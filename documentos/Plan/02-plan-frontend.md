@@ -359,7 +359,7 @@ la URL (?ver=ID). Revisa el mío: [pega].
 
 ### F5.1 Listado y programar
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Construye el listado con filtros por estado en la URL (`?estado=pendiente`) y el
 formulario de programar, con el aviso de comparación cuando el tipo es Salida.
@@ -375,7 +375,7 @@ cliente, sin exponer datos de otras organizaciones.
 
 ### F5.2 Detalle según el rol
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 En `inspecciones/[id]/page.tsx` muestra acciones distintas según el rol:
 

@@ -2,7 +2,10 @@ import { ZONA_HORARIA } from "@/lib/constantes";
 
 // La base guarda las fechas en UTC; aquí se muestran en hora de Bogotá.
 
-const FORMATO_FECHA = new Intl.DateTimeFormat("es-CO", {
+// Colombia no tiene horario de verano: su desfase frente a UTC es fijo.
+export const DESFASE_BOGOTA = "-05:00";
+
+const FORMATO_FECHA =new Intl.DateTimeFormat("es-CO", {
   day: "numeric",
   month: "short",
   year: "numeric",

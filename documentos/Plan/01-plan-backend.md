@@ -317,7 +317,7 @@ navegador.
 
 ### B5.1 Crear inspección con snapshot (transacción)
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Escribe una función SQL (RPC) que cree la inspección y copie el inventario en
 una sola transacción.
@@ -332,7 +332,7 @@ función SQL (RPC) y no en varias llamadas desde Next.js.
 
 ### B5.2 Iniciar y guardar detalles con versión
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Programa la transición Pendiente → En proceso y el `PATCH` de cada detalle con `version`.
 
@@ -346,7 +346,7 @@ UPDATE para detectarlo.
 
 ### B5.3 Finalizar, cancelar y reasignar
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea RPC transaccionales que validen los obligatorios, bloqueen la fila, cambien
 el estado y registren la auditoría.
