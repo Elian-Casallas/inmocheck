@@ -1,0 +1,80 @@
+import "server-only";
+import { crearClienteAdmin } from "@/lib/supabase/admin";
+import { armarPaginado } from "@/schemas/comun";
+import type { Inspector, InspectorEditar, InspectorInvitar, InspectoresFiltro } from "@/schemas/inspectores";
+import type { Actor } from "@/server/auth/sesion";
+import { ConflictError, NotFoundError } from "@/server/http/errores";
+import * as repositorio from "@/server/repositories/inspectores.repository";
+
+export async function listarInspectores(filtro: InspectoresFiltro) {
+  const { filas, total } = await repositorio.listarInspectores(filtro);
+  const abiertas = await repositorio.contarAbiertasPorInspector(filas.map((fila) => fila.id));
+
+  const inspectores: Inspector[] = filas.map((fila) => ({
+    ...fila,
+    inspeccionesAbiertas: abiertas.get(fila.id) ?? 0,
+  }));
+  return armarPaginado(inspectores, total, filtro.page, filtro.pageSize);
+}
+
+// Invitar necesita la API de administración de Supabase (service_role):
+// crea la cuenta en auth.users y envía el correo. El rol y la organización
+// los fija el servidor: INSPECTOR, en la organización del admin que invita.
+export async function invitarInspector(actor: Actor, datos: InspectorInvitar, origen: string) {
+  const admin = crearClienteAdmin();
+
+  const { data, error } = await admin.auth.admin.inviteUserByEmail(datos.email, {
+    data: { nombre: datos.nombre },
+    redirectTo: `${origen}/auth/confirmar?siguiente=/auth/actualizar-contrasena`,
+  });
+  if (error || !data.user) {
+    throw new ConflictError(
+      "No se pudo enviar la invitación. Es posible que ese correo ya tenga una cuenta.",
+      "INVITACION_FALLIDA",
+    );
+  }
+
+  const usuarioId = data.user.id;
+  const { error: errorPerfil } = await admin.from("perfiles").insert({
+    id: usuarioId,
+    organizacion_id: actor.organizacion.id,
+    nombre: datos.nombre,
+    email: datos.email,
+    rol: "INSPECTOR",
+  });
+
+  if (errorPerfil) {
+    // Compensación: sin perfil la cuenta quedaría huérfana, así que se elimina.
+    await admin.auth.admin.deleteUser(usuarioId);
+    throw errorPerfil;
+  }
+
+  await admin.from("auditoria").insert({
+    organizacion_id: actor.organizacion.id,
+    actor_id: actor.id,
+    recurso: "INSPECTOR",
+    recurso_id: usuarioId,
+    accion: "INVITADO",
+  });
+
+  return { id: usuarioId, nombre: datos.nombre, email: datos.email, activo: true };
+}
+
+export async function editarInspector(id: string, datos: InspectorEditar) {
+  if (datos.activo === false) {
+    const abiertas = await repositorio.contarAbiertasPorInspector([id]);
+    if ((abiertas.get(id) ?? 0) > 0) {
+      throw new ConflictError(
+        "El inspector tiene inspecciones abiertas. Reasígnalas antes de desactivar la cuenta.",
+        "INSPECTOR_CON_INSPECCIONES_ABIERTAS",
+      );
+    }
+  }
+
+  const inspector = await repositorio.actualizarInspector(id, datos);
+  if (!inspector) throw new NotFoundError();
+  return inspector;
+}
+
+export const listarOpcionesInspector = repositorio.listarOpcionesInspector;
+export const contarInspectoresActivos = repositorio.contarInspectoresActivos;

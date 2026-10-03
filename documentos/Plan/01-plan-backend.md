@@ -191,7 +191,7 @@ estructura y yo la completo.
 
 ### B3.1 Clientes de Supabase
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `lib/supabase/server.ts` y `lib/supabase/client.ts` con el paquete `@supabase/ssr`.
 
@@ -205,7 +205,7 @@ middleware que refresca la sesión.
 
 ### B3.2 Identidad y permisos
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `requireRole()`: obtiene el usuario de la sesión, lee su perfil, bloquea las
 cuentas inactivas y comprueba el rol.
@@ -220,7 +220,7 @@ organizacionId que venga del body. Dame pseudocódigo, no el código final.
 
 ### B3.3 Errores uniformes
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `toProblem()`, que convierte cualquier error (de Zod, de negocio o
 inesperado) en una respuesta `problem+json` con el código HTTP correcto.
@@ -235,7 +235,7 @@ ejemplo con un caso distinto al mío, por ejemplo una biblioteca.
 
 ### B3.4 Esquemas compartidos
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea la carpeta `schemas/` con los esquemas Zod de cada entidad y sus tipos (`z.infer`).
 

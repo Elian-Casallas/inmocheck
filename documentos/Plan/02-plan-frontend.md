@@ -170,7 +170,7 @@ evitar un if gigante para las clases. Luego revisa el mío: [pega].
 
 ### F1.2 Estructura de la app (menú y layout)
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea el menú lateral (escritorio), la navegación inferior (celular) y el
 encabezado de página, y úsalos en el layout del dashboard.
@@ -201,7 +201,7 @@ solo en /realizar. Revisa el mío: [pega].
 
 ### F2.1 Login y contraseñas
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 | Ruta | Archivo |
 |---|---|
@@ -225,7 +225,7 @@ formulario esté en otro archivo?
 
 ### F2.2 Proteger rutas y redirigir por rol
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 | Qué | Archivo |
 |---|---|

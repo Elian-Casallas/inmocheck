@@ -8,7 +8,7 @@
 -- Cuentas (todas con la misma contraseña de demostración):
 --   Los Pinos: admin@pinos.test · laura@pinos.test · carlos@pinos.test
 --   Andes:     admin@andes.test · sofia@andes.test · mateo@andes.test
--- Contraseña de demostración: InmoCheck.Demo2026
+-- Contraseña de demostración: 
 -- =========================================================
 
 -- ---------- Organizaciones ----------

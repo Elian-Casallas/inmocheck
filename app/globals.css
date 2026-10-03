@@ -75,6 +75,53 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Tabla que en celular se convierte en tarjetas (igual que el prototipo).
+   Va como clase porque son reglas sobre th/td que con utilidades de Tailwind
+   habría que repetir en cada celda. Se usa desde components/ui/Tabla.tsx. */
+@layer components {
+  .tabla {
+    @apply w-full border-collapse text-cuerpo-sm;
+  }
+  .tabla th {
+    @apply bg-sutil px-4 py-3 text-left text-pequeno font-medium whitespace-nowrap text-texto-secundario;
+  }
+  .tabla td {
+    @apply border-t border-borde px-4 py-3.5 align-middle;
+  }
+  .tabla th:first-child,
+  .tabla td:first-child {
+    @apply pl-5;
+  }
+  .tabla tbody tr {
+    @apply relative hover:bg-[#fafbfd];
+  }
+
+  @media (max-width: 760px) {
+    .tabla thead {
+      @apply hidden;
+    }
+    .tabla,
+    .tabla tbody {
+      @apply block;
+    }
+    .tabla tr {
+      @apply grid grid-cols-[1fr_auto] gap-x-3 gap-y-1 border-t border-borde px-4 py-3.5;
+    }
+    .tabla tbody tr:first-child {
+      @apply border-t-0;
+    }
+    .tabla td {
+      @apply col-start-1 border-0 p-0;
+    }
+    .tabla td.solo-escritorio {
+      @apply hidden;
+    }
+    .tabla td.a-la-derecha {
+      @apply col-start-2 row-start-1 justify-self-end;
+    }
+  }
+}
+
 @layer base {
   body {
     @apply bg-fondo text-cuerpo text-texto-principal;
