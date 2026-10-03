@@ -1,8 +1,11 @@
+import { exigirRol } from "@/server/auth/sesion";
+
 export default async function PaginaInspeccionRealizar({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await exigirRol("INSPECTOR");
   const { id } = await params;
 
   return (

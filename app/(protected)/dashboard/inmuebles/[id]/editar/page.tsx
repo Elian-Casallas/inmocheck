@@ -1,8 +1,11 @@
+import { exigirRol } from "@/server/auth/sesion";
+
 export default async function PaginaInmuebleEditar({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  await exigirRol("ADMIN");
   const { id } = await params;
 
   return (
