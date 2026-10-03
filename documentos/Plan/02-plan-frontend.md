@@ -475,7 +475,7 @@ poner el Content-Type a mano, y cómo mostrar errores por archivo (413, 415).
 
 ### F7.1 Comparación e informe
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 La comparación usa filtros en la URL (`?contra=ID&ver=cambios`). El informe
 muestra la vista previa, las versiones y la descarga.

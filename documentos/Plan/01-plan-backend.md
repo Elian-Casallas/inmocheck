@@ -387,7 +387,7 @@ URLs firmadas y por qué debo generar yo el nombre del archivo. ¿Qué es una
 
 ### B7.1 Comparación
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Relaciona los detalles de entrada y salida por `elemento_id` y clasifica cada
 uno: sin cambio, cambio o no comparable.
@@ -402,7 +402,7 @@ datos pequeños, no el código de mi servicio.
 
 ### B7.2 Informe PDF
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Genera el PDF con `@react-pdf/renderer` a partir de los datos copiados en el
 snapshot, guárdalo en privado y registra la versión.
