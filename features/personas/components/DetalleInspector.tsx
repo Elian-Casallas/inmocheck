@@ -20,6 +20,8 @@ export function DetalleInspector({ inspector, children }: Props) {
   const router = useRouter();
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [accesoEnviado, setAccesoEnviado] = useState(false);
+  const [enviandoAcceso, setEnviandoAcceso] = useState(false);
 
   async function cambiarEstado() {
     setEnviando(true);
@@ -37,10 +39,29 @@ export function DetalleInspector({ inspector, children }: Props) {
     }
   }
 
+  async function reenviarAcceso() {
+    setEnviandoAcceso(true);
+    setError(null);
+    setAccesoEnviado(false);
+    try {
+      await apiFetch(`/inspectores/${inspector.id}/acceso`, { method: "POST", body: "{}" });
+      setAccesoEnviado(true);
+    } catch (causa) {
+      setError(mensajeDeError(causa));
+    } finally {
+      setEnviandoAcceso(false);
+    }
+  }
+
   return (
     <>
       <PanelCuerpo>
         {error && <Aviso tipo="error">{error}</Aviso>}
+        {accesoEnviado && (
+          <Aviso tipo="exito">
+            Enviamos a {inspector.email} un enlace para crear su contraseña. Puede llegar a correo no deseado.
+          </Aviso>
+        )}
         <ListaDatos
           datos={[
             { etiqueta: "Correo", valor: inspector.email },
@@ -62,6 +83,11 @@ export function DetalleInspector({ inspector, children }: Props) {
         </Aviso>
       </PanelCuerpo>
       <PanelPie>
+        {inspector.activo && (
+          <Boton variante="secundario" onClick={reenviarAcceso} cargando={enviandoAcceso} textoCargando="Enviando…">
+            Reenviar enlace de acceso
+          </Boton>
+        )}
         <Boton variante={inspector.activo ? "peligro" : "secundario"} onClick={cambiarEstado} cargando={enviando}>
           {inspector.activo ? "Desactivar cuenta" : "Reactivar cuenta"}
         </Boton>

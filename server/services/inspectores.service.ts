@@ -1,9 +1,10 @@
 import "server-only";
 import { crearClienteAdmin } from "@/lib/supabase/admin";
+import { RUTA_ENLACE_CORREO, crearClienteCorreo } from "@/lib/supabase/correo";
 import { armarPaginado } from "@/schemas/comun";
 import type { Inspector, InspectorEditar, InspectorInvitar, InspectoresFiltro } from "@/schemas/inspectores";
 import type { Actor } from "@/server/auth/sesion";
-import { ConflictError, NotFoundError } from "@/server/http/errores";
+import { AppError, ConflictError, NotFoundError } from "@/server/http/errores";
 import * as repositorio from "@/server/repositories/inspectores.repository";
 
 export async function listarInspectores(filtro: InspectoresFiltro) {
@@ -25,7 +26,7 @@ export async function invitarInspector(actor: Actor, datos: InspectorInvitar, or
 
   const { data, error } = await admin.auth.admin.inviteUserByEmail(datos.email, {
     data: { nombre: datos.nombre },
-    redirectTo: `${origen}/auth/confirmar?siguiente=/auth/actualizar-contrasena`,
+    redirectTo: `${origen}${RUTA_ENLACE_CORREO}`,
   });
   if (error || !data.user) {
     throw new ConflictError(
@@ -58,6 +59,39 @@ export async function invitarInspector(actor: Actor, datos: InspectorInvitar, or
   });
 
   return { id: usuarioId, nombre: datos.nombre, email: datos.email, activo: true };
+}
+
+// Si la invitación venció, se perdió o cayó en correo no deseado, el admin
+// puede enviar un enlace nuevo. Es un enlace de "crear contraseña": sirve
+// tanto si el inspector nunca entró como si olvidó su clave.
+export async function reenviarAcceso(actor: Actor, inspectorId: string, origen: string) {
+  // Se busca con la sesión del admin: RLS garantiza que sea de su organización.
+  const inspector = await repositorio.buscarInspector(inspectorId);
+  if (!inspector) throw new NotFoundError();
+  if (!inspector.activo) {
+    throw new ConflictError("La cuenta está desactivada. Reactívala antes de enviar el enlace.", "CUENTA_INACTIVA");
+  }
+
+  const { error } = await crearClienteCorreo().auth.resetPasswordForEmail(inspector.email, {
+    redirectTo: `${origen}${RUTA_ENLACE_CORREO}`,
+  });
+  if (error) {
+    // Supabase limita cuántos correos se envían por hora.
+    throw new AppError(
+      503,
+      "CORREO_NO_ENVIADO",
+      "No se pudo enviar el correo",
+      "No se pudo enviar el correo. Espera unos minutos e intenta de nuevo.",
+    );
+  }
+
+  await crearClienteAdmin().from("auditoria").insert({
+    organizacion_id: actor.organizacion.id,
+    actor_id: actor.id,
+    recurso: "INSPECTOR",
+    recurso_id: inspector.id,
+    accion: "ACCESO_REENVIADO",
+  });
 }
 
 export async function editarInspector(id: string, datos: InspectorEditar) {

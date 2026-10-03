@@ -49,6 +49,18 @@ export async function contarAbiertasPorInspector(inspectorIds: string[]): Promis
   return conteo;
 }
 
+export async function buscarInspector(id: string): Promise<InspectorBase | null> {
+  const supabase = await crearClienteServidor();
+  const { data, error } = await supabase
+    .from("perfiles")
+    .select(COLUMNAS)
+    .eq("id", id)
+    .eq("rol", "INSPECTOR")
+    .maybeSingle();
+  if (error) throw error;
+  return data as InspectorBase | null;
+}
+
 export async function actualizarInspector(id: string, datos: InspectorEditar) {
   const supabase = await crearClienteServidor();
   const { data, error } = await supabase
