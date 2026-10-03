@@ -298,7 +298,7 @@ elementos, y revisa mi servicio: [pega].
 
 ### B4.4 Invitar inspectores
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Usa la API de administración de Supabase (`inviteUserByEmail`) **solo en el
 servidor** y crea el perfil con la organización del administrador.

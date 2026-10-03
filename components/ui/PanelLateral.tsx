@@ -99,5 +99,10 @@ export function PanelCuerpo({ children }: { children: ReactNode }) {
 }
 
 export function PanelPie({ children }: { children: ReactNode }) {
-  return <div className="flex justify-end gap-3 border-t border-borde px-6 py-4">{children}</div>;
+  // flex-wrap: si los botones no caben en una fila, bajan en vez de salirse del panel.
+  return (
+    <div className="flex flex-wrap justify-end gap-3 border-t border-borde px-6 py-4 max-sm:[&>*]:flex-1">
+      {children}
+    </div>
+  );
 }

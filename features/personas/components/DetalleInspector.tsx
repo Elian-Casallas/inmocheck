@@ -84,11 +84,22 @@ export function DetalleInspector({ inspector, children }: Props) {
       </PanelCuerpo>
       <PanelPie>
         {inspector.activo && (
-          <Boton variante="secundario" onClick={reenviarAcceso} cargando={enviandoAcceso} textoCargando="Enviando…">
-            Reenviar enlace de acceso
+          <Boton
+            variante="secundario"
+            tamano="pequeno"
+            onClick={reenviarAcceso}
+            cargando={enviandoAcceso}
+            textoCargando="Enviando…"
+          >
+            Reenviar enlace
           </Boton>
         )}
-        <Boton variante={inspector.activo ? "peligro" : "secundario"} onClick={cambiarEstado} cargando={enviando}>
+        <Boton
+          variante={inspector.activo ? "peligro" : "secundario"}
+          tamano="pequeno"
+          onClick={cambiarEstado}
+          cargando={enviando}
+        >
           {inspector.activo ? "Desactivar cuenta" : "Reactivar cuenta"}
         </Boton>
       </PanelPie>

@@ -8,7 +8,8 @@ import { Aviso } from "@/components/ui/Aviso";
 import { Boton, clasesBoton } from "@/components/ui/Boton";
 import { Campo } from "@/components/ui/Campo";
 import { CONTRASENA_MINIMA } from "@/lib/constantes";
-import { crearClienteNavegador } from "@/lib/supabase/client";
+import { apiFetch } from "@/lib/api/client";
+import { aplicarErroresDeApi } from "@/lib/formularios";
 import { nuevaContrasenaSchema, type NuevaContrasenaDatos } from "@/schemas/auth";
 
 export function FormularioNuevaContrasena() {
@@ -18,19 +19,18 @@ export function FormularioNuevaContrasena() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<NuevaContrasenaDatos>({ resolver: zodResolver(nuevaContrasenaSchema) });
 
-  async function guardarContrasena({ password }: NuevaContrasenaDatos) {
+  async function guardarContrasena(datos: NuevaContrasenaDatos) {
     setErrorGeneral(null);
-    // Supabase Auth cambia la contraseña del usuario de la sesión actual.
-    const { error } = await crearClienteNavegador().auth.updateUser({ password });
-
-    if (error) {
-      setErrorGeneral("No pudimos guardar la contraseña. Abre de nuevo el enlace del correo.");
-      return;
+    try {
+      await apiFetch("/auth/contrasena", { method: "PUT", body: JSON.stringify(datos) });
+      setGuardada(true);
+    } catch (error) {
+      setErrorGeneral(aplicarErroresDeApi(error, setError));
     }
-    setGuardada(true);
   }
 
   if (guardada) {
@@ -49,7 +49,7 @@ export function FormularioNuevaContrasena() {
       <div className="flex flex-col gap-1.5 pt-2">
         <h1 className="text-titulo-movil font-semibold">Crea una nueva contraseña</h1>
         <p className="text-cuerpo-sm text-texto-secundario">
-          Usa al menos {CONTRASENA_MINIMA} caracteres.
+          Usa al menos {CONTRASENA_MINIMA} caracteres, con una letra y un número.
         </p>
       </div>
       {errorGeneral && <Aviso tipo="error">{errorGeneral}</Aviso>}
