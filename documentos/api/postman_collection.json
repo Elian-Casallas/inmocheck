@@ -1,0 +1,1393 @@
+{
+  "info": {
+    "name": "InmoCheck API v1",
+    "description": "Casos API-01 a API-24 del diseño técnico. Ejecutar la colección completa EN ORDEN (Run collection): cada carpeta inicia sesión con un usuario distinto y Postman conserva la cookie de sesión.\n\nAntes de ejecutar: `npm run dev`, cargar supabase/seed.sql y escribir la variable `password` con la contraseña de demostración. Las fotos (API-13 a API-15) se prueban desde la app porque necesitan un archivo.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api/v1"
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "adminEmail",
+      "value": "admin@pinos.test"
+    },
+    {
+      "key": "inspectorEmail",
+      "value": "laura@pinos.test"
+    },
+    {
+      "key": "otroInspectorEmail",
+      "value": "carlos@pinos.test"
+    },
+    {
+      "key": "adminOtraOrgEmail",
+      "value": "admin@andes.test"
+    },
+    {
+      "key": "inspectorId",
+      "value": "a1000000-0000-4000-8000-000000000002"
+    },
+    {
+      "key": "propietarioId",
+      "value": ""
+    },
+    {
+      "key": "inmuebleId",
+      "value": ""
+    },
+    {
+      "key": "inmuebleCodigo",
+      "value": ""
+    },
+    {
+      "key": "espacioId",
+      "value": ""
+    },
+    {
+      "key": "inspeccionId",
+      "value": ""
+    },
+    {
+      "key": "detalleId",
+      "value": ""
+    },
+    {
+      "key": "detalleOpcionalId",
+      "value": ""
+    },
+    {
+      "key": "informeId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "0 · Sin sesión",
+      "item": [
+        {
+          "name": "API-02 Listar inmuebles sin sesión → 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inmuebles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inmuebles"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1 · Administrador",
+      "item": [
+        {
+          "name": "API-01 Login admin → 200 y cookie",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));",
+                  "pm.test('rol ADMIN', () => pm.expect(pm.response.json().data.rol).to.eql('ADMIN'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear propietario → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('propietarioId', pm.response.json().data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/propietarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "propietarios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Propietario Postman\",\n  \"telefono\": \"+57 300 000 9999\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-04 Crear inmueble con código nuevo → 201 + Location",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 201', () => pm.response.to.have.status(201));",
+                  "pm.test('trae Location', () => pm.expect(pm.response.headers.get('Location')).to.include('/api/v1/inmuebles/'));",
+                  "const inmueble = pm.response.json().data;",
+                  "pm.collectionVariables.set('inmuebleId', inmueble.id);",
+                  "pm.collectionVariables.set('inmuebleCodigo', inmueble.codigo);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inmuebles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inmuebles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"PM-{{$timestamp}}\",\n  \"tipo\": \"CASA\",\n  \"direccion\": \"Calle de Postman 123\",\n  \"ciudad\": \"Villavicencio\",\n  \"departamento\": \"Meta\",\n  \"habitaciones\": 2,\n  \"banos\": 1,\n  \"propietarioId\": \"{{propietarioId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-05 Repetir el código → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 409', () => pm.response.to.have.status(409));",
+                  "pm.test('código de error', () => pm.expect(pm.response.json().code).to.eql('CODIGO_INMUEBLE_DUPLICADO'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inmuebles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inmuebles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"{{inmuebleCodigo}}\",\n  \"tipo\": \"CASA\",\n  \"direccion\": \"Calle de Postman 123\",\n  \"ciudad\": \"Villavicencio\",\n  \"departamento\": \"Meta\",\n  \"habitaciones\": 2,\n  \"banos\": 1,\n  \"propietarioId\": \"{{propietarioId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Inspección sin inventario → 409 INVENTARIO_VACIO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inmuebleId\": \"{{inmuebleId}}\",\n  \"inspectorId\": \"{{inspectorId}}\",\n  \"tipo\": \"ENTRADA\",\n  \"programadaPara\": \"2026-10-09T09:00:00-05:00\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear espacio → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('espacioId', pm.response.json().data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inmuebles/{{inmuebleId}}/espacios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inmuebles",
+                "{{inmuebleId}}",
+                "espacios"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Cocina\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear elemento obligatorio → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/espacios/{{espacioId}}/elementos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "espacios",
+                "{{espacioId}}",
+                "elementos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Grifería\",\n  \"obligatorio\": true\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear elemento opcional → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/espacios/{{espacioId}}/elementos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "espacios",
+                "{{espacioId}}",
+                "elementos"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Enchufes\",\n  \"obligatorio\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "API-07 Crear inspección con inventario → 201 con snapshots",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 201', () => pm.response.to.have.status(201));",
+                  "const inspeccion = pm.response.json().data;",
+                  "pm.test('copió los 2 elementos', () => pm.expect(inspeccion.progreso.total).to.eql(2));",
+                  "pm.collectionVariables.set('inspeccionId', inspeccion.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inmuebleId\": \"{{inmuebleId}}\",\n  \"inspectorId\": \"{{inspectorId}}\",\n  \"tipo\": \"ENTRADA\",\n  \"programadaPara\": \"2026-10-09T09:00:00-05:00\",\n  \"nota\": \"Creada desde Postman\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-23 Dashboard → 200 solo de su organización",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/resumen",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard",
+                "resumen"
+              ]
+            }
+          }
+        },
+        {
+          "name": "API-06 Inmueble de otra organización → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inmuebles/b3000000-0000-4000-8000-000000000001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inmuebles",
+                "b3000000-0000-4000-8000-000000000001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Admin intenta iniciar la inspección → 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/inicio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "inicio"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout admin → 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2 · Inspector no asignado",
+      "item": [
+        {
+          "name": "Login Carlos → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{otroInspectorEmail}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-03 Inspector crea inmueble → 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inmuebles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inmuebles"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"codigo\": \"HACK-1\",\n  \"tipo\": \"CASA\",\n  \"direccion\": \"Calle falsa 123\",\n  \"ciudad\": \"X\",\n  \"departamento\": \"Y\",\n  \"habitaciones\": 1,\n  \"banos\": 1,\n  \"propietarioId\": \"{{propietarioId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-08 Iniciar inspección ajena → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/inicio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "inicio"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout Carlos → 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 · Inspector asignado",
+      "item": [
+        {
+          "name": "Login Laura → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{inspectorEmail}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-09 Iniciar inspección pendiente → 200 EN_PROCESO",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));",
+                  "pm.test('en proceso', () => pm.expect(pm.response.json().data.estado).to.eql('EN_PROCESO'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/inicio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "inicio"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar detalles → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));",
+                  "const detalles = pm.response.json().data;",
+                  "pm.collectionVariables.set('detalleId', detalles.find(d => d.obligatorio).id);",
+                  "pm.collectionVariables.set('detalleOpcionalId', detalles.find(d => !d.obligatorio).id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/detalles",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "detalles"
+              ]
+            }
+          }
+        },
+        {
+          "name": "API-10 Finalizar incompleta → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 409', () => pm.response.to.have.status(409));",
+                  "pm.test('código', () => pm.expect(pm.response.json().code).to.eql('INSPECCION_INCOMPLETA'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/finalizacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "finalizacion"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "API-11 Guardar detalle → 200 y versión 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));",
+                  "pm.test('sube la versión', () => pm.expect(pm.response.json().data.version).to.eql(2));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/detalles/{{detalleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "detalles",
+                "{{detalleId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"REGULAR\",\n  \"observacion\": \"La llave presenta fuga leve.\",\n  \"version\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "API-12 Repetir con versión vieja → 409 VERSION_CONFLICT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 409', () => pm.response.to.have.status(409));",
+                  "pm.test('código', () => pm.expect(pm.response.json().code).to.eql('VERSION_CONFLICT'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/detalles/{{detalleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "detalles",
+                "{{detalleId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"BUENO\",\n  \"version\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "API-16 Finalizar completa → 200 FINALIZADA",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));",
+                  "pm.test('finalizada', () => pm.expect(pm.response.json().data.estado).to.eql('FINALIZADA'));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/finalizacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "finalizacion"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"version\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "API-17 Editar detalle de inspección cerrada → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/detalles/{{detalleOpcionalId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "detalles",
+                "{{detalleOpcionalId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"BUENO\",\n  \"version\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "API-20 Generar informe PDF → 201",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 201', () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set('informeId', pm.response.json().data.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/informes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "informes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tipo\": \"ACTA\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-19 Comparar una entrada como salida → 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}/comparacion?contra={{inspeccionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}",
+                "comparacion"
+              ],
+              "query": [
+                {
+                  "key": "contra",
+                  "value": "{{inspeccionId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout Laura → 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 · Otra organización",
+      "item": [
+        {
+          "name": "Login admin de Andes → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminOtraOrgEmail}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-21 Descargar PDF ajeno → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/informes/{{informeId}}/descarga",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "informes",
+                "{{informeId}}",
+                "descarga"
+              ]
+            }
+          }
+        },
+        {
+          "name": "API-06 Ver inspección ajena → 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inspecciones/{{inspeccionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inspecciones",
+                "{{inspeccionId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout → 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 · Cierre (admin)",
+      "item": [
+        {
+          "name": "Login admin → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{adminEmail}}\",\n  \"password\": \"{{password}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "API-22 Desactivar inmueble con historial → 204",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inmuebles/{{inmuebleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inmuebles",
+                "{{inmuebleId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "API-22 El inmueble sigue existiendo, inactivo → 200",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));",
+                  "pm.test('inactivo', () => pm.expect(pm.response.json().data.activo).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/inmuebles/{{inmuebleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "inmuebles",
+                "{{inmuebleId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "API-24 Auditoría de la inspección → 200 con eventos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('responde 200', () => pm.response.to.have.status(200));",
+                  "const acciones = pm.response.json().data.map(e => e.accion);",
+                  "pm.test('registró el flujo', () => pm.expect(acciones).to.include.members(['PROGRAMADA', 'INICIADA', 'FINALIZADA', 'INFORME_GENERADO']));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auditoria?recurso=INSPECCION&recursoId={{inspeccionId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auditoria"
+              ],
+              "query": [
+                {
+                  "key": "recurso",
+                  "value": "INSPECCION"
+                },
+                {
+                  "key": "recursoId",
+                  "value": "{{inspeccionId}}"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

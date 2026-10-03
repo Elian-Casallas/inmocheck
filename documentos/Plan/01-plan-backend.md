@@ -417,7 +417,7 @@ actual.
 
 ### B7.3 Dashboard
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea las consultas de conteo filtradas por organización.
 
@@ -449,7 +449,7 @@ verifique el código HTTP de la respuesta.
 
 ### B8.2 Pruebas unitarias con Vitest
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Cubre los esquemas Zod, el cálculo de progreso y la comparación.
 

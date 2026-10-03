@@ -490,7 +490,7 @@ inspección.
 
 ### F7.2 Biblioteca, dashboard y configuración
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Todas reutilizan los componentes que ya tienes, así que esta fase debería ir rápido.
 
