@@ -268,7 +268,7 @@ primero la fija, así que `/inmuebles/nuevo` no se confunde con un id.
 
 ### F3.1 Listado con búsqueda y filtros en la URL
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 **Ruta** `/dashboard/inmuebles` → `inmuebles/page.tsx`, más `loading.tsx` y
 `error.tsx` en la misma carpeta. Componentes en `src/features/inmuebles/components/`
@@ -285,7 +285,7 @@ en useState, y cómo manejar los estados loading, empty y error en App Router
 
 ### F3.2 Registrar y editar con un solo formulario
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 **Rutas** `/nuevo` → `nuevo/page.tsx` y `/[id]/editar` → `[id]/editar/page.tsx`.
 Ambas usan el mismo `src/features/inmuebles/components/FormularioInmueble.tsx`.
@@ -304,7 +304,7 @@ de la API en un error visible en el campo "código".
 
 ### F3.3 Detalle, inventario e historial con pestañas
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Primero crea `[id]/layout.tsx` con el encabezado del inmueble y las pestañas
 *Resumen · Inventario · Historial*. Luego llena las tres páginas.
@@ -330,7 +330,7 @@ código.
 
 ### F4.1 Panel lateral reutilizable
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `src/components/ui/PanelLateral.tsx`: accesible, se cierra con Esc y mueve
 el foco. Úsalo para registrar y editar propietarios, y para invitar y ver

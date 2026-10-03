@@ -110,7 +110,8 @@
     .tabla tbody tr:first-child {
       @apply border-t-0;
     }
-    .tabla td {
+    .tabla td,
+    .tabla td:first-child {
       @apply col-start-1 border-0 p-0;
     }
     .tabla td.solo-escritorio {

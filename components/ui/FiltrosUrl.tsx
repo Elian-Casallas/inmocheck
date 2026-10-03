@@ -79,7 +79,8 @@ export function FiltroSeleccion({ parametro, etiqueta, opciones, porDefecto = ""
       aria-label={etiqueta}
       value={parametros.get(parametro) ?? porDefecto}
       onChange={(evento) => cambiarParametro(parametro, evento.target.value)}
-      className={`${CLASES_ENTRADA} w-auto min-w-44 cursor-pointer max-sm:flex-1`}
+      // Sin w-full: el select ocupa solo lo que necesita y la búsqueda se estira.
+      className={`${CLASES_ENTRADA.replace("w-full ", "")} min-w-44 cursor-pointer max-sm:flex-1`}
     >
       {opciones.map(({ valor, texto }) => (
         <option key={valor} value={valor}>

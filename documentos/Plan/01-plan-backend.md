@@ -253,7 +253,7 @@ rechazar campos extra.
 
 ### B4.1 Propietarios (tu primer CRUD completo)
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `GET` y `POST /api/v1/propietarios`, y `GET` y `PATCH` por id. Sigue el
 camino: handler → servicio → repositorio.
@@ -268,7 +268,7 @@ revisa mi código del POST: [pega].
 
 ### B4.2 Inmuebles con búsqueda y paginación
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Construye el listado con `search`, `activo`, `page` y `pageSize`, más crear,
 editar y desactivar.
@@ -284,7 +284,7 @@ meter el parámetro sort directamente en la consulta?
 
 ### B4.3 Inventario
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Construye los endpoints de espacios y elementos.
 
