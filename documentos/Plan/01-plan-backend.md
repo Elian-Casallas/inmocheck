@@ -9,7 +9,7 @@ Antes de cada chat nuevo, pega el **prompt de contexto** de `00-guia-del-plan.md
 
 ### B0.1 Repositorio y proyecto Supabase
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea el repositorio en GitHub, el proyecto en Supabase y un archivo `.env.local`
 con la URL y la clave pública (`anon`). Agrega `.env.local` al `.gitignore` y
@@ -25,7 +25,7 @@ variables de entorno en Next.js (.env.local, .env.example, NEXT_PUBLIC_).
 
 ### B0.2 Migraciones versionadas
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Instala Supabase CLI y aprende a crear migraciones, para que tu SQL quede
 guardado en `supabase/migrations/` y no solo en el editor web.
@@ -44,7 +44,7 @@ Supabase CLI para crear y aplicar una migración, con una explicación de cada u
 
 ### B1.1 Tipos enumerados
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea los `enum`: rol, tipo de inspección, estado de inspección y estado de
 elemento. Tu documento técnico ya los tiene definidos.
@@ -59,7 +59,7 @@ No escribas mis enums; déjame hacerlos y luego los reviso contigo.
 
 ### B1.2 Tablas núcleo
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `organizaciones`, `perfiles`, `personas` e `inmuebles`, con UUID, llaves
 foráneas y `UNIQUE(organizacion_id, codigo)`.
@@ -76,7 +76,7 @@ ON DELETE CASCADE aquí. Luego revisa mi SQL: [pega].
 
 ### B1.3 Inventario
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `espacios` y `elementos`, con `orden`, `obligatorio` y `activo`.
 
@@ -90,7 +90,7 @@ espacios y elementos: [pega].
 
 ### B1.4 Inspecciones y detalles
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `inspecciones` (con la columna `version`) y `detalles_inspeccion`, con los
 campos de copia histórica (*snapshot*): nombre del espacio, nombre del elemento
@@ -107,7 +107,7 @@ concurrencia optimista).
 
 ### B1.5 Evidencias, informes y auditoría
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea las tres tablas restantes y los índices de búsqueda.
 
@@ -121,7 +121,7 @@ EXPLAIN que se está usando. Revisa mis índices: [pega].
 
 ### B1.6 Datos de prueba (seed)
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea `seed.sql` con 2 organizaciones, un administrador y 2 inspectores en cada
 una, y algunos inmuebles. Usa datos inventados.
@@ -139,7 +139,7 @@ organizaciones en los datos de prueba para probar la seguridad.
 
 ### B2.1 Funciones de ayuda para RLS
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea funciones como `mi_organizacion()` y `mi_rol()`, que leen el perfil de
 quien está conectado.
@@ -154,7 +154,7 @@ Explícame también los riesgos de SECURITY DEFINER y qué es search_path.
 
 ### B2.2 Políticas por tabla
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Activa RLS en todas las tablas y escribe las políticas:
 
@@ -172,7 +172,7 @@ para la política del inspector. Luego revisa las mías: [pega].
 
 ### B2.3 Probar la seguridad
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Prueba con varios usuarios: inspector no asignado, otra organización y cuenta
 desactivada.

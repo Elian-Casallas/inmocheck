@@ -90,7 +90,7 @@ panel lateral dentro de su listado, como en el prototipo.
 
 ### F0.1 Crear el proyecto
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Ejecuta `create-next-app` con TypeScript, Tailwind, ESLint, App Router y la
 carpeta `src/`.
@@ -108,7 +108,7 @@ layout.tsx, page.tsx y globals.css, y qué significa que un componente sea
 
 ### F0.2 Llevar el sistema de diseño a Tailwind
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Pasa los colores y la tipografía de `docs/prototipo/assets/styles.css` al tema
 de Tailwind. En Tailwind 4 van en `src/app/globals.css` con `@theme`; en
@@ -124,7 +124,7 @@ Tailwind para mantener los mismos nombres.
 
 ### F0.3 Esqueleto de rutas (tu mapa vivo)
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea **todas** las carpetas del mapa general, cada una con un `page.tsx` que por
 ahora solo muestre su título, por ejemplo `<h1>Inmuebles</h1>`. Haz que
