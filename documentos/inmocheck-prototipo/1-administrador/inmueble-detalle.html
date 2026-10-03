@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Detalle del inmueble · /dashboard/inmuebles/[id] — InmoCheck</title></head>
+<body data-role="admin" data-active="inmuebles" data-route="/dashboard/inmuebles/[id]">
+<main class="page">
+<a class="back-link" href="inmuebles.html"><i data-icon="arrow-left"></i>Inmuebles</a>
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">APT-302</h1><span class="badge badge-activo">Activo</span></div><p class="body-sm muted">Apartamento · Calle 10 #20-30, apto 302, Centro, Villavicencio</p></div>
+  <div class="actions"><a class="btn btn-secondary" data-only="admin" href="inmueble-editar.html">Editar</a><a class="btn btn-primary" data-only="admin" href="inspeccion-nueva.html">Programar inspección</a></div>
+</header>
+<nav class="tabs" aria-label="Secciones del inmueble"><a class="tab active" href="inmueble-detalle.html" aria-current=page>Resumen</a><a class="tab" href="inmueble-inventario.html">Inventario</a><a class="tab" href="inmueble-historial.html">Historial</a></nav>
+<div class="grid-side">
+  <div class="stack-lg">
+    <section class="card card-pad stack" style="gap:16px">
+      <h2 class="h-section">Datos del inmueble</h2>
+      <dl class="dl dl-2">
+        <div><dt>Código</dt><dd>APT-302</dd></div><div><dt>Tipo</dt><dd>Apartamento</dd></div>
+        <div><dt>Habitaciones</dt><dd>3</dd></div><div><dt>Baños</dt><dd>2</dd></div>
+        <div><dt>Área</dt><dd>85,5 m²</dd></div><div><dt>Registrado</dt><dd>12 ene 2025</dd></div>
+      </dl>
+    </section>
+    <section class="card">
+      <div class="card-head"><h2 class="h-section">Inspecciones recientes</h2><a class="label" href="inmueble-historial.html">Ver historial</a></div>
+      <div class="list">
+        <a class="list-row" href="../2-inspector/inspeccion-detalle.html?rol=admin"><div class="grow"><span class="label">Entrada</span><span class="caption faint">28 sep 2026 · Laura Díaz</span></div><span class="badge badge-en-proceso">En proceso</span></a>
+        <a class="list-row" href="inspeccion-informe.html"><div class="grow"><span class="label">Seguimiento</span><span class="caption faint">24 sep 2026 · Laura Díaz</span></div><span class="badge badge-finalizada">Finalizada</span></a>
+        <a class="list-row" href="inspeccion-informe.html"><div class="grow"><span class="label">Salida</span><span class="caption faint">15 ene 2025 · Andrés Mora</span></div><span class="badge badge-finalizada">Finalizada</span></a>
+      </div>
+    </section>
+  </div>
+  <div class="stack-lg">
+    <section class="card card-pad stack" style="gap:16px" data-only="admin">
+      <h2 class="h-section">Propietario</h2>
+      <dl class="dl"><div><dt>Nombre</dt><dd>María López</dd></div><div><dt>Correo</dt><dd>maria@example.com</dd></div><div><dt>Teléfono</dt><dd>+57 300 000 0000</dd></div></dl>
+    </section>
+    <section class="card" data-only="admin">
+      <div class="card-head"><h2 class="h-section">Actividad</h2></div>
+      <div class="list">
+        <div class="list-row"><div class="grow"><span class="body-sm">Carlos Rojas programó una inspección de entrada</span><span class="caption faint">25 sep 2026</span></div></div>
+        <div class="list-row"><div class="grow"><span class="body-sm">Carlos Rojas agregó «Mesón» a Cocina</span><span class="caption faint">20 sep 2026</span></div></div>
+      </div>
+    </section>
+  </div>
+</div>
+</main>
+<script src="../assets/app.js"></script>
+</body></html>

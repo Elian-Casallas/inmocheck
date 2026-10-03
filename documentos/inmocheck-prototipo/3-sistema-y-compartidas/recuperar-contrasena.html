@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css"><title>Recuperar contraseña · /recuperar-contrasena — InmoCheck</title></head>
+<body class="auth-body" data-layout="auth" data-route="/recuperar-contrasena">
+<main class="auth">
+  <form class="auth-card" id="form" novalidate>
+    <div class="brand" style="padding:0"><span class="brand-mark"><i data-icon="logo"></i></span>InmoCheck</div>
+    <div id="paso1" class="stack" style="gap:20px">
+      <div class="stack" style="gap:6px;padding-top:8px">
+        <h1 class="h-mobile">Recuperar contraseña</h1>
+        <p class="body-sm muted">Escribe tu correo y te enviaremos un enlace para crear una nueva contraseña.</p>
+      </div>
+      <div class="field" id="f-email">
+        <label for="email">Correo electrónico</label>
+        <input class="input" id="email" type="email" autocomplete="email" placeholder="nombre@inmobiliaria.com">
+        <span class="hint hidden" id="h-email">Escribe un correo válido.</span>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Enviar enlace</button>
+    </div>
+    <div id="paso2" class="stack hidden" style="gap:20px">
+      <div class="stack" style="gap:6px;padding-top:8px">
+        <h1 class="h-mobile">Revisa tu correo</h1>
+        <p class="body-sm muted">Si la cuenta existe, recibirás un enlace para crear una nueva contraseña. El enlace vence en una hora.</p>
+      </div>
+      <a class="btn btn-secondary btn-block" href="nueva-contrasena.html">Abrir el enlace (simulado)</a>
+    </div>
+    <a class="label" href="login.html" style="text-align:center">Volver a iniciar sesión</a>
+  </form>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+// El mensaje es igual exista o no la cuenta: así no se revela qué correos están registrados.
+document.getElementById('form').addEventListener('submit', e => {
+  e.preventDefault();
+  const v = document.getElementById('email').value.trim();
+  const ok = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v);
+  document.getElementById('f-email').classList.toggle('has-error', !ok);
+  document.getElementById('h-email').classList.toggle('hidden', ok);
+  if (ok) { document.getElementById('paso1').classList.add('hidden'); document.getElementById('paso2').classList.remove('hidden'); }
+});
+</script>
+</body></html>

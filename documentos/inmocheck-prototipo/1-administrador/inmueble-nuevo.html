@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Registrar inmueble · /dashboard/inmuebles/nuevo — InmoCheck</title></head>
+<body data-role="admin" data-active="inmuebles" data-route="/dashboard/inmuebles/nuevo">
+<main class="page page-narrow">
+<a class="back-link" href="inmuebles.html"><i data-icon="arrow-left"></i>Inmuebles</a>
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">Registrar inmueble</h1></div></div>
+  
+</header>
+<form class="card card-pad form" onsubmit="event.preventDefault();location.href='inmueble-inventario.html'">
+  <section class="form-section">
+    <h2 class="h-section">Datos generales</h2>
+    <div class="form-grid">
+      <div class="field "><label for="codigo">Código interno</label><input class="input" id="codigo" type="text" placeholder="Ej.: APT-302"><span class="hint">Debe ser único en tu inmobiliaria.</span></div>
+      <div class="field "><label for="tipo">Tipo</label><select class="select" id="tipo"><option selected>Selecciona</option><option>Apartamento</option><option>Casa</option><option>Otro</option></select></div>
+      <div class="field "><label for="hab">Habitaciones</label><input class="input" id="hab" type="number" placeholder="0"></div>
+      <div class="field "><label for="banos">Baños</label><input class="input" id="banos" type="number" placeholder="0"></div>
+      <div class="field "><label for="area">Área en m² <span class="opt">(opcional)</span></label><input class="input" id="area" type="text" placeholder="Ej.: 85,5"></div>
+    </div>
+  </section>
+  <hr class="divider" style="height:1px;border:0;background:var(--borde);margin:0">
+  <section class="form-section">
+    <h2 class="h-section">Ubicación</h2>
+    <div class="form-grid">
+      <div class="field span-2"><label for="dir">Dirección</label><input class="input" id="dir" type="text" placeholder="Ej.: Calle 10 #20-30, apto 302"></div>
+      <div class="field "><label for="barrio">Barrio <span class="opt">(opcional)</span></label><input class="input" id="barrio" type="text"></div>
+      <div class="field "><label for="ciudad">Ciudad</label><input class="input" id="ciudad" type="text" value="Villavicencio"></div>
+      <div class="field "><label for="depto">Departamento</label><input class="input" id="depto" type="text" value="Meta"></div>
+    </div>
+  </section>
+  <hr style="height:1px;border:0;background:var(--borde);margin:0">
+  <section class="form-section">
+    <h2 class="h-section">Propietario</h2>
+    <div class="form-grid">
+      <div class="field "><label for="prop">Propietario</label><select class="select" id="prop"><option selected>Selecciona un propietario</option><option>María López</option><option>Jorge Ramírez</option><option>Ana Castro</option><option>Luis Herrera</option></select></div>
+      <div class="field" style="justify-content:flex-end"><a class="btn btn-text" style="align-self:flex-start;height:48px" href="propietarios.html"><i data-icon="plus"></i>Registrar propietario nuevo</a></div>
+      <div class="field span-2"><label for="desc">Descripción <span class="opt">(opcional)</span></label><textarea class="textarea" id="desc"></textarea></div>
+    </div>
+  </section>
+  <div class="notice"><i data-icon="info"></i><span>Después de guardar configurarás los espacios y elementos que se van a inspeccionar.</span></div>
+  <div class="form-actions">
+    <a class="btn btn-secondary" href="inmuebles.html">Cancelar</a>
+    <button class="btn btn-primary" type="submit">Guardar inmueble</button>
+  </div>
+</form>
+</main>
+<script src="../assets/app.js"></script>
+</body></html>

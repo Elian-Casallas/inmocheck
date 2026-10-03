@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css"><title>Inicio de sesión · /login — InmoCheck</title></head>
+<body class="auth-body" data-layout="auth" data-route="/login">
+<main class="auth">
+  <form class="auth-card" id="form" novalidate>
+    <div class="brand" style="padding:0"><span class="brand-mark"><i data-icon="logo"></i></span>InmoCheck</div>
+    <div class="stack" style="gap:6px;padding-top:8px">
+      <h1 class="h-mobile">Iniciar sesión</h1>
+      <p class="body-sm muted">Ingresa con la cuenta que te asignó tu inmobiliaria.</p>
+    </div>
+    <div class="notice notice-error hidden" id="err" role="alert"><i data-icon="alert"></i><span>El correo o la contraseña no son correctos.</span></div>
+    <div class="stack" style="gap:16px">
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+        <input class="input" id="email" type="email" autocomplete="email" value="carlos@inmobiliaria.com">
+      </div>
+      <div class="field">
+        <label for="pass">Contraseña</label>
+        <input class="input" id="pass" type="password" autocomplete="current-password" value="demo1234">
+      </div>
+      <a class="label" href="recuperar-contrasena.html" style="align-self:flex-end">¿Olvidaste tu contraseña?</a>
+      <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
+    </div>
+    <p class="body-sm faint" style="text-align:center">¿No tienes cuenta? Solicítala al administrador de tu inmobiliaria.</p>
+  </form>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+// Prototipo: un correo que empiece por "laura" entra como inspectora; cualquier otro, como administrador.
+document.getElementById('form').addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const pass = document.getElementById('pass').value;
+  const err = document.getElementById('err');
+  if (!email || !pass) { err.classList.remove('hidden'); err.querySelector('span').textContent = 'Escribe tu correo y tu contraseña.'; return; }
+  location.href = email.startsWith('laura') ? '../2-inspector/mis-inspecciones.html' : '../1-administrador/dashboard.html';
+});
+</script>
+</body></html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="assets/styles.css">
+<title>InmoCheck — Mapa de pantallas del prototipo</title>
+<style>
+  .map{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;align-items:start}
+  @media (max-width:1000px){.map{grid-template-columns:1fr}}
+  .map .list-row{padding:12px 20px}
+  code{font:500 12px/16px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--texto-2);background:var(--sutil);padding:2px 6px;border-radius:4px}
+  .sub{padding-left:32px}
+</style></head>
+<body>
+<main class="page" style="margin:0 auto">
+  <header class="stack" style="gap:6px">
+    <div class="brand" style="padding:0"><span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V21H3z"/><path d="m9 14 2 2 4-4"/></svg></span>InmoCheck</div>
+    <h1 class="h-page">Prototipo de pantallas</h1>
+    <p class="muted">22 pantallas en 3 carpetas. Cada una se adapta a escritorio y celular. Empieza por el <a href="3-sistema-y-compartidas/login.html">inicio de sesión</a>: un correo que empiece por «laura» entra como inspectora; cualquier otro, como administrador.</p>
+  </header>
+
+  <div class="map">
+    <section class="card">
+      <div class="card-head"><h2 class="h-section">1 · Administrador</h2><span class="body-sm muted">15</span></div>
+      <div class="list" style="border-top:1px solid var(--borde)">
+        <a class="list-row" href="1-administrador/dashboard.html"><span class="grow"><span class="label">Dashboard</span><code>/dashboard</code></span></a>
+        <a class="list-row" href="1-administrador/inmuebles.html"><span class="grow"><span class="label">Listado de inmuebles</span><code>/dashboard/inmuebles</code></span></a>
+        <a class="list-row" href="1-administrador/inmueble-nuevo.html"><span class="grow"><span class="label">Registrar inmueble</span><code>/dashboard/inmuebles/nuevo</code></span></a>
+        <a class="list-row" href="1-administrador/inmueble-detalle.html"><span class="grow"><span class="label">Detalle del inmueble</span><code>/dashboard/inmuebles/[id]</code></span></a>
+        <a class="list-row" href="1-administrador/inmueble-editar.html"><span class="grow"><span class="label">Editar inmueble</span><code>/dashboard/inmuebles/[id]/editar</code></span></a>
+        <a class="list-row" href="1-administrador/inmueble-inventario.html"><span class="grow"><span class="label">Inventario</span><code>/dashboard/inmuebles/[id]/inventario</code></span></a>
+        <a class="list-row" href="1-administrador/inmueble-historial.html"><span class="grow"><span class="label">Historial</span><code>/dashboard/inmuebles/[id]/historial</code></span></a>
+        <a class="list-row" href="1-administrador/propietarios.html"><span class="grow"><span class="label">Propietarios</span><code>/dashboard/propietarios</code></span></a>
+        <a class="list-row" href="1-administrador/inspectores.html"><span class="grow"><span class="label">Inspectores</span><code>/dashboard/inspectores</code></span></a>
+        <a class="list-row" href="1-administrador/inspecciones.html"><span class="grow"><span class="label">Listado de inspecciones</span><code>/dashboard/inspecciones</code></span></a>
+        <a class="list-row" href="1-administrador/inspeccion-nueva.html"><span class="grow"><span class="label">Programar inspección</span><code>/dashboard/inspecciones/nueva</code></span></a>
+        <a class="list-row" href="1-administrador/inspeccion-comparar.html"><span class="grow"><span class="label">Comparación entrada y salida</span><code>/dashboard/inspecciones/[id]/comparar</code></span></a>
+        <a class="list-row" href="1-administrador/inspeccion-informe.html"><span class="grow"><span class="label">Visualización del informe</span><code>/dashboard/inspecciones/[id]/informe</code></span></a>
+        <a class="list-row" href="1-administrador/informes.html"><span class="grow"><span class="label">Biblioteca de informes</span><code>/dashboard/informes</code></span></a>
+        <a class="list-row" href="1-administrador/configuracion.html"><span class="grow"><span class="label">Configuración y perfil</span><code>/dashboard/configuracion</code></span></a>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2 class="h-section">2 · Inspector</h2><span class="body-sm muted">3</span></div>
+      <div class="list" style="border-top:1px solid var(--borde)">
+        <a class="list-row" href="2-inspector/mis-inspecciones.html"><span class="grow"><span class="label">Mis inspecciones</span><code>/dashboard/mis-inspecciones</code></span></a>
+        <a class="list-row" href="2-inspector/inspeccion-detalle.html"><span class="grow"><span class="label">Detalle de la inspección</span><code>/dashboard/inspecciones/[id]</code></span></a>
+        <a class="list-row sub" href="2-inspector/inspeccion-detalle.html?rol=admin"><span class="grow"><span class="body-sm">Vista del administrador</span><span class="caption faint">Reasignar, cancelar y actividad</span></span></a>
+        <a class="list-row" href="2-inspector/inspeccion-realizar.html"><span class="grow"><span class="label">Realizar inspección</span><code>/dashboard/inspecciones/[id]/realizar</code></span></a>
+      </div>
+      <div class="card-body" style="padding-top:16px"><p class="caption faint">El inspector también usa Inmuebles, Informes y Configuración de la carpeta 1, en modo solo lectura.</p></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><h2 class="h-section">3 · Sistema y compartidas</h2><span class="body-sm muted">4</span></div>
+      <div class="list" style="border-top:1px solid var(--borde)">
+        <a class="list-row" href="3-sistema-y-compartidas/sistema-de-diseno.html"><span class="grow"><span class="label">Sistema de diseño</span><span class="caption faint">Colores, textos, componentes y las 5 reglas</span></span></a>
+        <a class="list-row" href="3-sistema-y-compartidas/login.html"><span class="grow"><span class="label">Inicio de sesión</span><code>/login</code></span></a>
+        <a class="list-row" href="3-sistema-y-compartidas/recuperar-contrasena.html"><span class="grow"><span class="label">Recuperar contraseña</span><code>/recuperar-contrasena</code></span></a>
+        <a class="list-row" href="3-sistema-y-compartidas/nueva-contrasena.html"><span class="grow"><span class="label">Nueva contraseña</span><code>/auth/actualizar-contrasena</code></span></a>
+        <a class="list-row" href="3-sistema-y-compartidas/error.html?tipo=403"><span class="grow"><span class="label">Sin permiso</span><code>/403</code></span></a>
+        <a class="list-row" href="3-sistema-y-compartidas/error.html"><span class="grow"><span class="label">No encontrada</span><code>/404</code></span></a>
+      </div>
+    </section>
+  </div>
+</main>
+</body></html>

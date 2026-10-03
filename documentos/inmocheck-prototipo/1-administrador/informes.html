@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Biblioteca de informes · /dashboard/informes — InmoCheck</title></head>
+<body data-role="admin" data-active="informes" data-route="/dashboard/informes">
+<main class="page">
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">Informes</h1></div><p class="body-sm muted"><span data-only="admin">Actas generadas a partir de inspecciones finalizadas.</span><span data-only="inspector">Actas de las inspecciones que realizaste.</span></p></div>
+  
+</header>
+<div class="toolbar"><div class="search"><i data-icon="search"></i><input class="input" type="search" placeholder="Buscar por código de inmueble o de informe" aria-label="Buscar informes"></div>
+<select class="select" aria-label="Tipo"><option>Todos los tipos</option><option>Entrada</option><option>Salida</option><option>Seguimiento</option></select>
+<select class="select" aria-label="Mes"><option>Septiembre 2026</option><option>Agosto 2026</option><option>Julio 2026</option></select></div>
+<div class="card table-card"><table class="table">
+  <thead><tr><th>Inspección</th><th>Código</th><th>Generado</th><th>Inspector</th><th></th></tr></thead>
+  <tbody><tr data-href="inspeccion-informe.html"><td><div class="cell-main">APT-221 · Salida</div><div class="cell-sub">INF-2026-0142</div></td><td class="m-hide">INF-2026-0142</td><td>27 sep 2026</td><td class="m-hide">Laura Díaz</td><td class="m-right"><button class="icon-btn" aria-label="Descargar INF-2026-0142" style="color:var(--primario)"><i data-icon="download"></i></button></td></tr><tr data-href="inspeccion-informe.html" data-only="admin"><td><div class="cell-main">CASA-090 · Entrada</div><div class="cell-sub">INF-2026-0141</div></td><td class="m-hide">INF-2026-0141</td><td>26 sep 2026</td><td class="m-hide">Andrés Mora</td><td class="m-right"><button class="icon-btn" aria-label="Descargar INF-2026-0141" style="color:var(--primario)"><i data-icon="download"></i></button></td></tr><tr data-href="inspeccion-informe.html"><td><div class="cell-main">APT-302 · Seguimiento</div><div class="cell-sub">INF-2026-0139</div></td><td class="m-hide">INF-2026-0139</td><td>24 sep 2026</td><td class="m-hide">Laura Díaz</td><td class="m-right"><button class="icon-btn" aria-label="Descargar INF-2026-0139" style="color:var(--primario)"><i data-icon="download"></i></button></td></tr><tr data-href="inspeccion-informe.html" data-only="admin"><td><div class="cell-main">APT-118 · Entrada</div><div class="cell-sub">INF-2026-0136</div></td><td class="m-hide">INF-2026-0136</td><td>22 sep 2026</td><td class="m-hide">Andrés Mora</td><td class="m-right"><button class="icon-btn" aria-label="Descargar INF-2026-0136" style="color:var(--primario)"><i data-icon="download"></i></button></td></tr><tr data-href="inspeccion-informe.html" data-only="admin"><td><div class="cell-main">CASA-203 · Seguimiento</div><div class="cell-sub">INF-2026-0131</div></td><td class="m-hide">INF-2026-0131</td><td>15 sep 2026</td><td class="m-hide">Andrés Mora</td><td class="m-right"><button class="icon-btn" aria-label="Descargar INF-2026-0131" style="color:var(--primario)"><i data-icon="download"></i></button></td></tr></tbody></table></div>
+</main>
+<script src="../assets/app.js"></script>
+</body></html>

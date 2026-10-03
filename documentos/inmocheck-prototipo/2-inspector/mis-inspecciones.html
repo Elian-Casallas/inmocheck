@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css"><title>Mis inspecciones · /dashboard/mis-inspecciones — InmoCheck</title>
+<style>
+  .current{display:grid;grid-template-columns:minmax(0,1fr) minmax(200px,280px) auto;gap:16px 32px;align-items:center;padding:24px}
+  @media (max-width:760px){.current{grid-template-columns:1fr;padding:16px}.current .btn{width:100%}}
+</style></head>
+<body data-role="inspector" data-active="mis-inspecciones" data-route="/dashboard/mis-inspecciones">
+<main class="page">
+  <header class="page-header">
+    <div class="title-block">
+      <h1 class="h-page">Mis inspecciones</h1>
+      <p class="body-sm muted">Martes, 29 de septiembre de 2026</p>
+    </div>
+  </header>
+
+  <section class="stack">
+    <h2 class="h-section">En curso</h2>
+    <div class="card current">
+      <div class="stack" style="gap:6px">
+        <div class="title-row"><span class="h-section">APT-302 · Entrada</span><span class="badge badge-en-proceso">En proceso</span></div>
+        <span class="body-sm muted">Calle 10 #20-30, Centro, Villavicencio</span>
+      </div>
+      <div class="stack" style="gap:6px">
+        <span class="caption faint">Avance</span>
+        <div class="row"><div class="progress"><i style="width:60%"></i></div><span class="caption muted">9 de 15</span></div>
+      </div>
+      <a class="btn btn-primary" href="inspeccion-realizar.html">Continuar inspección</a>
+    </div>
+  </section>
+
+  <section class="stack">
+    <div class="row between wrap">
+      <h2 class="h-section">Asignadas</h2>
+      <div class="fchips" data-filter-for="#lista">
+        <button class="fchip active" data-filter="proxima">Próximas <span class="count">3</span></button>
+        <button class="fchip" data-filter="finalizada">Finalizadas <span class="count">2</span></button>
+      </div>
+    </div>
+    <div class="card table-card">
+      <table class="table" id="lista">
+        <thead><tr><th>Inmueble</th><th>Tipo</th><th>Fecha</th><th>Estado</th><th></th></tr></thead>
+        <tbody>
+          <tr data-cat="proxima" data-href="inspeccion-detalle.html"><td><div class="cell-main">CASA-118</div><div class="cell-sub">Carrera 32 #15-40, Barzal</div></td><td>Salida</td><td class="text-primary label">Hoy · 2:00 p. m.</td><td class="m-right"><span class="badge badge-pendiente">Pendiente</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr>
+          <tr data-cat="proxima" data-href="inspeccion-detalle.html"><td><div class="cell-main">APT-105</div><div class="cell-sub">Calle 7 #45-12, apto 105, Buque</div></td><td>Seguimiento</td><td>Mañana · 9:00 a. m.</td><td class="m-right"><span class="badge badge-pendiente">Pendiente</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr>
+          <tr data-cat="proxima" data-href="inspeccion-detalle.html"><td><div class="cell-main">APT-410</div><div class="cell-sub">Avenida 40 #26-18, apto 410, Centro</div></td><td>Entrada</td><td>Vie 2 oct · 10:30 a. m.</td><td class="m-right"><span class="badge badge-pendiente">Pendiente</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr>
+          <tr class="hidden" data-cat="finalizada" data-href="../1-administrador/inspeccion-informe.html"><td><div class="cell-main">APT-221</div><div class="cell-sub">Calle 15 #38-05, apto 221, San Benito</div></td><td>Salida</td><td>27 sep · 3:00 p. m.</td><td class="m-right"><span class="badge badge-finalizada">Finalizada</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr>
+          <tr class="hidden" data-cat="finalizada" data-href="../1-administrador/inspeccion-informe.html"><td><div class="cell-main">CASA-090</div><div class="cell-sub">Calle 26 #12-44, La Grama</div></td><td>Entrada</td><td>26 sep · 10:00 a. m.</td><td class="m-right"><span class="badge badge-finalizada">Finalizada</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+<script src="../assets/app.js"></script>
+</body></html>

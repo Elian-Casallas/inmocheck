@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css"><title>Nueva contraseña · /auth/actualizar-contrasena — InmoCheck</title></head>
+<body class="auth-body" data-layout="auth" data-route="/auth/actualizar-contrasena">
+<main class="auth">
+  <form class="auth-card" id="form" novalidate>
+    <div class="brand" style="padding:0"><span class="brand-mark"><i data-icon="logo"></i></span>InmoCheck</div>
+    <div id="paso1" class="stack" style="gap:20px">
+      <div class="stack" style="gap:6px;padding-top:8px">
+        <h1 class="h-mobile">Crea una nueva contraseña</h1>
+        <p class="body-sm muted">Usa al menos 8 caracteres.</p>
+      </div>
+      <div class="field" id="f1">
+        <label for="p1">Nueva contraseña</label>
+        <input class="input" id="p1" type="password" autocomplete="new-password">
+        <span class="hint" id="h1">Mínimo 8 caracteres.</span>
+      </div>
+      <div class="field" id="f2">
+        <label for="p2">Confirmar contraseña</label>
+        <input class="input" id="p2" type="password" autocomplete="new-password">
+        <span class="hint hidden" id="h2">Las contraseñas no coinciden.</span>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">Guardar contraseña</button>
+    </div>
+    <div id="paso2" class="stack hidden" style="gap:20px">
+      <div class="notice notice-ok"><i data-icon="check"></i><span>Contraseña guardada. Ya puedes iniciar sesión.</span></div>
+      <a class="btn btn-primary btn-block" href="login.html">Ir a iniciar sesión</a>
+    </div>
+  </form>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+document.getElementById('form').addEventListener('submit', e => {
+  e.preventDefault();
+  const a = document.getElementById('p1').value, b = document.getElementById('p2').value;
+  const okLen = a.length >= 8, okEq = a === b && b.length > 0;
+  document.getElementById('f1').classList.toggle('has-error', !okLen);
+  document.getElementById('f2').classList.toggle('has-error', okLen && !okEq);
+  document.getElementById('h2').classList.toggle('hidden', !okLen || okEq);
+  if (okLen && okEq) { document.getElementById('paso1').classList.add('hidden'); document.getElementById('paso2').classList.remove('hidden'); }
+});
+</script>
+</body></html>

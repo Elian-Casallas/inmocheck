@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Historial del inmueble · /dashboard/inmuebles/[id]/historial — InmoCheck</title></head>
+<body data-role="admin" data-active="inmuebles" data-route="/dashboard/inmuebles/[id]/historial">
+<main class="page">
+<a class="back-link" href="inmuebles.html"><i data-icon="arrow-left"></i>Inmuebles</a>
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">APT-302</h1><span class="badge badge-activo">Activo</span></div><p class="body-sm muted">Apartamento · Calle 10 #20-30, apto 302, Centro, Villavicencio</p></div>
+  <div class="actions"><a class="btn btn-secondary" data-only="admin" href="inmueble-editar.html">Editar</a><a class="btn btn-primary" data-only="admin" href="inspeccion-nueva.html">Programar inspección</a></div>
+</header>
+<nav class="tabs" aria-label="Secciones del inmueble"><a class="tab" href="inmueble-detalle.html">Resumen</a><a class="tab" href="inmueble-inventario.html">Inventario</a><a class="tab active" href="inmueble-historial.html" aria-current=page>Historial</a></nav>
+<div class="fchips" data-filter-for="#hist">
+  <button class="fchip active" data-filter="all">Todas <span class="count">5</span></button>
+  <button class="fchip" data-filter="entrada">Entrada <span class="count">2</span></button>
+  <button class="fchip" data-filter="salida">Salida <span class="count">1</span></button>
+  <button class="fchip" data-filter="seguimiento">Seguimiento <span class="count">2</span></button>
+</div>
+<div class="card table-card"><table class="table" id="hist">
+  <thead><tr><th>Tipo</th><th>Fecha</th><th>Inspector</th><th>Estado</th><th>Documentos</th></tr></thead>
+  <tbody><tr data-cat="entrada"><td><div class="cell-main">Entrada</div><div class="cell-sub">Laura Díaz</div></td><td>28 sep 2026</td><td class="m-hide">Laura Díaz</td><td class="m-right"><span class="badge badge-en-proceso">En proceso</span></td><td><span class="faint">—</span></td></tr><tr data-cat="seguimiento"><td><div class="cell-main">Seguimiento</div><div class="cell-sub">Laura Díaz</div></td><td>24 sep 2026</td><td class="m-hide">Laura Díaz</td><td class="m-right"><span class="badge badge-finalizada">Finalizada</span></td><td><a class="label" href="inspeccion-informe.html">Informe</a></td></tr><tr data-cat="seguimiento"><td><div class="cell-main">Seguimiento</div><div class="cell-sub">Andrés Mora</div></td><td>10 jun 2025</td><td class="m-hide">Andrés Mora</td><td class="m-right"><span class="badge badge-cancelada">Cancelada</span></td><td><span class="faint">—</span></td></tr><tr data-cat="salida"><td><div class="cell-main">Salida</div><div class="cell-sub">Andrés Mora</div></td><td>15 ene 2025</td><td class="m-hide">Andrés Mora</td><td class="m-right"><span class="badge badge-finalizada">Finalizada</span></td><td><a class="label" href="inspeccion-informe.html">Informe</a> · <a class="label" href="inspeccion-comparar.html">Comparar</a></td></tr><tr data-cat="entrada"><td><div class="cell-main">Entrada</div><div class="cell-sub">Andrés Mora</div></td><td>20 ene 2024</td><td class="m-hide">Andrés Mora</td><td class="m-right"><span class="badge badge-finalizada">Finalizada</span></td><td><a class="label" href="inspeccion-informe.html">Informe</a></td></tr></tbody></table></div>
+<p class="caption faint">Las inspecciones finalizadas no se pueden editar. Las correcciones se agregan como anotaciones que conservan el dato original.</p>
+</main>
+<script src="../assets/app.js"></script>
+</body></html>

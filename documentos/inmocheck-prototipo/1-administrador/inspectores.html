@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Gestión de inspectores · /dashboard/inspectores — InmoCheck</title></head>
+<body data-role="admin" data-active="inspectores" data-route="/dashboard/inspectores">
+<main class="page">
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">Inspectores</h1></div><p class="body-sm muted">Personas que realizan las inspecciones en campo.</p></div>
+  <div class="actions"><button class="btn btn-primary" data-open="d-invitar"><i data-icon="mail"></i>Invitar inspector</button></div>
+</header>
+<div class="toolbar"><div class="search"><i data-icon="search"></i><input class="input" type="search" placeholder="Buscar por nombre o correo" aria-label="Buscar inspectores"></div>
+<select class="select" aria-label="Estado"><option>Todos los estados</option><option>Activos</option><option>Invitación enviada</option><option>Inactivos</option></select></div>
+<div class="card table-card"><table class="table">
+  <thead><tr><th>Nombre</th><th>Correo</th><th>Inspecciones</th><th>Estado</th><th></th></tr></thead>
+  <tbody><tr data-open="d-insp" style="cursor:pointer"><td><div class="cell-main">Laura Díaz</div><div class="cell-sub">laura@inmobiliaria.com</div></td><td class="m-hide">laura@inmobiliaria.com</td><td>4 abiertas</td><td class="m-right"><span class="badge badge-activo">Activo</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr><tr data-open="d-insp" style="cursor:pointer"><td><div class="cell-main">Andrés Mora</div><div class="cell-sub">andres@inmobiliaria.com</div></td><td class="m-hide">andres@inmobiliaria.com</td><td>1 abiertas</td><td class="m-right"><span class="badge badge-activo">Activo</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr><tr data-open="d-insp" style="cursor:pointer"><td><div class="cell-main">Paula Gómez</div><div class="cell-sub">paula@inmobiliaria.com</div></td><td class="m-hide">paula@inmobiliaria.com</td><td>0 abiertas</td><td class="m-right"><span class="badge badge-pendiente">Invitación enviada</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr><tr data-open="d-insp" style="cursor:pointer"><td><div class="cell-main">Julián Pérez</div><div class="cell-sub">julian@inmobiliaria.com</div></td><td class="m-hide">julian@inmobiliaria.com</td><td>0 abiertas</td><td class="m-right"><span class="badge badge-inactivo">Inactivo</span></td><td class="chev"><i data-icon="chevron-right"></i></td></tr></tbody></table></div>
+</main>
+<div class="drawer" id="d-invitar" role="dialog" aria-labelledby="t-d-invitar">
+  <div class="drawer-head"><h2 class="h-section" id="t-d-invitar">Invitar inspector</h2><button class="icon-btn" data-close aria-label="Cerrar"><i data-icon="x"></i></button></div>
+  <div class="drawer-body"><div class="field "><label for="in">Nombre completo</label><input class="input" id="in" type="text" placeholder="Ej.: Paula Gómez"></div><div class="field "><label for="ie">Correo</label><input class="input" id="ie" type="email" placeholder="nombre@inmobiliaria.com"></div><div class="notice"><i data-icon="info"></i><span>Recibirá un correo para crear su contraseña. Entrará con el rol de inspector en tu inmobiliaria.</span></div></div>
+  <div class="drawer-foot"><button class="btn btn-secondary" data-close>Cancelar</button><button class="btn btn-primary" data-close>Enviar invitación</button></div>
+</div>
+<div class="drawer" id="d-insp" role="dialog" aria-labelledby="t-d-insp">
+  <div class="drawer-head"><h2 class="h-section" id="t-d-insp">Laura Díaz</h2><button class="icon-btn" data-close aria-label="Cerrar"><i data-icon="x"></i></button></div>
+  <div class="drawer-body"><dl class="dl"><div><dt>Correo</dt><dd>laura@inmobiliaria.com</dd></div><div><dt>Estado</dt><dd>Activa desde el 3 feb 2025</dd></div></dl>
+<div class="stack" style="gap:8px"><span class="label">Inspecciones abiertas</span><div class="card list">
+<a class="list-row" href="../2-inspector/inspeccion-detalle.html?rol=admin"><div class="grow"><span class="label">CASA-118 · Salida</span><span class="caption faint">Hoy · 2:00 p. m.</span></div><span class="badge badge-pendiente">Pendiente</span></a>
+<a class="list-row" href="../2-inspector/inspeccion-detalle.html?rol=admin"><div class="grow"><span class="label">APT-302 · Entrada</span><span class="caption faint">Ayer · 9:00 a. m.</span></div><span class="badge badge-en-proceso">En proceso</span></a>
+<a class="list-row" href="../2-inspector/inspeccion-detalle.html?rol=admin"><div class="grow"><span class="label">APT-105 · Seguimiento</span><span class="caption faint">Mañana · 9:00 a. m.</span></div><span class="badge badge-pendiente">Pendiente</span></a>
+<a class="list-row" href="../2-inspector/inspeccion-detalle.html?rol=admin"><div class="grow"><span class="label">APT-410 · Entrada</span><span class="caption faint">Vie 2 oct</span></div><span class="badge badge-pendiente">Pendiente</span></a>
+</div></div>
+<div class="notice"><i data-icon="info"></i><span>Si desactivas la cuenta, sus inspecciones pasadas se conservan. Reasigna antes las que estén abiertas.</span></div></div>
+  <div class="drawer-foot"><button class="btn btn-danger" data-close>Desactivar cuenta</button></div>
+</div>
+<script src="../assets/app.js"></script>
+</body></html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Crear y programar inspección · /dashboard/inspecciones/nueva — InmoCheck</title></head>
+<body data-role="admin" data-active="inspecciones" data-route="/dashboard/inspecciones/nueva">
+<main class="page page-narrow">
+<a class="back-link" href="inspecciones.html"><i data-icon="arrow-left"></i>Inspecciones</a>
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">Programar inspección</h1></div></div>
+  
+</header>
+<form class="card card-pad form" onsubmit="event.preventDefault();location.href='../2-inspector/inspeccion-detalle.html?rol=admin'">
+  <section class="form-section">
+    <h2 class="h-section">Inmueble</h2>
+    <div class="field "><label for="inm">Inmueble</label><select class="select" id="inm"><option>CASA-118 · Carrera 32 #15-40, Barzal</option><option>APT-302 · Calle 10 #20-30, Centro</option><option>APT-105 · Calle 7 #45-12, Buque</option></select><span class="hint">Solo aparecen inmuebles activos con inventario configurado.</span></div>
+    <div class="notice"><i data-icon="info"></i><span>Se revisarán 15 elementos en 4 espacios. <a href="inmueble-inventario.html">Ver inventario</a></span></div>
+  </section>
+  <hr style="height:1px;border:0;background:var(--borde);margin:0">
+  <section class="form-section">
+    <h2 class="h-section">Tipo de inspección</h2>
+    <div class="choice-grid" role="radiogroup" aria-label="Tipo de inspección">
+      <label class="choice"><input type="radio" name="tipo" value="entrada"><span><span class="label">Entrada</span><span class="caption faint">Al entregar el inmueble</span></span></label>
+      <label class="choice"><input type="radio" name="tipo" value="salida" checked><span><span class="label">Salida</span><span class="caption faint">Al recibirlo de vuelta</span></span></label>
+      <label class="choice"><input type="radio" name="tipo" value="seguimiento"><span><span class="label">Seguimiento</span><span class="caption faint">Revisión periódica</span></span></label>
+    </div>
+    <div class="notice" id="cmp-note"><i data-icon="compare"></i><span>Al finalizar podrá compararse con la entrada del 3 mar 2025.</span></div>
+  </section>
+  <hr style="height:1px;border:0;background:var(--borde);margin:0">
+  <section class="form-section">
+    <h2 class="h-section">Programación</h2>
+    <div class="form-grid">
+      <div class="field "><label for="fecha">Fecha</label><input class="input" id="fecha" type="date" value="2026-09-29"></div>
+      <div class="field "><label for="hora">Hora</label><input class="input" id="hora" type="time" value="14:00"></div>
+      <div class="field span-2"><label for="insp">Inspector responsable</label><select class="select" id="insp"><option>Laura Díaz</option><option>Andrés Mora</option></select><span class="hint">Solo aparecen inspectores activos de tu inmobiliaria.</span></div>
+      <div class="field span-2"><label for="nota">Nota para el inspector <span class="opt">(opcional)</span></label><textarea class="textarea" id="nota" placeholder="Ej.: Revisar especialmente la cocina"></textarea></div>
+    </div>
+  </section>
+  <div class="form-actions"><a class="btn btn-secondary" href="inspecciones.html">Cancelar</a><button class="btn btn-primary" type="submit">Programar inspección</button></div>
+</form>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+document.querySelectorAll('input[name=tipo]').forEach(r => r.addEventListener('change', () => {
+  document.getElementById('cmp-note').classList.toggle('hidden', r.value !== 'salida' || !r.checked);
+}));</script>
+</body></html>

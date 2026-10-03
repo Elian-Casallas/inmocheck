@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Editar inmueble · /dashboard/inmuebles/[id]/editar — InmoCheck</title></head>
+<body data-role="admin" data-active="inmuebles" data-route="/dashboard/inmuebles/[id]/editar">
+<main class="page page-narrow">
+<a class="back-link" href="inmueble-detalle.html"><i data-icon="arrow-left"></i>APT-302</a>
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">Editar APT-302</h1></div></div>
+  
+</header>
+<form class="card card-pad form" onsubmit="event.preventDefault();location.href='inmueble-detalle.html'">
+  <section class="form-section">
+    <h2 class="h-section">Datos generales</h2>
+    <div class="form-grid">
+      <div class="field "><label for="codigo">Código interno</label><input class="input" id="codigo" type="text" value="APT-302" placeholder="Ej.: APT-302"><span class="hint">Debe ser único en tu inmobiliaria.</span></div>
+      <div class="field "><label for="tipo">Tipo</label><select class="select" id="tipo"><option selected>Apartamento</option><option>Casa</option><option>Otro</option></select></div>
+      <div class="field "><label for="hab">Habitaciones</label><input class="input" id="hab" type="number" value="3" placeholder="0"></div>
+      <div class="field "><label for="banos">Baños</label><input class="input" id="banos" type="number" value="2" placeholder="0"></div>
+      <div class="field "><label for="area">Área en m² <span class="opt">(opcional)</span></label><input class="input" id="area" type="text" value="85,5" placeholder="Ej.: 85,5"></div>
+    </div>
+  </section>
+  <hr class="divider" style="height:1px;border:0;background:var(--borde);margin:0">
+  <section class="form-section">
+    <h2 class="h-section">Ubicación</h2>
+    <div class="form-grid">
+      <div class="field span-2"><label for="dir">Dirección</label><input class="input" id="dir" type="text" value="Calle 10 #20-30, apto 302" placeholder="Ej.: Calle 10 #20-30, apto 302"></div>
+      <div class="field "><label for="barrio">Barrio <span class="opt">(opcional)</span></label><input class="input" id="barrio" type="text" value="Centro"></div>
+      <div class="field "><label for="ciudad">Ciudad</label><input class="input" id="ciudad" type="text" value="Villavicencio"></div>
+      <div class="field "><label for="depto">Departamento</label><input class="input" id="depto" type="text" value="Meta"></div>
+    </div>
+  </section>
+  <hr style="height:1px;border:0;background:var(--borde);margin:0">
+  <section class="form-section">
+    <h2 class="h-section">Propietario</h2>
+    <div class="form-grid">
+      <div class="field "><label for="prop">Propietario</label><select class="select" id="prop"><option selected>María López</option><option>Jorge Ramírez</option><option>Ana Castro</option><option>Luis Herrera</option></select></div>
+      <div class="field" style="justify-content:flex-end"><a class="btn btn-text" style="align-self:flex-start;height:48px" href="propietarios.html"><i data-icon="plus"></i>Registrar propietario nuevo</a></div>
+      <div class="field span-2"><label for="desc">Descripción <span class="opt">(opcional)</span></label><textarea class="textarea" id="desc">Apartamento residencial en tercer piso, con balcón.</textarea></div>
+    </div>
+  </section>
+  
+  <div class="form-actions">
+    <a class="btn btn-secondary" href="inmueble-detalle.html">Cancelar</a>
+    <button class="btn btn-primary" type="submit">Guardar cambios</button>
+  </div>
+</form>
+
+<section class="card card-pad row between wrap" style="gap:16px">
+  <div class="stack" style="gap:2px;max-width:520px"><h2 class="h-section">Desactivar inmueble</h2><p class="body-sm muted">Dejará de aparecer para nuevas inspecciones. Su historial y sus informes se conservan.</p></div>
+  <button class="btn btn-danger" type="button" data-open="d-desactivar">Desactivar</button>
+</section>
+</main>
+<div class="drawer" id="d-desactivar" role="dialog" aria-labelledby="t-d-desactivar">
+  <div class="drawer-head"><h2 class="h-section" id="t-d-desactivar">Desactivar APT-302</h2><button class="icon-btn" data-close aria-label="Cerrar"><i data-icon="x"></i></button></div>
+  <div class="drawer-body"><p class="body-sm muted">El inmueble quedará inactivo. No se borran sus inspecciones, fotos ni informes.</p>
+<div class="notice"><i data-icon="info"></i><span>No se puede desactivar mientras tenga inspecciones pendientes o en proceso.</span></div></div>
+  <div class="drawer-foot"><button class="btn btn-secondary" data-close>Volver</button><button class="btn btn-danger" data-close>Desactivar inmueble</button></div>
+</div>
+<script src="../assets/app.js"></script>
+</body></html>

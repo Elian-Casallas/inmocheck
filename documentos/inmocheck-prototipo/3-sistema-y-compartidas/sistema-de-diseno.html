@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Sistema de diseño — InmoCheck</title>
+<style>
+  .sw{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .sw div{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--texto-2)}
+  .sw b{display:block;height:56px;border-radius:var(--r-sm);border:1px solid var(--borde)}
+  .ds-sec{display:flex;flex-direction:column;gap:16px}
+  .rules{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+  .rules .card{padding:16px;display:flex;flex-direction:column;gap:4px}
+</style></head>
+<body data-layout="doc">
+<main class="page page-narrow" style="margin:0 auto">
+  <a class="back-link" href="../index.html"><i data-icon="arrow-left"></i>Mapa de pantallas</a>
+  <div class="stack" style="gap:6px">
+    <div class="brand" style="padding:0"><span class="brand-mark"><i data-icon="logo"></i></span>InmoCheck</div>
+    <h1 class="h-page">Sistema de diseño</h1>
+    <p class="muted">Todas las pantallas usan estas piezas. Si cambias un valor en <code>assets/styles.css</code>, cambia en todo el prototipo.</p>
+  </div>
+
+  <section class="ds-sec">
+    <h2 class="h-section">Las cinco reglas</h2>
+    <div class="rules">
+      <div class="card"><span class="label">Jerarquía</span><span class="body-sm muted">Un título y un solo botón primario por pantalla.</span></div>
+      <div class="card"><span class="label">Contraste</span><span class="body-sm muted">El color solo comunica estado; siempre va con texto.</span></div>
+      <div class="card"><span class="label">Alineación</span><span class="body-sm muted">Márgenes de 16 / 24 / 40 px y espaciado en múltiplos de 4.</span></div>
+      <div class="card"><span class="label">Proximidad</span><span class="body-sm muted">Fotos y observaciones dentro de la tarjeta de su elemento.</span></div>
+      <div class="card"><span class="label">Consistencia</span><span class="body-sm muted">Mismo menú, botones, estados y textos en todo el sistema.</span></div>
+    </div>
+  </section>
+
+  <section class="ds-sec">
+    <h2 class="h-section">Color de marca y neutros</h2>
+    <div class="sw">
+      <div><b style="background:var(--primario)"></b>Primario #1D4ED8</div>
+      <div><b style="background:var(--primario-suave)"></b>Primario suave #EFF4FF</div>
+      <div><b style="background:var(--texto)"></b>Texto #0F172A</div>
+      <div><b style="background:var(--texto-2)"></b>Texto secundario #475569</div>
+      <div><b style="background:var(--fondo)"></b>Fondo #F6F8FB</div>
+      <div><b style="background:var(--borde)"></b>Borde #E2E8F0</div>
+    </div>
+  </section>
+
+  <section class="ds-sec">
+    <h2 class="h-section">Estados de una inspección</h2>
+    <div class="row wrap">
+      <span class="badge badge-pendiente">Pendiente</span>
+      <span class="badge badge-en-proceso">En proceso</span>
+      <span class="badge badge-finalizada">Finalizada</span>
+      <span class="badge badge-cancelada">Cancelada</span>
+    </div>
+  </section>
+
+  <section class="ds-sec">
+    <h2 class="h-section">Estado de un elemento</h2>
+    <div class="state-options" role="radiogroup" aria-label="Ejemplo de estado">
+      <label class="state-opt" style="--c:var(--excelente)"><input type="radio" name="demo"><span>Excelente</span></label>
+      <label class="state-opt" style="--c:var(--bueno)"><input type="radio" name="demo"><span>Bueno</span></label>
+      <label class="state-opt" style="--c:var(--regular)"><input type="radio" name="demo" checked><span>Regular</span></label>
+      <label class="state-opt" style="--c:var(--danado)"><input type="radio" name="demo"><span>Dañado</span></label>
+      <label class="state-opt" style="--c:var(--no-aplica)"><input type="radio" name="demo"><span>No aplica</span></label>
+    </div>
+    <div class="row wrap" style="gap:20px">
+      <span class="state s-excelente">Excelente</span><span class="state s-bueno">Bueno</span><span class="state s-regular">Regular</span><span class="state s-danado">Dañado</span><span class="state s-no-aplica">No aplica</span><span class="state s-none">Sin evaluar</span>
+    </div>
+  </section>
+
+  <section class="ds-sec">
+    <h2 class="h-section">Tipografía (Inter)</h2>
+    <div class="card card-pad stack">
+      <span class="h-page">Título de pantalla · 28 / 36</span>
+      <span class="h-mobile">Título en móvil · 20 / 28</span>
+      <span class="h-section">Título de sección · 17 / 24</span>
+      <span>Cuerpo · 16 / 24</span>
+      <span class="body-sm">Cuerpo pequeño · 14 / 20</span>
+      <span class="caption">Etiqueta pequeña · 12 / 16</span>
+    </div>
+  </section>
+
+  <section class="ds-sec">
+    <h2 class="h-section">Botones</h2>
+    <div class="row wrap">
+      <button class="btn btn-primary">Primario</button>
+      <button class="btn btn-secondary">Secundario</button>
+      <button class="btn btn-text">Texto</button>
+      <button class="btn btn-danger">Acción delicada</button>
+    </div>
+  </section>
+
+  <section class="ds-sec">
+    <h2 class="h-section">Campos y fotos</h2>
+    <div class="form-grid">
+      <div class="field"><label for="a">Campo normal</label><input class="input" id="a" placeholder="Escribe aquí"></div>
+      <div class="field has-error"><label for="b">Campo con error</label><input class="input" id="b" value="APT-302"><span class="hint">Ya existe un inmueble con este código.</span></div>
+    </div>
+    <div class="thumbs"><span class="thumb"><i data-icon="image"></i></span><span class="thumb"><i data-icon="image"></i></span><button class="thumb-add"><i data-icon="camera"></i>Foto</button></div>
+  </section>
+</main>
+<script src="../assets/app.js"></script>
+</body></html>

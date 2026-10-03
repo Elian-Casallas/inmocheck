@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css"><title>Error 403 / 404 · /403 y /404 — InmoCheck</title></head>
+<body class="auth-body" data-layout="auth" data-route="/404">
+<main class="auth">
+  <div class="auth-card" style="text-align:center;align-items:center">
+    <div class="brand" style="padding:0"><span class="brand-mark"><i data-icon="logo"></i></span>InmoCheck</div>
+    <p class="h-page faint" id="code" style="font-size:48px;line-height:56px">404</p>
+    <div class="stack" style="gap:6px">
+      <h1 class="h-mobile" id="title">No encontramos esta página</h1>
+      <p class="body-sm muted" id="text">Puede que el enlace esté mal escrito o que el registro no exista.</p>
+    </div>
+    <a class="btn btn-primary btn-block" href="../1-administrador/dashboard.html" id="home">Volver al inicio</a>
+  </div>
+</main>
+<script src="../assets/app.js"></script>
+<script>
+// /403 no muestra detalles del recurso para no filtrar información de otras inmobiliarias.
+if (new URLSearchParams(location.search).get('tipo') === '403') {
+  document.getElementById('code').textContent = '403';
+  document.getElementById('title').textContent = 'No tienes permiso para ver esto';
+  document.getElementById('text').textContent = 'Tu cuenta no tiene acceso a esta sección. Si crees que es un error, habla con el administrador de tu inmobiliaria.';
+  const t = document.querySelector('.route-tag'); if (t) t.textContent = '/403';
+}
+</script>
+</body></html>

@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+/* =========================================================
+   InmoCheck — Tokens de diseño (Tailwind CSS v4)
+   Mismos valores que el prototipo: docs/prototipo/assets/styles.css
+   Cada variable --color-X crea clases como bg-X, text-X, border-X.
+   ========================================================= */
+@theme {
+  /* ---------- Marca ---------- */
+  --color-primario: #1d4ed8;
+  --color-primario-hover: #1e40af;
+  --color-primario-suave: #eff4ff;
+
+  /* ---------- Texto ---------- */
+  --color-texto-principal: #0f172a;
+  --color-texto-secundario: #475569;
+  --color-texto-tenue: #64748b;
+
+  /* ---------- Superficies y bordes ---------- */
+  --color-fondo: #f6f8fb;
+  --color-tarjeta: #ffffff;
+  --color-sutil: #f1f5f9;
+  --color-borde: #e2e8f0;
+  --color-borde-fuerte: #cbd5e1;
+
+  /* ---------- Estados de una inspección ---------- */
+  --color-inspeccion-pendiente: #b45309;
+  --color-inspeccion-pendiente-fondo: #fef3c7;
+  --color-inspeccion-en-proceso: #0369a1;
+  --color-inspeccion-en-proceso-fondo: #e0f2fe;
+  --color-inspeccion-finalizada: #15803d;
+  --color-inspeccion-finalizada-fondo: #dcfce7;
+  --color-inspeccion-cancelada: #475569;
+  --color-inspeccion-cancelada-fondo: #f1f5f9;
+
+  /* ---------- Estado de un elemento inspeccionado ---------- */
+  --color-estado-excelente: #15803d;
+  --color-estado-bueno: #4d7c0f;
+  --color-estado-regular: #b45309;
+  --color-estado-danado: #b91c1c;
+  --color-estado-no-aplica: #64748b;
+
+  /* ---------- Mensajes ---------- */
+  --color-error: #b91c1c;
+  --color-error-fondo: #fef2f2;
+  --color-error-borde: #fecaca;
+  --color-exito: #15803d;
+  --color-exito-fondo: #dcfce7;
+
+  /* ---------- Tipografía: tamaño + interlineado ----------
+     Uso: text-titulo-pantalla, text-cuerpo-sm, text-pequeno… */
+  --text-titulo-pantalla: 28px;
+  --text-titulo-pantalla--line-height: 36px;
+  --text-titulo-movil: 20px;
+  --text-titulo-movil--line-height: 28px;
+  --text-titulo-seccion: 17px;
+  --text-titulo-seccion--line-height: 24px;
+  --text-boton: 15px;
+  --text-boton--line-height: 20px;
+  --text-cuerpo: 16px;
+  --text-cuerpo--line-height: 24px;
+  --text-cuerpo-sm: 14px;
+  --text-cuerpo-sm--line-height: 20px;
+  --text-pequeno: 12px;
+  --text-pequeno--line-height: 16px;
+
+  /* ---------- Formas y sombras ---------- */
+  --radius-boton: 10px;              /* rounded-boton */
+  --shadow-tarjeta: 0 8px 24px rgb(15 23 42 / 0.06); /* shadow-tarjeta */
+}
+
+/* La fuente Inter la carga next/font en layout.tsx (variable --font-inter).
+   "inline" hace que Tailwind use esa variable tal cual en la clase font-sans. */
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-fondo text-cuerpo text-texto-principal;
+  }
+
+  :focus-visible {
+    outline: 3px solid rgb(29 78 216 / 0.35);
+    outline-offset: 2px;
+  }
+}

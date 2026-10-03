@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Inventario del inmueble · /dashboard/inmuebles/[id]/inventario — InmoCheck</title></head>
+<body data-role="admin" data-active="inmuebles" data-route="/dashboard/inmuebles/[id]/inventario">
+<main class="page">
+<a class="back-link" href="inmuebles.html"><i data-icon="arrow-left"></i>Inmuebles</a>
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">APT-302</h1><span class="badge badge-activo">Activo</span></div><p class="body-sm muted">Apartamento · Calle 10 #20-30, apto 302, Centro, Villavicencio</p></div>
+  <div class="actions"><a class="btn btn-secondary" data-only="admin" href="inmueble-editar.html">Editar</a><a class="btn btn-primary" data-only="admin" href="inspeccion-nueva.html">Programar inspección</a></div>
+</header>
+<nav class="tabs" aria-label="Secciones del inmueble"><a class="tab" href="inmueble-detalle.html">Resumen</a><a class="tab active" href="inmueble-inventario.html" aria-current=page>Inventario</a><a class="tab" href="inmueble-historial.html">Historial</a></nav>
+<div class="notice"><i data-icon="info"></i><span>Los cambios aplican a las inspecciones que se programen desde ahora. Las inspecciones ya creadas conservan su propia copia del inventario.</span></div>
+<div class="stack" id="espacios"><section class="card">
+  <div class="card-head"><h2 class="h-section">Cocina</h2><span class="body-sm muted">5 elementos</span></div>
+  <div class="list" style="border-top:1px solid var(--borde)"><div class="list-row"><span class="body-sm grow">Grifería</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Grifería obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Paredes</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Paredes obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Enchufes</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Enchufes obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Gabinetes</span><label class="switch"><input type="checkbox" data-admin-only aria-label="Gabinetes obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Mesón</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Mesón obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div>
+    <form class="list-row" data-only="admin" onsubmit="event.preventDefault();addEl(this)"><input class="input grow" placeholder="Nuevo elemento, ej.: Ventana" aria-label="Nuevo elemento en Cocina"><button class="btn btn-secondary btn-sm" type="submit"><i data-icon="plus"></i>Agregar</button></form>
+  </div>
+</section><section class="card">
+  <div class="card-head"><h2 class="h-section">Baño</h2><span class="body-sm muted">3 elementos</span></div>
+  <div class="list" style="border-top:1px solid var(--borde)"><div class="list-row"><span class="body-sm grow">Sanitario</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Sanitario obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Ducha</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Ducha obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Lavamanos</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Lavamanos obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div>
+    <form class="list-row" data-only="admin" onsubmit="event.preventDefault();addEl(this)"><input class="input grow" placeholder="Nuevo elemento, ej.: Ventana" aria-label="Nuevo elemento en Baño"><button class="btn btn-secondary btn-sm" type="submit"><i data-icon="plus"></i>Agregar</button></form>
+  </div>
+</section><section class="card">
+  <div class="card-head"><h2 class="h-section">Habitación 1</h2><span class="body-sm muted">4 elementos</span></div>
+  <div class="list" style="border-top:1px solid var(--borde)"><div class="list-row"><span class="body-sm grow">Puerta</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Puerta obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Ventana</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Ventana obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Piso</span><label class="switch"><input type="checkbox" data-admin-only aria-label="Piso obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Clóset</span><label class="switch"><input type="checkbox" data-admin-only aria-label="Clóset obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div>
+    <form class="list-row" data-only="admin" onsubmit="event.preventDefault();addEl(this)"><input class="input grow" placeholder="Nuevo elemento, ej.: Ventana" aria-label="Nuevo elemento en Habitación 1"><button class="btn btn-secondary btn-sm" type="submit"><i data-icon="plus"></i>Agregar</button></form>
+  </div>
+</section><section class="card">
+  <div class="card-head"><h2 class="h-section">Sala</h2><span class="body-sm muted">3 elementos</span></div>
+  <div class="list" style="border-top:1px solid var(--borde)"><div class="list-row"><span class="body-sm grow">Piso</span><label class="switch"><input type="checkbox" checked data-admin-only aria-label="Piso obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Paredes</span><label class="switch"><input type="checkbox" data-admin-only aria-label="Paredes obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div><div class="list-row"><span class="body-sm grow">Iluminación</span><label class="switch"><input type="checkbox" data-admin-only aria-label="Iluminación obligatorio"><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm" data-only="admin">Desactivar</button></div>
+    <form class="list-row" data-only="admin" onsubmit="event.preventDefault();addEl(this)"><input class="input grow" placeholder="Nuevo elemento, ej.: Ventana" aria-label="Nuevo elemento en Sala"><button class="btn btn-secondary btn-sm" type="submit"><i data-icon="plus"></i>Agregar</button></form>
+  </div>
+</section></div>
+<button class="btn btn-secondary" data-only="admin" data-open="d-espacio" style="align-self:flex-start"><i data-icon="plus"></i>Agregar espacio</button>
+</main>
+<div class="drawer" id="d-espacio" role="dialog" aria-labelledby="t-d-espacio">
+  <div class="drawer-head"><h2 class="h-section" id="t-d-espacio">Agregar espacio</h2><button class="icon-btn" data-close aria-label="Cerrar"><i data-icon="x"></i></button></div>
+  <div class="drawer-body"><div class="field "><label for="esp">Nombre del espacio</label><input class="input" id="esp" type="text" placeholder="Ej.: Balcón, Habitación 2"></div></div>
+  <div class="drawer-foot"><button class="btn btn-secondary" data-close>Cancelar</button><button class="btn btn-primary" data-close>Agregar espacio</button></div>
+</div>
+<script src="../assets/app.js"></script>
+<script>
+if (document.body.dataset.role === 'inspector') document.querySelectorAll('[data-admin-only]').forEach(i => i.disabled = true);
+function addEl(f){ const i = f.querySelector('input'); if(!i.value.trim()) { i.focus(); return; }
+  const r = document.createElement('div'); r.className = 'list-row';
+  r.innerHTML = `<span class="body-sm grow"></span><label class="switch"><input type="checkbox" checked><span class="caption muted">Obligatorio</span></label><button class="btn btn-text btn-sm">Desactivar</button>`;
+  r.querySelector('span').textContent = i.value.trim(); f.before(r); i.value=''; }
+</script>
+</body></html>

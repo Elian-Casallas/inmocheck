@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Visualización del informe · /dashboard/inspecciones/[id]/informe — InmoCheck</title><style>
+.paper{background:#fff;border:1px solid var(--borde);border-radius:var(--r-md);box-shadow:var(--sombra);padding:40px;display:flex;flex-direction:column;gap:24px}
+@media (max-width:640px){.paper{padding:20px}}
+.ptable{width:100%;border-collapse:collapse;font-size:13px}
+.ptable th{text-align:left;font-weight:500;color:var(--texto-2);border-bottom:1px solid var(--borde-fuerte);padding:6px 8px}
+.ptable td{border-bottom:1px solid var(--borde);padding:6px 8px;vertical-align:top}
+</style></head>
+<body data-role="admin" data-active="informes" data-route="/dashboard/inspecciones/[id]/informe">
+<main class="page">
+<a class="back-link" href="informes.html"><i data-icon="arrow-left"></i>Informes</a>
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">Informe de APT-221 · Salida</h1><span class="badge badge-finalizada">Finalizada</span></div><p class="body-sm muted">Inspección finalizada el 27 sep 2026 por Laura Díaz</p></div>
+  <div class="actions"><button class="btn btn-primary"><i data-icon="download"></i>Descargar PDF</button></div>
+</header>
+<div class="grid-side">
+  <article class="paper" aria-label="Vista previa del informe">
+    <div class="row between wrap" style="gap:8px"><div class="brand" style="padding:0"><span class="brand-mark"><i data-icon="logo"></i></span>InmoCheck</div><span class="caption faint">INF-2026-0142 · Versión 1</span></div>
+    <div class="stack" style="gap:4px"><h2 class="h-mobile">Acta de inspección de salida</h2><p class="body-sm muted">Inmobiliaria Ejemplo</p></div>
+    <dl class="dl dl-2">
+      <div><dt>Inmueble</dt><dd>APT-221 · Calle 15 #38-05, apto 221, San Benito</dd></div>
+      <div><dt>Propietario</dt><dd>Jorge Ramírez</dd></div>
+      <div><dt>Fecha de la visita</dt><dd>27 sep 2026 · 3:00 p. m.</dd></div>
+      <div><dt>Inspector</dt><dd>Laura Díaz</dd></div>
+    </dl>
+    <div class="stack" style="gap:8px"><h3 class="label">Resultado por elemento</h3>
+      <div style="overflow-x:auto"><table class="ptable"><thead><tr><th>Espacio</th><th>Elemento</th><th>Estado</th><th>Observación</th></tr></thead><tbody><tr><td>Cocina</td><td>Grifería</td><td>Regular</td><td>Presenta fuga al cerrar la llave.</td></tr><tr><td>Cocina</td><td>Paredes</td><td>Bueno</td><td></td></tr><tr><td>Cocina</td><td>Enchufes</td><td>Excelente</td><td></td></tr><tr><td>Cocina</td><td>Mesón</td><td>Bueno</td><td></td></tr><tr><td>Baño</td><td>Sanitario</td><td>Bueno</td><td></td></tr><tr><td>Baño</td><td>Ducha</td><td>Bueno</td><td></td></tr><tr><td>Baño</td><td>Espejo</td><td>Dañado</td><td>Esquina inferior quebrada.</td></tr><tr><td>Baño</td><td>Toallero</td><td>Bueno</td><td></td></tr><tr><td>Habitación 1</td><td>Puerta</td><td>Bueno</td><td></td></tr><tr><td>Habitación 1</td><td>Ventana</td><td>Excelente</td><td></td></tr><tr><td>Habitación 1</td><td>Piso</td><td>Bueno</td><td></td></tr><tr><td>Habitación 1</td><td>Clóset</td><td>Bueno</td><td></td></tr><tr><td>Sala</td><td>Piso</td><td>Bueno</td><td></td></tr><tr><td>Sala</td><td>Paredes</td><td>Bueno</td><td></td></tr><tr><td>Sala</td><td>Iluminación</td><td>Excelente</td><td></td></tr></tbody></table></div></div>
+    <div class="stack" style="gap:8px"><h3 class="label">Diferencias con la entrada del 3 mar 2025</h3>
+      <p class="body-sm">14 elementos comparados, 2 con cambio de estado (Grifería de cocina, Espejo del baño) y 1 no comparable (Toallero del baño).</p></div>
+    <div class="stack" style="gap:8px"><h3 class="label">Evidencias seleccionadas</h3><div class="thumbs"><span class="thumb"><i data-icon="image"></i></span><span class="thumb"><i data-icon="image"></i></span><span class="thumb"><i data-icon="image"></i></span></div></div>
+    <p class="caption faint" style="border-top:1px solid var(--borde);padding-top:12px">Generado el 27 sep 2026, 4:32 p. m., a partir de la inspección finalizada. Las diferencias registradas no determinan responsabilidades.</p>
+  </article>
+  <aside class="card">
+    <div class="card-head"><h2 class="h-section">Versiones</h2></div>
+    <div class="list" style="border-top:1px solid var(--borde)">
+      <div class="list-row"><div class="grow"><span class="label">Versión 1</span><span class="caption faint">27 sep 2026 · 4:32 p. m. · Laura Díaz</span></div><button class="icon-btn" aria-label="Descargar versión 1" style="color:var(--primario)"><i data-icon="download"></i></button></div>
+    </div>
+    <div class="card-body" style="padding-top:12px"><p class="caption faint">El PDF se guarda de forma privada. Solo pueden descargarlo usuarios autorizados de tu inmobiliaria.</p></div>
+  </aside>
+</div>
+</main>
+<script src="../assets/app.js"></script>
+</body></html>

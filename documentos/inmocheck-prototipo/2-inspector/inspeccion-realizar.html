@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Realizar inspección · /dashboard/inspecciones/[id]/realizar — InmoCheck</title>
+<style>
+  /* Espacios: columna en escritorio, pestañas deslizables en móvil */
+  .spaces{padding:8px}
+  .spaces .sp{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;padding:10px 12px;border:0;background:none;border-radius:var(--r-sm);font-size:14px;cursor:pointer;text-align:left}
+  .spaces .sp:hover{background:var(--sutil)}
+  .spaces .sp.active{background:var(--primario-suave);color:var(--primario);font-weight:500}
+  .spaces .sp .n{font-size:12px;color:var(--texto-3)} .spaces .sp.active .n{color:var(--primario)}
+  .spaces .sp svg{width:16px;height:16px;color:var(--finalizada)}
+  .spaces-title{padding:8px 12px 4px}
+  .el{overflow:hidden}
+  .el-row{display:flex;align-items:center;gap:12px;width:100%;padding:16px 20px;border:0;background:none;cursor:pointer;text-align:left}
+  .el-row .grow{display:flex;flex-direction:column;gap:2px}
+  .el-row > svg{width:20px;height:20px;color:var(--texto-3);flex:none}
+  .el-body{padding:0 20px 20px;display:flex;flex-direction:column;gap:20px}
+  .el-two{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start}
+  .el-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;border-top:1px solid var(--borde)}
+  .mobile-only{display:none}
+  .finish-bar{display:none}
+  @media (max-width:900px){
+    .desktop-only{display:none!important}
+    .mobile-only{display:flex}
+    .page{padding-top:0;padding-bottom:120px}
+    .m-appbar{margin:0 -16px;padding:12px 8px 16px;background:var(--tarjeta);display:flex;gap:4px;align-items:flex-start}
+    .m-progress{margin:0 -16px;padding:0 16px 16px;background:var(--tarjeta)}
+    .spaces{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;margin:-20px -16px 0;border:0;border-radius:0;border-top:1px solid var(--borde);border-bottom:1px solid var(--borde)}
+    .spaces-title{display:none}
+    .spaces .sp{width:auto;flex:none;border:1px solid var(--borde-fuerte);border-radius:999px;padding:8px 14px;white-space:nowrap}
+    .spaces .sp.active{background:var(--primario);border-color:var(--primario);color:#fff}
+    .spaces .sp.active .n{color:#DBEAFE}
+    .el-row{padding:14px 16px}
+    .el-body{padding:0 16px 16px}
+    .el-two{grid-template-columns:1fr}
+    .finish-bar{display:block;position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--tarjeta);border-top:1px solid var(--borde);padding:12px 16px calc(16px + env(safe-area-inset-bottom))}
+  }
+</style></head>
+<body data-role="inspector" data-layout="focus" data-active="mis-inspecciones" data-route="/dashboard/inspecciones/[id]/realizar">
+<main class="page">
+  <!-- Encabezado móvil -->
+  <div class="m-appbar mobile-only">
+    <a class="icon-btn" href="mis-inspecciones.html" aria-label="Volver"><i data-icon="chevron-left"></i></a>
+    <div class="stack" style="gap:2px;padding-top:6px">
+      <h1 class="h-mobile">APT-302 · Entrada</h1>
+      <span class="body-sm muted">Calle 10 #20-30 · Villavicencio</span>
+    </div>
+  </div>
+  <div class="m-progress mobile-only stack" style="gap:8px">
+    <div class="row between"><span class="label js-count" data-short>9 de 15 evaluados</span><span class="caption text-warn js-pending">3 obligatorios pendientes</span></div>
+    <div class="progress" style="flex:none"><i class="js-bar" style="width:60%"></i></div>
+  </div>
+
+  <!-- Encabezado escritorio -->
+  <a class="back-link desktop-only" href="mis-inspecciones.html"><i data-icon="arrow-left"></i>Mis inspecciones</a>
+  <header class="page-header desktop-only">
+    <div class="title-block">
+      <div class="title-row"><h1 class="h-page">APT-302 · Inspección de entrada</h1><span class="badge badge-en-proceso js-badge">En proceso</span></div>
+      <p class="body-sm muted">Calle 10 #20-30, Villavicencio · Programada el 28 sep 2026, 9:00 a. m.</p>
+    </div>
+    <div class="actions"><button class="btn btn-primary js-finish">Finalizar inspección</button></div>
+  </header>
+  <div class="card desktop-only row" style="padding:16px 20px;gap:20px">
+    <span class="label js-count">9 de 15 elementos evaluados</span>
+    <div class="progress"><i class="js-bar" style="width:60%"></i></div>
+    <span class="caption text-warn js-pending">3 obligatorios pendientes</span>
+  </div>
+
+  <div class="grid-nav">
+    <nav class="card spaces" id="spaces" aria-label="Espacios"></nav>
+    <section class="stack" aria-live="polite">
+      <div id="alert" class="hidden" role="alert"></div>
+      <h2 class="h-section" id="space-title">Cocina</h2>
+      <div class="stack" id="elements"></div>
+    </section>
+  </div>
+</main>
+<div class="finish-bar"><button class="btn btn-primary btn-block js-finish">Finalizar inspección</button></div>
+
+<script src="../assets/app.js"></script>
+<script>
+/* Datos de ejemplo: 15 elementos en 4 espacios (9 evaluados, 3 obligatorios pendientes) */
+const ESTADOS = [
+  ['excelente','Excelente'],['bueno','Bueno'],['regular','Regular'],['danado','Dañado'],['no-aplica','No aplica']
+];
+const MAX_FOTOS = 8;
+const spaces = [
+  {id:'cocina', name:'Cocina', items:[
+    {id:'e1', name:'Grifería', req:true, state:'regular', obs:'La llave presenta fuga leve al cerrarla.', photos:2},
+    {id:'e2', name:'Paredes', req:true, state:'bueno', obs:'', photos:1},
+    {id:'e3', name:'Enchufes', req:true, state:null, obs:'', photos:0},
+    {id:'e4', name:'Gabinetes', req:false, state:null, obs:'', photos:0},
+    {id:'e5', name:'Mesón', req:true, state:'excelente', obs:'', photos:0}]},
+  {id:'bano', name:'Baño', items:[
+    {id:'e6', name:'Sanitario', req:true, state:'bueno', obs:'', photos:0},
+    {id:'e7', name:'Ducha', req:true, state:'regular', obs:'Junta con manchas de moho.', photos:1},
+    {id:'e8', name:'Lavamanos', req:true, state:null, obs:'', photos:0}]},
+  {id:'hab1', name:'Habitación 1', items:[
+    {id:'e9', name:'Puerta', req:true, state:'bueno', obs:'', photos:0},
+    {id:'e10', name:'Ventana', req:true, state:'excelente', obs:'', photos:0},
+    {id:'e11', name:'Piso', req:false, state:'bueno', obs:'', photos:0},
+    {id:'e12', name:'Clóset', req:false, state:'bueno', obs:'', photos:0}]},
+  {id:'sala', name:'Sala', items:[
+    {id:'e13', name:'Piso', req:true, state:null, obs:'', photos:0},
+    {id:'e14', name:'Paredes', req:false, state:null, obs:'', photos:0},
+    {id:'e15', name:'Iluminación', req:false, state:null, obs:'', photos:0}]}
+];
+let current = 'cocina', openId = 'e1', finished = false;
+const dirty = {};      // cambios sin guardar por elemento
+const draft = {};      // valores en edición
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const all = () => spaces.flatMap(s => s.items.map(i => ({...i, space:s})));
+const label = st => (ESTADOS.find(e => e[0] === st) || [,''])[1];
+
+function summary(){
+  const items = all();
+  const done = items.filter(i => i.state).length;
+  const pend = items.filter(i => i.req && !i.state).length;
+  document.querySelectorAll('.js-count').forEach(e => e.textContent = e.hasAttribute('data-short') ? `${done} de ${items.length} evaluados` : `${done} de ${items.length} elementos evaluados`);
+  document.querySelectorAll('.js-bar').forEach(e => e.style.width = (done / items.length * 100) + '%');
+  document.querySelectorAll('.js-pending').forEach(e => {
+    e.textContent = pend ? `${pend} obligatorio${pend>1?'s':''} pendiente${pend>1?'s':''}` : 'Obligatorios completos';
+    e.className = e.className.replace(/text-\w+/, pend ? 'text-warn' : 'text-primary');
+  });
+}
+function renderSpaces(){
+  $('#spaces').innerHTML = '<div class="spaces-title caption faint">Espacios</div>' + spaces.map(s => {
+    const d = s.items.filter(i => i.state).length, t = s.items.length;
+    const right = d === t ? InmoIcon('check') : `<span class="n">${d}/${t}</span>`;
+    return `<button class="sp${s.id===current?' active':''}" data-space="${s.id}" aria-current="${s.id===current}"><span>${s.name}</span>${right}</button>`;
+  }).join('');
+}
+function meta(i){
+  const bits = [i.req ? 'Obligatorio' : 'Opcional'];
+  if (i.photos) bits.push(i.photos + (i.photos > 1 ? ' fotos' : ' foto'));
+  return bits.join(' · ');
+}
+function renderElements(){
+  const s = spaces.find(x => x.id === current);
+  $('#space-title').textContent = s.name;
+  $('#elements').innerHTML = s.items.map(i => {
+    const open = i.id === openId && !finished;
+    const st = i.state ? `<span class="state s-${i.state}">${label(i.state)}</span>` : `<span class="state s-none">Sin evaluar</span>`;
+    const metaCls = i.req && !i.state ? 'caption text-warn' : 'caption faint';
+    const head = `<button class="el-row" data-toggle="${i.id}" aria-expanded="${open}">
+        <span class="grow"><span class="${open?'h-section':'label'}">${i.name}</span><span class="${metaCls}">${meta(i)}</span></span>
+        ${open ? '' : st}${InmoIcon(open ? 'chevron-up' : 'chevron-down')}</button>`;
+    if (!open) return `<div class="card el" id="${i.id}">${head}</div>`;
+    const v = draft[i.id] || {state:i.state, obs:i.obs};
+    const opts = ESTADOS.map(([k,l]) => `<label class="state-opt" style="--c:var(--${k==='danado'?'danado':k})"><input type="radio" name="st-${i.id}" value="${k}" ${v.state===k?'checked':''}><span>${l}</span></label>`).join('');
+    const thumbs = Array.from({length:i.photos}, () => `<span class="thumb">${InmoIcon('image')}</span>`).join('');
+    const add = i.photos < MAX_FOTOS ? `<button class="thumb-add" data-photo="${i.id}">${InmoIcon('camera')}Foto</button>` : '';
+    const needObs = v.state === 'no-aplica' && i.req;
+    const status = dirty[i.id] ? '<span class="body-sm muted">Cambios sin guardar</span>' : (i.state ? '<span class="body-sm" style="color:var(--finalizada)">Guardado</span>' : '<span class="body-sm faint">Sin evaluar</span>');
+    return `<div class="card el" id="${i.id}">${head}
+      <div class="el-body">
+        <fieldset class="stack" style="gap:8px;border:0;margin:0;padding:0"><legend class="label" style="padding:0 0 8px">Estado</legend><div class="state-options">${opts}</div></fieldset>
+        <div class="el-two">
+          <div class="field" id="f-${i.id}"><label for="o-${i.id}">Observación ${needObs ? '' : '<span class="opt">(opcional)</span>'}</label>
+            <textarea class="textarea" id="o-${i.id}" data-obs="${i.id}" maxlength="2000" placeholder="Describe lo que observas">${esc(v.obs||'')}</textarea>
+            <span class="hint hidden" id="h-${i.id}">Explica por qué este elemento obligatorio no aplica.</span></div>
+          <div class="stack" style="gap:6px"><div class="row between"><span class="label">Fotos</span><span class="caption faint">${i.photos} de ${MAX_FOTOS}</span></div><div class="thumbs">${thumbs}${add}</div></div>
+        </div>
+        <div class="el-foot">${status}<button class="btn btn-secondary" data-save="${i.id}">Guardar</button></div>
+      </div></div>`;
+  }).join('');
+}
+function render(){ summary(); renderSpaces(); renderElements(); }
+function find(id){ return all().find(i => i.id === id); }
+function item(id){ for (const s of spaces) { const i = s.items.find(x => x.id === id); if (i) return i; } }
+
+document.addEventListener('click', e => {
+  if (finished) return;
+  const sp = e.target.closest('[data-space]');
+  if (sp) { current = sp.dataset.space; openId = (spaces.find(s=>s.id===current).items.find(i=>!i.state)||{}).id || null; render(); return; }
+  const tg = e.target.closest('[data-toggle]');
+  if (tg) { openId = openId === tg.dataset.toggle ? null : tg.dataset.toggle; renderElements(); return; }
+  const ph = e.target.closest('[data-photo]');
+  if (ph) { const i = item(ph.dataset.photo); if (i.photos < MAX_FOTOS) { i.photos++; dirty[i.id] = true; keepDraft(i.id); renderElements(); } return; }
+  const sv = e.target.closest('[data-save]');
+  if (sv) {
+    const i = item(sv.dataset.save), v = draft[i.id] || {state:i.state, obs:i.obs};
+    if (v.state === 'no-aplica' && i.req && !v.obs.trim()) {
+      $('#f-'+i.id).classList.add('has-error'); $('#h-'+i.id).classList.remove('hidden'); $('#o-'+i.id).focus(); return;
+    }
+    i.state = v.state; i.obs = v.obs; delete dirty[i.id]; delete draft[i.id];
+    $('#alert').classList.add('hidden');
+    render(); return;
+  }
+  const fin = e.target.closest('.js-finish');
+  if (fin) finish();
+});
+function keepDraft(id){
+  const i = item(id), el = document.getElementById(id);
+  const r = el && el.querySelector('input[type=radio]:checked'), o = el && el.querySelector('textarea');
+  draft[id] = {state: r ? r.value : (draft[id]||i).state, obs: o ? o.value : (draft[id]||i).obs};
+}
+document.addEventListener('change', e => { const r = e.target.closest('input[type=radio][name^="st-"]'); if (r) { const id = r.name.slice(3); dirty[id] = true; keepDraft(id); renderElements(); } });
+document.addEventListener('input', e => { const t = e.target.closest('[data-obs]'); if (t) { dirty[t.dataset.obs] = true; keepDraft(t.dataset.obs); const s = t.closest('.el').querySelector('.el-foot > span'); s.className = 'body-sm muted'; s.textContent = 'Cambios sin guardar'; } });
+
+function finish(){
+  const pend = all().filter(i => i.req && !i.state);
+  const unsaved = Object.keys(dirty).map(find);
+  const box = $('#alert');
+  if (pend.length || unsaved.length) {
+    const li = [...pend.map(i => `<li><a href="#" data-go="${i.space.id}|${i.id}">${i.space.name} · ${i.name}</a> — sin evaluar</li>`),
+                ...unsaved.map(i => `<li><a href="#" data-go="${i.space.id}|${i.id}">${i.space.name} · ${i.name}</a> — cambios sin guardar</li>`)].join('');
+    box.className = 'notice notice-error';
+    box.innerHTML = `${InmoIcon('alert')}<div><strong>Aún no puedes finalizar.</strong> Revisa estos elementos:<ul style="margin:6px 0 0;padding-left:18px">${li}</ul></div>`;
+    box.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  finished = true;
+  box.className = 'notice notice-ok';
+  box.innerHTML = `${InmoIcon('check')}<div><strong>Inspección finalizada.</strong> Ya no se puede editar. <a href="../1-administrador/inspeccion-informe.html">Ver el informe</a></div>`;
+  document.querySelectorAll('.js-badge').forEach(b => { b.className = 'badge badge-finalizada js-badge'; b.textContent = 'Finalizada'; });
+  document.querySelectorAll('.js-finish').forEach(b => b.disabled = true);
+  openId = null; renderElements();
+  box.scrollIntoView({behavior:'smooth', block:'center'});
+}
+document.getElementById('alert').addEventListener('click', e => {
+  const g = e.target.closest('[data-go]'); if (!g || finished) return;
+  e.preventDefault(); const [s, id] = g.dataset.go.split('|'); current = s; openId = id; render();
+  document.getElementById(id).scrollIntoView({behavior:'smooth', block:'center'});
+});
+render();
+</script>
+</body></html>

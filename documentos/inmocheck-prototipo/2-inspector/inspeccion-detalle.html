@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css"><title>Detalle de la inspección · /dashboard/inspecciones/[id] — InmoCheck</title></head>
+<body data-role="inspector" data-active-inspector="mis-inspecciones" data-active-admin="inspecciones" data-route="/dashboard/inspecciones/[id]">
+<main class="page">
+  <a class="back-link" data-only="inspector" href="mis-inspecciones.html"><i data-icon="arrow-left"></i>Mis inspecciones</a>
+  <a class="back-link" data-only="admin" href="../1-administrador/inspecciones.html"><i data-icon="arrow-left"></i>Inspecciones</a>
+
+  <header class="page-header">
+    <div class="title-block">
+      <div class="title-row"><h1 class="h-page">CASA-118 · Inspección de salida</h1><span class="badge badge-pendiente">Pendiente</span></div>
+      <p class="body-sm muted">Carrera 32 #15-40, Barzal, Villavicencio</p>
+    </div>
+    <div class="actions" data-only="inspector" style="flex-direction:column;align-items:stretch;gap:6px">
+      <a class="btn btn-primary" href="inspeccion-realizar.html">Iniciar inspección</a>
+      <span class="caption faint" style="text-align:center">Pasará a «En proceso».</span>
+    </div>
+    <div class="actions" data-only="admin">
+      <button class="btn btn-danger" data-open="d-cancelar">Cancelar inspección</button>
+      <button class="btn btn-primary" data-open="d-reasignar">Reasignar</button>
+    </div>
+  </header>
+
+  <div class="grid-side">
+    <div class="stack-lg">
+      <section class="card">
+        <div class="card-head"><h2 class="h-section"><span data-only="inspector">Qué vas a revisar</span><span data-only="admin">Inventario a revisar</span></h2><span class="body-sm muted">15 elementos</span></div>
+        <div class="list">
+          <div class="list-row"><span class="label grow">Cocina</span><span class="body-sm muted">5 elementos · 4 obligatorios</span></div>
+          <div class="list-row"><span class="label grow">Baño</span><span class="body-sm muted">3 elementos · 3 obligatorios</span></div>
+          <div class="list-row"><span class="label grow">Habitación 1</span><span class="body-sm muted">4 elementos · 2 obligatorios</span></div>
+          <div class="list-row"><span class="label grow">Sala</span><span class="body-sm muted">3 elementos · 1 obligatorio</span></div>
+        </div>
+      </section>
+      <section class="card" data-only="admin">
+        <div class="card-head"><h2 class="h-section">Actividad</h2></div>
+        <div class="list">
+          <div class="list-row"><div class="grow"><span class="body-sm">Carlos Rojas asignó la inspección a Laura Díaz</span><span class="caption faint">25 sep 2026 · 4:12 p. m.</span></div></div>
+          <div class="list-row"><div class="grow"><span class="body-sm">Carlos Rojas programó la inspección</span><span class="caption faint">25 sep 2026 · 4:10 p. m.</span></div></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="card card-pad stack" style="gap:16px">
+      <h2 class="h-section">Datos de la visita</h2>
+      <dl class="dl">
+        <div><dt>Tipo</dt><dd>Salida</dd></div>
+        <div><dt>Fecha programada</dt><dd>Hoy, 29 sep 2026 · 2:00 p. m.</dd></div>
+        <div><dt>Inspector asignado</dt><dd>Laura Díaz</dd></div>
+        <div><dt>Se comparará con</dt><dd>Entrada del 3 mar 2025</dd></div>
+      </dl>
+      <div class="stack" style="gap:4px;background:var(--sutil);border-radius:var(--r-sm);padding:10px 12px">
+        <span class="caption muted">Nota del administrador</span>
+        <span class="body-sm">Revisar especialmente la grifería de la cocina y la humedad en el baño.</span>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- Paneles solo del administrador -->
+<div class="drawer" id="d-reasignar" role="dialog" aria-labelledby="t-reasignar">
+  <div class="drawer-head"><h2 class="h-section" id="t-reasignar">Reasignar inspección</h2><button class="icon-btn" data-close aria-label="Cerrar"><i data-icon="x"></i></button></div>
+  <div class="drawer-body">
+    <div class="field"><label for="r-insp">Nuevo inspector</label>
+      <select class="select" id="r-insp"><option>Andrés Mora</option><option>Laura Díaz (actual)</option></select>
+      <span class="hint">Solo aparecen inspectores activos de tu inmobiliaria.</span></div>
+    <div class="field"><label for="r-mot">Motivo <span class="opt">(obligatorio si ya está en proceso)</span></label>
+      <textarea class="textarea" id="r-mot" placeholder="Ej.: la inspectora original está incapacitada"></textarea></div>
+    <div class="notice"><i data-icon="info"></i><span>El cambio queda registrado en la actividad de la inspección.</span></div>
+  </div>
+  <div class="drawer-foot"><button class="btn btn-secondary" data-close>Cancelar</button><button class="btn btn-primary" data-close>Reasignar</button></div>
+</div>
+<div class="drawer" id="d-cancelar" role="dialog" aria-labelledby="t-cancelar">
+  <div class="drawer-head"><h2 class="h-section" id="t-cancelar">Cancelar inspección</h2><button class="icon-btn" data-close aria-label="Cerrar"><i data-icon="x"></i></button></div>
+  <div class="drawer-body">
+    <div class="field"><label for="c-mot">Motivo de la cancelación</label>
+      <textarea class="textarea" id="c-mot" placeholder="Ej.: el ocupante canceló la visita"></textarea>
+      <span class="hint">Es obligatorio y quedará en el historial.</span></div>
+    <div class="notice"><i data-icon="info"></i><span>La inspección no se borra: queda como «Cancelada» y no se podrá reabrir.</span></div>
+  </div>
+  <div class="drawer-foot"><button class="btn btn-secondary" data-close>Volver</button><button class="btn btn-danger" data-close>Cancelar inspección</button></div>
+</div>
+<script src="../assets/app.js"></script>
+</body></html>

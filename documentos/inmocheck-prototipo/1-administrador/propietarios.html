@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"><link rel="stylesheet" href="../assets/styles.css">
+<title>Gestión de propietarios · /dashboard/propietarios — InmoCheck</title><style>.drawer-body .list-row svg{width:18px;height:18px;color:var(--texto-3)}</style></head>
+<body data-role="admin" data-active="propietarios" data-route="/dashboard/propietarios">
+<main class="page">
+<header class="page-header">
+  <div class="title-block"><div class="title-row"><h1 class="h-page">Propietarios</h1></div><p class="body-sm muted">Personas registradas como dueñas de los inmuebles. No tienen acceso a la aplicación.</p></div>
+  <div class="actions"><button class="btn btn-primary" data-open="d-nuevo"><i data-icon="plus"></i>Registrar propietario</button></div>
+</header>
+<div class="toolbar"><div class="search"><i data-icon="search"></i><input class="input" type="search" placeholder="Buscar por nombre o correo" aria-label="Buscar propietarios"></div></div>
+<div class="card table-card"><table class="table">
+  <thead><tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Inmuebles</th><th></th></tr></thead>
+  <tbody><tr data-open="d-prop" style="cursor:pointer"><td><div class="cell-main">María López</div><div class="cell-sub">maria@example.com</div></td><td class="m-hide">maria@example.com</td><td class="m-hide">+57 300 000 0000</td><td class="m-right">3 inmuebles</td><td class="chev"><i data-icon="chevron-right"></i></td></tr><tr data-open="d-prop" style="cursor:pointer"><td><div class="cell-main">Jorge Ramírez</div><div class="cell-sub">jorge.ramirez@example.com</div></td><td class="m-hide">jorge.ramirez@example.com</td><td class="m-hide">+57 311 222 3344</td><td class="m-right">2 inmuebles</td><td class="chev"><i data-icon="chevron-right"></i></td></tr><tr data-open="d-prop" style="cursor:pointer"><td><div class="cell-main">Ana Castro</div><div class="cell-sub">ana.castro@example.com</div></td><td class="m-hide">ana.castro@example.com</td><td class="m-hide">+57 320 555 6677</td><td class="m-right">2 inmuebles</td><td class="chev"><i data-icon="chevron-right"></i></td></tr><tr data-open="d-prop" style="cursor:pointer"><td><div class="cell-main">Luis Herrera</div><div class="cell-sub">—</div></td><td class="m-hide">—</td><td class="m-hide">+57 315 888 9900</td><td class="m-right">1 inmueble</td><td class="chev"><i data-icon="chevron-right"></i></td></tr></tbody></table></div>
+</main>
+<div class="drawer" id="d-nuevo" role="dialog" aria-labelledby="t-d-nuevo">
+  <div class="drawer-head"><h2 class="h-section" id="t-d-nuevo">Registrar propietario</h2><button class="icon-btn" data-close aria-label="Cerrar"><i data-icon="x"></i></button></div>
+  <div class="drawer-body"><div class="field "><label for="pn">Nombre completo</label><input class="input" id="pn" type="text" placeholder="Ej.: María López"></div><div class="field "><label for="pe">Correo <span class="opt">(opcional)</span></label><input class="input" id="pe" type="email" placeholder="nombre@correo.com"></div><div class="field "><label for="pt">Teléfono <span class="opt">(opcional)</span></label><input class="input" id="pt" type="text" placeholder="+57 300 000 0000"></div><div class="notice"><i data-icon="info"></i><span>Pide solo los datos necesarios para contactar al propietario.</span></div></div>
+  <div class="drawer-foot"><button class="btn btn-secondary" data-close>Cancelar</button><button class="btn btn-primary" data-close>Guardar propietario</button></div>
+</div>
+<div class="drawer" id="d-prop" role="dialog" aria-labelledby="t-d-prop">
+  <div class="drawer-head"><h2 class="h-section" id="t-d-prop">María López</h2><button class="icon-btn" data-close aria-label="Cerrar"><i data-icon="x"></i></button></div>
+  <div class="drawer-body"><div class="field "><label for="en">Nombre completo</label><input class="input" id="en" type="text" value="María López"></div><div class="field "><label for="ee">Correo <span class="opt">(opcional)</span></label><input class="input" id="ee" type="text" value="maria@example.com"></div><div class="field "><label for="et">Teléfono <span class="opt">(opcional)</span></label><input class="input" id="et" type="text" value="+57 300 000 0000"></div><div class="stack" style="gap:8px"><span class="label">Inmuebles</span><div class="card list"><a class="list-row" href="inmueble-detalle.html"><span class="label grow">APT-302</span><i data-icon="chevron-right"></i></a><a class="list-row" href="inmueble-detalle.html"><span class="label grow">APT-410</span><i data-icon="chevron-right"></i></a><a class="list-row" href="inmueble-detalle.html"><span class="label grow">APT-118</span><span class="badge badge-inactivo">Inactivo</span></a></div></div>
+<p class="caption faint">Cambiar estos datos no modifica las actas ya finalizadas.</p></div>
+  <div class="drawer-foot"><button class="btn btn-secondary" data-close>Cancelar</button><button class="btn btn-primary" data-close>Guardar cambios</button></div>
+</div>
+<script src="../assets/app.js"></script>
+</body></html>
