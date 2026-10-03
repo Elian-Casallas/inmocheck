@@ -402,7 +402,7 @@ AccionesAdmin y AccionesInspector. ¿Dónde leo el rol de forma segura?
 
 ### F6.1 Mis inspecciones
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Arriba muestra la tarjeta "En curso" y debajo la tabla con filtro
 *Próximas / Finalizadas* en la URL (`?vista=finalizadas`).
@@ -417,7 +417,7 @@ aunque yo filtre también en la consulta.
 
 ### F6.2 Realizar inspección: dividirla en componentes
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea los componentes en `src/features/inspecciones/components/realizar/`:
 `ProgresoInspeccion`, `ListaEspacios`, `TarjetaElemento`, `SelectorEstado` y
@@ -433,7 +433,7 @@ Dame un diagrama en texto, no el código.
 
 ### F6.3 Estado de guardado honesto
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Muestra "Cambios sin guardar" hasta recibir la respuesta del servidor, y maneja
 el 409 de versión sin reintentar a ciegas.
@@ -448,7 +448,7 @@ responde 409 VERSION_CONFLICT.
 
 ### F6.4 Fotos y finalizar
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Construye la subida con `FormData` y su progreso, y la validación que lista los
 obligatorios pendientes con un enlace a cada uno.

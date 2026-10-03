@@ -366,7 +366,7 @@ traduzca a 409. Revisa mi función: [pega].
 
 ### B6.1 Bucket privado y subida validada
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Crea el bucket privado con sus políticas. En el endpoint, valida el tipo real,
 el tamaño y la cantidad; genera el nombre del archivo y guarda los metadatos.

@@ -23,4 +23,9 @@ export const FOTOS_MAXIMAS_POR_ELEMENTO = 8;
 export const FOTO_TAMANO_MAXIMO_BYTES = 10 * 1024 * 1024;
 export const FOTO_TIPOS_PERMITIDOS = ["image/jpeg", "image/png", "image/webp"] as const;
 
+// Las fotos se reducen en el celular antes de subirlas: ahorra datos y tiempo.
+export const FOTO_LADO_MAXIMO_PX = 1600;
+// Duración de los enlaces firmados a fotos y PDF privados.
+export const URL_FIRMADA_SEGUNDOS = 60;
+
 export const ZONA_HORARIA = "America/Bogota";

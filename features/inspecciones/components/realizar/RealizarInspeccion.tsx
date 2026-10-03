@@ -6,7 +6,8 @@ import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
 import { ApiError, apiFetch, mensajeDeError } from "@/lib/api/client";
 import { calcularProgreso, esObligatorioPendiente } from "@/lib/progreso";
-import type { Detalle, Inspeccion } from "@/schemas/inspecciones";
+import type { Detalle, Evidencia, Inspeccion } from "@/schemas/inspecciones";
+import { FotosElemento } from "./FotosElemento";
 import { ListaEspacios } from "./ListaEspacios";
 import { ProgresoInspeccion } from "./ProgresoInspeccion";
 import { TarjetaElemento } from "./TarjetaElemento";
@@ -67,6 +68,14 @@ export function RealizarInspeccion({ inspeccion, detallesIniciales }: Props) {
   function quitarBorrador(id: string) {
     setBorradores((actuales) =>
       Object.fromEntries(Object.entries(actuales).filter(([clave]) => clave !== id)),
+    );
+  }
+
+  // Las fotos se guardan al instante (no pasan por el borrador): la lista
+  // solo cambia cuando el servidor ya confirmó la subida o el borrado.
+  function cambiarEvidencias(detalleId: string, cambio: (actuales: Evidencia[]) => Evidencia[]) {
+    setDetalles((actuales) =>
+      actuales.map((item) => (item.id === detalleId ? { ...item, evidencias: cambio(item.evidencias) } : item)),
     );
   }
 
@@ -201,6 +210,20 @@ export function RealizarInspeccion({ inspeccion, detallesIniciales }: Props) {
               alAlternar={() => setAbiertoId(abiertoId === detalle.id ? null : detalle.id)}
               alCambiar={(cambios) => cambiar(detalle, cambios)}
               alGuardar={() => guardar(detalle)}
+              fotos={
+                <FotosElemento
+                  inspeccionId={inspeccion.id}
+                  detalleId={detalle.id}
+                  nombreElemento={detalle.elementoNombre}
+                  evidencias={detalle.evidencias}
+                  alAgregar={(evidencia) =>
+                    cambiarEvidencias(detalle.id, (actuales) => [...actuales, evidencia])
+                  }
+                  alQuitar={(evidenciaId) =>
+                    cambiarEvidencias(detalle.id, (actuales) => actuales.filter(({ id }) => id !== evidenciaId))
+                  }
+                />
+              }
             />
           ))}
         </section>
