@@ -77,6 +77,7 @@ export function SelectorFotosInforme({ inspeccionId, grupos, hrefCerrar }: Props
         {grupos.map((grupo) => (
           <section key={grupo.espacio} className="flex flex-col gap-3">
             <h3 className="border-b border-borde pb-1.5 text-cuerpo-sm font-semibold">{grupo.espacio}</h3>
+            <div className="flex flex-wrap gap-4">
             {grupo.elementos.map((elemento) => (
               <div key={elemento.nombre} className="flex flex-col gap-1.5">
                 <span className="text-pequeno font-medium text-texto-secundario">{elemento.nombre}</span>
@@ -113,6 +114,7 @@ export function SelectorFotosInforme({ inspeccionId, grupos, hrefCerrar }: Props
                 </div>
               </div>
             ))}
+            </div>
           </section>
         ))}
       </PanelCuerpo>

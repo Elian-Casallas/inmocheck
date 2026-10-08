@@ -47,15 +47,53 @@ function agruparFotos(fotos: FotoActa[]): FotosPorEspacio[] {
   return espacios;
 }
 
-const FOTOS_POR_FILA = 3;
+// Medidas de la cuadrícula de fotos, en puntos. Una hoja A4 con márgenes de
+// 40 deja 515 de ancho útil: caben 4 fotos de 118 con 3 separaciones de 14.
+const ANCHO_UTIL = 515;
+const ANCHO_FOTO = 118;
+const ALTO_FOTO = 96;
+const SEPARACION = 14;
+const FOTOS_POR_FILA = 4;
 
-// Parte las fotos de un elemento en filas de tres.
-function enFilas(fotos: FotoActa[]): FotoActa[][] {
-  const filas: FotoActa[][] = [];
-  for (let inicio = 0; inicio < fotos.length; inicio += FOTOS_POR_FILA) {
-    filas.push(fotos.slice(inicio, inicio + FOTOS_POR_FILA));
+type BloqueDeFotos = { titulo: string; fotos: FotoActa[] };
+
+// Acomoda los elementos de un espacio uno al lado del otro y pasa a la
+// siguiente fila cuando ya no caben, como un "flex-wrap". Se calcula a mano
+// para poder mantener cada fila entera en la misma página.
+function empaquetarEnFilas(elementos: FotosPorEspacio["elementos"]): BloqueDeFotos[][] {
+  // Un elemento con más de 4 fotos se parte en varios bloques.
+  const bloques: BloqueDeFotos[] = elementos.flatMap((elemento) => {
+    const partes: BloqueDeFotos[] = [];
+    for (let inicio = 0; inicio < elemento.fotos.length; inicio += FOTOS_POR_FILA) {
+      partes.push({
+        titulo: inicio === 0 ? elemento.nombre : `${elemento.nombre} (continuación)`,
+        fotos: elemento.fotos.slice(inicio, inicio + FOTOS_POR_FILA),
+      });
+    }
+    return partes;
+  });
+
+  const filas: BloqueDeFotos[][] = [];
+  let fila: BloqueDeFotos[] = [];
+  let anchoOcupado = 0;
+
+  for (const bloque of bloques) {
+    const ancho = anchoDeBloque(bloque);
+    const anchoConBloque = anchoOcupado + (fila.length > 0 ? SEPARACION : 0) + ancho;
+    if (fila.length > 0 && anchoConBloque > ANCHO_UTIL) {
+      filas.push(fila);
+      fila = [];
+      anchoOcupado = 0;
+    }
+    anchoOcupado += (fila.length > 0 ? SEPARACION : 0) + ancho;
+    fila.push(bloque);
   }
+  if (fila.length > 0) filas.push(fila);
   return filas;
+}
+
+function anchoDeBloque(bloque: BloqueDeFotos): number {
+  return bloque.fotos.length * ANCHO_FOTO + (bloque.fotos.length - 1) * SEPARACION;
 }
 
 const COLOR = { texto: "#0f172a", tenue: "#64748b", borde: "#e2e8f0", primario: "#1d4ed8", sutil: "#f1f5f9" };
@@ -85,10 +123,10 @@ const estilos = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: COLOR.borde,
   },
-  elemento: { fontSize: 9, color: COLOR.tenue, marginTop: 4, marginBottom: 4 },
+  elemento: { fontSize: 9, color: COLOR.tenue, marginBottom: 3 },
+  filaDeFotos: { flexDirection: "row", marginTop: 4, marginBottom: 8 },
   fotos: { flexDirection: "row" },
-  foto: { width: "31%", marginRight: "2%", marginBottom: 8 },
-  imagen: { width: "100%", height: 120, objectFit: "cover", borderRadius: 3 },
+  imagen: { width: ANCHO_FOTO, height: ALTO_FOTO, objectFit: "cover", borderRadius: 3 },
   pie: { position: "absolute", left: 40, right: 40, bottom: 24, fontSize: 8, color: COLOR.tenue, borderTopWidth: 0.5, borderTopColor: COLOR.borde, paddingTop: 6 },
 });
 
@@ -146,27 +184,34 @@ function Acta({ datos }: { datos: DatosActa }) {
           <View>
             <Text style={estilos.seccion}>Evidencias fotográficas</Text>
             {agruparFotos(datos.fotos).map((espacio) =>
-              espacio.elementos.map((elemento, indiceElemento) =>
-                enFilas(elemento.fotos).map((fila, indiceFila) => (
-                  // wrap={false}: el bloque no se parte entre páginas. Los títulos
-                  // viajan pegados a la primera fila de fotos, así nunca queda un
-                  // título solo al final de una página.
-                  <View key={`${espacio.nombre}-${elemento.nombre}-${indiceFila}`} wrap={false}>
-                    {indiceFila === 0 && indiceElemento === 0 && (
-                      <Text style={estilos.espacio}>{espacio.nombre}</Text>
-                    )}
-                    {indiceFila === 0 && <Text style={estilos.elemento}>{elemento.nombre}</Text>}
-                    <View style={estilos.fotos}>
-                      {fila.map((foto, indice) => (
-                        <View key={indice} style={estilos.foto}>
-                          {/* eslint-disable-next-line jsx-a11y/alt-text -- es el componente Image de react-pdf, no un <img> */}
-                          <Image style={estilos.imagen} src={{ data: foto.datos, format: foto.formato }} />
+              empaquetarEnFilas(espacio.elementos).map((fila, indiceFila) => (
+                // wrap={false}: la fila no se parte entre páginas. El título del
+                // espacio viaja pegado a su primera fila, así nunca queda solo
+                // al final de una página.
+                <View key={`${espacio.nombre}-${indiceFila}`} wrap={false}>
+                  {indiceFila === 0 && <Text style={estilos.espacio}>{espacio.nombre}</Text>}
+                  <View style={estilos.filaDeFotos}>
+                    {fila.map((bloque, indiceBloque) => (
+                      <View
+                        key={bloque.titulo}
+                        style={{ width: anchoDeBloque(bloque), marginLeft: indiceBloque === 0 ? 0 : SEPARACION }}
+                      >
+                        <Text style={estilos.elemento}>{bloque.titulo}</Text>
+                        <View style={estilos.fotos}>
+                          {bloque.fotos.map((foto, indice) => (
+                            // eslint-disable-next-line jsx-a11y/alt-text -- es el componente Image de react-pdf, no un <img>
+                            <Image
+                              key={indice}
+                              style={[estilos.imagen, { marginLeft: indice === 0 ? 0 : SEPARACION }]}
+                              src={{ data: foto.datos, format: foto.formato }}
+                            />
+                          ))}
                         </View>
-                      ))}
-                    </View>
+                      </View>
+                    ))}
                   </View>
-                )),
-              ),
+                </View>
+              )),
             )}
           </View>
         )}

@@ -63,12 +63,15 @@ describe("renderizarActa", () => {
   });
 
   it("genera un PDF con fotos de varios espacios y elementos", async () => {
+    // Un caso parecido al real: varios elementos con una foto, uno con dos y
+    // uno con más de cuatro (que debe partirse en dos bloques).
     const fotos = [
-      foto("Cocina", "Grifería"),
-      foto("Cocina", "Grifería"),
-      foto("Cocina", "Paredes"),
+      ...["Paredes", "Piso", "Grifería", "Gabinetes", "Enchufes", "Mesón"].map((elemento) => foto("Cocina", elemento)),
       foto("Baño", "Ducha"),
-      foto("Sala comedor", "Ventanas"),
+      foto("Baño", "Ducha"),
+      foto("Baño", "Lavamanos"),
+      ...Array.from({ length: 6 }, () => foto("Sala comedor", "Ventanas")),
+      foto("Sala comedor", "Piso"),
     ];
     const sinFotos = await renderizarActa({ ...datosBase, fotos: [] });
     const conFotos = await renderizarActa({ ...datosBase, fotos });

@@ -155,23 +155,26 @@ export default async function PaginaInspeccionInforme({
               {gruposDeFotos.map((grupo) => (
                 <section key={grupo.espacio} className="flex flex-col gap-2">
                   <h4 className="border-b border-borde pb-1 text-cuerpo-sm font-semibold">{grupo.espacio}</h4>
-                  {grupo.elementos.map((elemento) => (
-                    <div key={elemento.nombre} className="flex flex-col gap-1.5">
-                      <span className="text-pequeno font-medium text-texto-secundario">{elemento.nombre}</span>
-                      <div className="flex flex-wrap gap-2">
-                        {elemento.fotoIds.map((fotoId, indice) => (
-                          // eslint-disable-next-line @next/next/no-img-element -- enlace privado que vence; next/image no puede optimizarlo
-                          <img
-                            key={fotoId}
-                            src={`/api/v1/evidencias/${fotoId}/acceso?redirigir=1`}
-                            alt={`Foto ${indice + 1} de ${elemento.nombre} (${grupo.espacio})`}
-                            loading="lazy"
-                            className="size-[72px] rounded-lg bg-sutil object-cover"
-                          />
-                        ))}
+                  {/* Los elementos van uno al lado del otro y bajan de fila según el ancho. */}
+                  <div className="flex flex-wrap gap-4">
+                    {grupo.elementos.map((elemento) => (
+                      <div key={elemento.nombre} className="flex flex-col gap-1.5">
+                        <span className="text-pequeno font-medium text-texto-secundario">{elemento.nombre}</span>
+                        <div className="flex flex-wrap gap-2">
+                          {elemento.fotoIds.map((fotoId, indice) => (
+                            // eslint-disable-next-line @next/next/no-img-element -- enlace privado que vence; next/image no puede optimizarlo
+                            <img
+                              key={fotoId}
+                              src={`/api/v1/evidencias/${fotoId}/acceso?redirigir=1`}
+                              alt={`Foto ${indice + 1} de ${elemento.nombre} (${grupo.espacio})`}
+                              loading="lazy"
+                              className="size-[88px] rounded-lg bg-sutil object-cover"
+                            />
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </section>
               ))}
             </div>
