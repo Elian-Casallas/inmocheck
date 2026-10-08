@@ -435,7 +435,7 @@ cada número del dashboard.
 
 ### B8.1 Colección de Postman
 
-- [ ] Paso terminado
+- [x] Paso terminado
 
 Arma la colección con los casos API-01 a API-24 de tu documento técnico.
 
