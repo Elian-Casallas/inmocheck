@@ -14,7 +14,7 @@ import {
 } from "@/features/inspecciones/components/AccionesInspeccion";
 import { BadgeEstadoInspeccion } from "@/features/inspecciones/components/BadgeEstadoInspeccion";
 import { BarraProgreso } from "@/features/inspecciones/components/BarraProgreso";
-import { formatearFechaHora, plural } from "@/lib/formato";
+import { aFechaYHoraDeCampo, formatearFechaHora, plural } from "@/lib/formato";
 import {
   ESTADOS_ABIERTOS,
   ETIQUETA_TIPO_INSPECCION,
@@ -120,6 +120,7 @@ export default async function PaginaInspeccionDetalle({
             inspeccionId={inspeccion.id}
             version={inspeccion.version}
             programadaPara={inspeccion.programadaPara}
+            fechaMinima={aFechaYHoraDeCampo(new Date().toISOString()).fecha}
             hrefCerrar={ruta}
           />
         </PanelLateral>

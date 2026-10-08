@@ -1,5 +1,5 @@
 import "server-only";
-import type { EstadoInspeccion } from "@/lib/inspecciones";
+import { MENSAJE_FECHA_PASADA, sePuedeProgramar, type EstadoInspeccion } from "@/lib/inspecciones";
 import { calcularProgreso } from "@/lib/progreso";
 import { armarPaginado } from "@/schemas/comun";
 import type {
@@ -85,12 +85,22 @@ export const listarActividad = repositorio.listarActividad;
 
 // ---------- Acciones ----------
 
+// El formulario ya impide elegir una fecha pasada, pero esa validación se
+// puede saltar llamando a la API directamente; por eso se repite aquí.
+function exigirFechaVigente(programadaPara: string | undefined) {
+  if (programadaPara && !sePuedeProgramar(programadaPara)) {
+    throw new AppError(422, "FECHA_PASADA", "Fecha inválida", MENSAJE_FECHA_PASADA);
+  }
+}
+
 export async function crearInspeccion(datos: InspeccionCrear) {
+  exigirFechaVigente(datos.programadaPara);
   const id = await ejecutar(() => repositorio.rpcCrear(datos));
   return obtenerInspeccion(id);
 }
 
 export async function editarInspeccion(id: string, datos: InspeccionEditar) {
+  exigirFechaVigente(datos.programadaPara);
   await ejecutar(() => repositorio.rpcEditar(id, datos));
   return obtenerInspeccion(id);
 }

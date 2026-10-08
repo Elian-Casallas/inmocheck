@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { aFechaYHoraDeCampo } from "@/lib/formato";
-import { estaVencida, limiteParaIniciar } from "@/lib/inspecciones";
+import { estaVencida, limiteParaIniciar, sePuedeProgramar } from "@/lib/inspecciones";
 
 // Todas las horas se escriben en hora de Colombia (-05:00).
 const colombia = (fechaHora: string) => new Date(`${fechaHora}:00-05:00`);
@@ -61,5 +61,30 @@ describe("aFechaYHoraDeCampo", () => {
 
   it("retrocede de día cuando en UTC ya es el siguiente", () => {
     expect(aFechaYHoraDeCampo("2026-10-09T01:00:00Z")).toEqual({ fecha: "2026-10-08", hora: "20:00" });
+  });
+});
+
+describe("sePuedeProgramar", () => {
+  const ahora = colombia("2026-10-08T15:00");
+
+  it("no deja programar en días anteriores", () => {
+    expect(sePuedeProgramar("2026-10-07T10:00:00-05:00", ahora)).toBe(false);
+    expect(sePuedeProgramar("2026-09-30T10:00:00-05:00", ahora)).toBe(false);
+  });
+
+  it("deja programar para hoy, incluso a una hora que ya pasó, mientras no cierre la oficina", () => {
+    expect(sePuedeProgramar("2026-10-08T09:00:00-05:00", ahora)).toBe(true);
+    expect(sePuedeProgramar("2026-10-08T16:30:00-05:00", ahora)).toBe(true);
+  });
+
+  it("deja programar para días posteriores", () => {
+    expect(sePuedeProgramar("2026-10-09T08:00:00-05:00", ahora)).toBe(true);
+  });
+
+  it("después del cierre ya no deja programar para ese mismo día antes de las 7", () => {
+    const noche = colombia("2026-10-08T20:00");
+
+    expect(sePuedeProgramar("2026-10-08T10:00:00-05:00", noche)).toBe(false);
+    expect(sePuedeProgramar("2026-10-09T10:00:00-05:00", noche)).toBe(true);
   });
 });

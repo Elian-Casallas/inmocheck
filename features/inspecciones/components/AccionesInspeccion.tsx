@@ -12,6 +12,7 @@ import { CampoAreaTexto, CampoSeleccion } from "@/components/ui/CampoSeleccion";
 import { PanelCuerpo, PanelPie } from "@/components/ui/PanelLateral";
 import { apiFetch, mensajeDeError } from "@/lib/api/client";
 import { DESFASE_BOGOTA, aFechaYHoraDeCampo } from "@/lib/formato";
+import { MENSAJE_FECHA_PASADA, sePuedeProgramar } from "@/lib/inspecciones";
 import { z } from "@/schemas/zod";
 import { aplicarErroresDeApi, textoONull } from "@/lib/formularios";
 import {
@@ -183,22 +184,36 @@ export function FormularioCancelar({ inspeccionId, version, hrefCerrar }: PropsC
 
 // ---------- Administrador: reprogramar ----------
 
-const reprogramarSchema = z.object({
-  fecha: z.iso.date("Selecciona la fecha."),
-  hora: z.string().regex(/^\d{2}:\d{2}$/, "Selecciona la hora."),
-});
+const reprogramarSchema = z
+  .object({
+    fecha: z.iso.date("Selecciona la fecha."),
+    hora: z.string().regex(/^\d{2}:\d{2}$/, "Selecciona la hora."),
+  })
+  .refine(({ fecha, hora }) => sePuedeProgramar(`${fecha}T${hora}:00${DESFASE_BOGOTA}`), {
+    path: ["fecha"],
+    message: MENSAJE_FECHA_PASADA,
+  });
 type DatosReprogramar = z.infer<typeof reprogramarSchema>;
 
 type PropsReprogramar = {
   inspeccionId: string;
   version: number;
   programadaPara: string;
+  // Fecha de hoy en Colombia (AAAA-MM-DD): no se puede reprogramar hacia atrás.
+  fechaMinima: string;
   hrefCerrar: string;
 };
 
 // Cambia la fecha de una inspección pendiente. Es la salida para una
 // inspección "No realizada": con una fecha nueva vuelve a poder iniciarse.
-export function FormularioReprogramar({ inspeccionId, version, programadaPara, hrefCerrar }: PropsReprogramar) {
+export function FormularioReprogramar({
+  inspeccionId,
+  version,
+  programadaPara,
+  fechaMinima,
+  hrefCerrar,
+}: PropsReprogramar) {
+  const actual = aFechaYHoraDeCampo(programadaPara);
   const router = useRouter();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
   const {
@@ -207,7 +222,8 @@ export function FormularioReprogramar({ inspeccionId, version, programadaPara, h
     formState: { errors, isSubmitting },
   } = useForm<DatosReprogramar>({
     resolver: zodResolver(reprogramarSchema),
-    defaultValues: aFechaYHoraDeCampo(programadaPara),
+    // Si la fecha original ya pasó, el formulario arranca en hoy.
+    defaultValues: { fecha: actual.fecha < fechaMinima ? fechaMinima : actual.fecha, hora: actual.hora },
   });
 
   async function reprogramar({ fecha, hora }: DatosReprogramar) {
@@ -228,7 +244,14 @@ export function FormularioReprogramar({ inspeccionId, version, programadaPara, h
     <form onSubmit={handleSubmit(reprogramar)} noValidate className="flex min-h-0 flex-1 flex-col">
       <PanelCuerpo>
         {errorGeneral && <Aviso tipo="error">{errorGeneral}</Aviso>}
-        <Campo id="fecha" etiqueta="Nueva fecha" type="date" error={errors.fecha?.message} {...register("fecha")} />
+        <Campo
+          id="fecha"
+          etiqueta="Nueva fecha"
+          type="date"
+          min={fechaMinima}
+          error={errors.fecha?.message}
+          {...register("fecha")}
+        />
         <Campo id="hora" etiqueta="Nueva hora" type="time" error={errors.hora?.message} {...register("hora")} />
         <Aviso>
           El inspector podrá iniciarla hasta las 7:00 p. m. del día que elijas. El cambio queda en la

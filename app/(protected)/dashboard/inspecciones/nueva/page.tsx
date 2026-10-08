@@ -1,6 +1,7 @@
 import { EncabezadoPagina } from "@/components/layout/EncabezadoPagina";
 import { FormularioInspeccion } from "@/features/inspecciones/components/FormularioInspeccion";
 import { PAGINA_TAMANO_MAXIMO } from "@/lib/constantes";
+import { aFechaYHoraDeCampo } from "@/lib/formato";
 import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
 import { inmueblesFiltroSchema } from "@/schemas/inmuebles";
 import { exigirRol } from "@/server/auth/sesion";
@@ -32,6 +33,7 @@ export default async function PaginaInspeccionNueva({
         inmuebles={inmuebles.map(({ id, codigo, direccion }) => ({ id, codigo, direccion }))}
         inspectores={inspectores}
         inmuebleInicial={inmuebles.some((inmueble) => inmueble.id === inmuebleId) ? inmuebleId : undefined}
+        fechaMinima={aFechaYHoraDeCampo(new Date().toISOString()).fecha}
       />
     </div>
   );

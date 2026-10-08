@@ -13,7 +13,13 @@ import { Tarjeta } from "@/components/ui/Tarjeta";
 import { ApiError, apiFetch } from "@/lib/api/client";
 import { DESFASE_BOGOTA } from "@/lib/formato";
 import { aplicarErroresDeApi, textoONull } from "@/lib/formularios";
-import { ETIQUETA_TIPO_INSPECCION, TIPOS_INSPECCION, type TipoInspeccion } from "@/lib/inspecciones";
+import {
+  ETIQUETA_TIPO_INSPECCION,
+  MENSAJE_FECHA_PASADA,
+  TIPOS_INSPECCION,
+  sePuedeProgramar,
+  type TipoInspeccion,
+} from "@/lib/inspecciones";
 import type { Inspeccion } from "@/schemas/inspecciones";
 import { z } from "@/schemas/zod";
 
@@ -25,23 +31,31 @@ const DESCRIPCION_TIPO: Record<TipoInspeccion, string> = {
 
 // Esquema del formulario: fecha y hora van en campos separados y al enviar
 // se unen en un solo instante. La API vuelve a validar con su propio esquema.
-const formularioSchema = z.object({
-  inmuebleId: z.uuid("Selecciona un inmueble."),
-  inspectorId: z.uuid("Selecciona un inspector."),
-  tipo: z.enum(TIPOS_INSPECCION, "Selecciona el tipo de inspección."),
-  fecha: z.iso.date("Selecciona la fecha."),
-  hora: z.string().regex(/^\d{2}:\d{2}$/, "Selecciona la hora."),
-  nota: z.string().max(1000).nullable().optional(),
-});
+const formularioSchema = z
+  .object({
+    inmuebleId: z.uuid("Selecciona un inmueble."),
+    inspectorId: z.uuid("Selecciona un inspector."),
+    tipo: z.enum(TIPOS_INSPECCION, "Selecciona el tipo de inspección."),
+    fecha: z.iso.date("Selecciona la fecha."),
+    hora: z.string().regex(/^\d{2}:\d{2}$/, "Selecciona la hora."),
+    nota: z.string().max(1000).nullable().optional(),
+  })
+  // No se programa en el pasado: nacería como "No realizada".
+  .refine(({ fecha, hora }) => sePuedeProgramar(`${fecha}T${hora}:00${DESFASE_BOGOTA}`), {
+    path: ["fecha"],
+    message: MENSAJE_FECHA_PASADA,
+  });
 type DatosFormulario = z.infer<typeof formularioSchema>;
 
 type Props = {
   inmuebles: { id: string; codigo: string; direccion: string }[];
   inspectores: { id: string; nombre: string }[];
   inmuebleInicial?: string;
+  // Fecha de hoy en Colombia (AAAA-MM-DD). El calendario no deja elegir días anteriores.
+  fechaMinima: string;
 };
 
-export function FormularioInspeccion({ inmuebles, inspectores, inmuebleInicial }: Props) {
+export function FormularioInspeccion({ inmuebles, inspectores, inmuebleInicial, fechaMinima }: Props) {
   const router = useRouter();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
 
@@ -71,6 +85,10 @@ export function FormularioInspeccion({ inmuebles, inspectores, inmuebleInicial }
     } catch (error) {
       if (error instanceof ApiError && error.code === "INVENTARIO_VACIO") {
         setError("inmuebleId", { message: error.message }, { shouldFocus: true });
+        return;
+      }
+      if (error instanceof ApiError && error.code === "FECHA_PASADA") {
+        setError("fecha", { message: error.message }, { shouldFocus: true });
         return;
       }
       setErrorGeneral(aplicarErroresDeApi(error, setError));
@@ -128,7 +146,14 @@ export function FormularioInspeccion({ inmuebles, inspectores, inmuebleInicial }
         <section className="flex flex-col gap-4">
           <h2 className="text-titulo-seccion font-semibold">Programación</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Campo id="fecha" etiqueta="Fecha" type="date" error={errors.fecha?.message} {...register("fecha")} />
+            <Campo
+              id="fecha"
+              etiqueta="Fecha"
+              type="date"
+              min={fechaMinima}
+              error={errors.fecha?.message}
+              {...register("fecha")}
+            />
             <Campo id="hora" etiqueta="Hora" type="time" error={errors.hora?.message} {...register("hora")} />
             <CampoSeleccion
               id="inspectorId"

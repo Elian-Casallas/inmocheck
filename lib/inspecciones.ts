@@ -63,6 +63,15 @@ export function limiteParaIniciar(programadaPara: string): Date {
   return new Date(programada < cierre ? cierre : medianoche + 24 * HORA_MS);
 }
 
+// Una fecha sirve para programar si su plazo para iniciar aún no ha pasado.
+// Con una sola regla se descartan los días anteriores y también "hoy"
+// cuando ya cerró la oficina: en ambos casos nacería como "No realizada".
+export function sePuedeProgramar(programadaPara: string, ahora: Date = new Date()): boolean {
+  return limiteParaIniciar(programadaPara) > ahora;
+}
+
+export const MENSAJE_FECHA_PASADA = "Esa fecha ya pasó. Elige hoy antes de las 7:00 p. m. o un día posterior.";
+
 export function estaVencida(
   inspeccion: { estado: EstadoInspeccion; programadaPara: string },
   ahora: Date = new Date(),

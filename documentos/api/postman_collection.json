@@ -286,7 +286,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"inmuebleId\": \"{{inmuebleId}}\",\n  \"inspectorId\": \"{{inspectorId}}\",\n  \"tipo\": \"ENTRADA\",\n  \"programadaPara\": \"2026-10-09T09:00:00-05:00\"\n}"
+              "raw": "{\n  \"inmuebleId\": \"{{inmuebleId}}\",\n  \"inspectorId\": \"{{inspectorId}}\",\n  \"tipo\": \"ENTRADA\",\n  \"programadaPara\": \"2030-01-15T09:00:00-05:00\"\n}"
             }
           }
         },
@@ -440,7 +440,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"inmuebleId\": \"{{inmuebleId}}\",\n  \"inspectorId\": \"{{inspectorId}}\",\n  \"tipo\": \"ENTRADA\",\n  \"programadaPara\": \"2026-10-09T09:00:00-05:00\",\n  \"nota\": \"Creada desde Postman\"\n}"
+              "raw": "{\n  \"inmuebleId\": \"{{inmuebleId}}\",\n  \"inspectorId\": \"{{inspectorId}}\",\n  \"tipo\": \"ENTRADA\",\n  \"programadaPara\": \"2030-01-15T09:00:00-05:00\",\n  \"nota\": \"Creada desde Postman\"\n}"
             }
           }
         },
