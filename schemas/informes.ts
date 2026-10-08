@@ -1,4 +1,5 @@
-import type { TipoInspeccion } from "@/lib/inspecciones";
+import { TIPOS_INSPECCION, type TipoInspeccion } from "@/lib/inspecciones";
+import { busquedaSchema, paginacionSchema } from "./comun";
 import { z } from "./zod";
 
 export const FOTOS_MAXIMAS_EN_INFORME = 60;
@@ -10,6 +11,12 @@ export const informeCrearSchema = z
     evidenciaIds: z.array(z.uuid()).max(FOTOS_MAXIMAS_EN_INFORME).optional(),
   })
   .strict();
+
+export const informesFiltroSchema = paginacionSchema.extend({
+  search: busquedaSchema,
+  tipo: z.enum(TIPOS_INSPECCION).optional(),
+});
+export type InformesFiltro = z.infer<typeof informesFiltroSchema>;
 
 export type Informe = {
   id: string;

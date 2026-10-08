@@ -4,11 +4,13 @@ import { URL_FIRMADA_SEGUNDOS } from "@/lib/constantes";
 import { plural } from "@/lib/formato";
 import { crearClienteAdmin } from "@/lib/supabase/admin";
 import { crearClienteServidor } from "@/lib/supabase/server";
+import { armarPaginado } from "@/schemas/comun";
 import {
   FOTOS_MAXIMAS_EN_INFORME,
   codigoDeInforme,
   type Informe,
   type InformeConInspeccion,
+  type InformesFiltro,
 } from "@/schemas/informes";
 import type { Detalle, Inspeccion } from "@/schemas/inspecciones";
 import type { Actor } from "@/server/auth/sesion";
@@ -16,7 +18,7 @@ import { AppError, ConflictError, NotFoundError } from "@/server/http/errores";
 import { renderizarActa, type DatosActa } from "@/server/pdf/acta";
 import { buscarInmueble } from "@/server/repositories/inmuebles.repository";
 import { listarDetalles } from "@/server/repositories/inspecciones.repository";
-import { esViolacionUnica } from "@/server/repositories/utilidades";
+import { esViolacionUnica, limpiarBusqueda, rangoDePagina } from "@/server/repositories/utilidades";
 import { compararInspecciones, listarEntradasComparables } from "./comparacion.service";
 import { obtenerInspeccion } from "./inspecciones.service";
 
@@ -41,15 +43,61 @@ export async function listarInformesDeInspeccion(inspeccionId: string): Promise<
 
 // Biblioteca de informes: RLS deja ver al admin todos los de su
 // organización y al inspector solo los de sus inspecciones.
-export async function listarInformes(limite?: number): Promise<InformeConInspeccion[]> {
+const COLUMNAS_CON_INSPECCION = `${COLUMNAS}, inspeccion:inspecciones (id, tipo, inmueble:inmuebles (codigo, direccion))`;
+
+export async function listarInformes(filtro: InformesFiltro) {
   const supabase = await crearClienteServidor();
+  const [desde, hasta] = rangoDePagina(filtro.page, filtro.pageSize);
+
   let consulta = supabase
     .from("informes")
-    .select(`${COLUMNAS}, inspeccion:inspecciones (id, tipo, inmueble:inmuebles (codigo, direccion))`)
-    .order("generado_en", { ascending: false });
-  if (limite) consulta = consulta.limit(limite);
+    .select(COLUMNAS_CON_INSPECCION, { count: "exact" })
+    .order("generado_en", { ascending: false })
+    .range(desde, hasta);
+
+  // El inmueble y el tipo no están en la tabla informes sino en su
+  // inspección: primero se buscan las inspecciones que coinciden y luego
+  // los informes de esas inspecciones.
+  if (filtro.search || filtro.tipo) {
+    const inspeccionIds = await buscarInspeccionesConInforme(filtro);
+    if (inspeccionIds.length === 0) return armarPaginado([], 0, filtro.page, filtro.pageSize);
+    consulta = consulta.in("inspeccion_id", inspeccionIds);
+  }
+
+  const { data, count, error } = await consulta;
+  if (error) throw error;
+  return armarPaginado((data ?? []) as unknown as InformeConInspeccion[], count ?? 0, filtro.page, filtro.pageSize);
+}
+
+async function buscarInspeccionesConInforme({ search, tipo }: InformesFiltro): Promise<string[]> {
+  const supabase = await crearClienteServidor();
+  let consulta = supabase.from("inspecciones").select("id").eq("estado", "FINALIZADA");
+  if (tipo) consulta = consulta.eq("tipo", tipo);
+
+  const busqueda = search ? limpiarBusqueda(search) : "";
+  if (busqueda) {
+    const { data: inmuebles, error: errorInmuebles } = await supabase
+      .from("inmuebles")
+      .select("id")
+      .or(`codigo.ilike.%${busqueda}%,direccion.ilike.%${busqueda}%,barrio.ilike.%${busqueda}%`);
+    if (errorInmuebles) throw errorInmuebles;
+    if (!inmuebles?.length) return [];
+    consulta = consulta.in("inmueble_id", inmuebles.map((inmueble) => inmueble.id as string));
+  }
 
   const { data, error } = await consulta;
+  if (error) throw error;
+  return (data ?? []).map((inspeccion) => inspeccion.id as string);
+}
+
+// Los últimos informes, para el resumen del administrador.
+export async function listarInformesRecientes(limite: number): Promise<InformeConInspeccion[]> {
+  const supabase = await crearClienteServidor();
+  const { data, error } = await supabase
+    .from("informes")
+    .select(COLUMNAS_CON_INSPECCION)
+    .order("generado_en", { ascending: false })
+    .limit(limite);
   if (error) throw error;
   return (data ?? []) as unknown as InformeConInspeccion[];
 }

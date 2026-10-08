@@ -11,7 +11,7 @@ import { formatearFecha } from "@/lib/formato";
 import { ETIQUETA_TIPO_INSPECCION } from "@/lib/inspecciones";
 import { exigirActor } from "@/server/auth/sesion";
 import { obtenerResumen } from "@/server/services/dashboard.service";
-import { listarInformes } from "@/server/services/informes.service";
+import { listarInformesRecientes } from "@/server/services/informes.service";
 
 const INFORMES_RECIENTES = 4;
 
@@ -21,7 +21,7 @@ export default async function PaginaDashboard() {
   // El resumen es solo del administrador; el inspector va a su agenda.
   if (actor.rol !== "ADMIN") redirect(RUTA_INICIO_POR_ROL[actor.rol]);
 
-  const [resumen, informes] = await Promise.all([obtenerResumen({}), listarInformes(INFORMES_RECIENTES)]);
+  const [resumen, informes] = await Promise.all([obtenerResumen({}), listarInformesRecientes(INFORMES_RECIENTES)]);
   const mes = new Intl.DateTimeFormat("es-CO", { month: "long", year: "numeric", timeZone: ZONA_HORARIA }).format(new Date());
 
   const indicadores = [
