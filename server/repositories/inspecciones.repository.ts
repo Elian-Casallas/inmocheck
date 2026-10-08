@@ -91,6 +91,20 @@ export async function listarAbiertasDeInspector(inspectorId: string): Promise<In
   return (data ?? []) as unknown as InspeccionResumen[];
 }
 
+// Pendientes cuya hora programada ya pasó. Quien llama decide cuáles de
+// ellas ya superaron el plazo para iniciar (estaVencida).
+export async function listarPendientesPasadas(): Promise<InspeccionResumen[]> {
+  const supabase = await crearClienteServidor();
+  const { data, error } = await supabase
+    .from("inspecciones")
+    .select(COLUMNAS_RESUMEN)
+    .eq("estado", "PENDIENTE")
+    .lt("programada_para", new Date().toISOString())
+    .order("programada_para");
+  if (error) throw error;
+  return (data ?? []) as unknown as InspeccionResumen[];
+}
+
 // Una sola consulta trae todos los estados; el conteo por estado se hace en memoria.
 export async function contarPorEstado(): Promise<Record<EstadoInspeccion, number>> {
   const supabase = await crearClienteServidor();

@@ -7,9 +7,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton, clasesBoton } from "@/components/ui/Boton";
+import { Campo } from "@/components/ui/Campo";
 import { CampoAreaTexto, CampoSeleccion } from "@/components/ui/CampoSeleccion";
 import { PanelCuerpo, PanelPie } from "@/components/ui/PanelLateral";
 import { apiFetch, mensajeDeError } from "@/lib/api/client";
+import { DESFASE_BOGOTA, aFechaYHoraDeCampo } from "@/lib/formato";
+import { z } from "@/schemas/zod";
 import { aplicarErroresDeApi, textoONull } from "@/lib/formularios";
 import {
   inspeccionCancelarSchema,
@@ -172,6 +175,72 @@ export function FormularioCancelar({ inspeccionId, version, hrefCerrar }: PropsC
         </Link>
         <Boton type="submit" variante="peligro" cargando={isSubmitting} textoCargando="Cancelando…">
           Cancelar inspección
+        </Boton>
+      </PanelPie>
+    </form>
+  );
+}
+
+// ---------- Administrador: reprogramar ----------
+
+const reprogramarSchema = z.object({
+  fecha: z.iso.date("Selecciona la fecha."),
+  hora: z.string().regex(/^\d{2}:\d{2}$/, "Selecciona la hora."),
+});
+type DatosReprogramar = z.infer<typeof reprogramarSchema>;
+
+type PropsReprogramar = {
+  inspeccionId: string;
+  version: number;
+  programadaPara: string;
+  hrefCerrar: string;
+};
+
+// Cambia la fecha de una inspección pendiente. Es la salida para una
+// inspección "No realizada": con una fecha nueva vuelve a poder iniciarse.
+export function FormularioReprogramar({ inspeccionId, version, programadaPara, hrefCerrar }: PropsReprogramar) {
+  const router = useRouter();
+  const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<DatosReprogramar>({
+    resolver: zodResolver(reprogramarSchema),
+    defaultValues: aFechaYHoraDeCampo(programadaPara),
+  });
+
+  async function reprogramar({ fecha, hora }: DatosReprogramar) {
+    setErrorGeneral(null);
+    try {
+      await apiFetch(`/inspecciones/${inspeccionId}`, {
+        method: "PATCH",
+        body: JSON.stringify({ programadaPara: `${fecha}T${hora}:00${DESFASE_BOGOTA}`, version }),
+      });
+      router.push(hrefCerrar, { scroll: false });
+      router.refresh();
+    } catch (error) {
+      setErrorGeneral(mensajeDeError(error));
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit(reprogramar)} noValidate className="flex min-h-0 flex-1 flex-col">
+      <PanelCuerpo>
+        {errorGeneral && <Aviso tipo="error">{errorGeneral}</Aviso>}
+        <Campo id="fecha" etiqueta="Nueva fecha" type="date" error={errors.fecha?.message} {...register("fecha")} />
+        <Campo id="hora" etiqueta="Nueva hora" type="time" error={errors.hora?.message} {...register("hora")} />
+        <Aviso>
+          El inspector podrá iniciarla hasta las 7:00 p. m. del día que elijas. El cambio queda en la
+          actividad de la inspección.
+        </Aviso>
+      </PanelCuerpo>
+      <PanelPie>
+        <Link href={hrefCerrar} scroll={false} className={clasesBoton({ variante: "secundario" })}>
+          Volver
+        </Link>
+        <Boton type="submit" cargando={isSubmitting} textoCargando="Guardando…">
+          Reprogramar
         </Boton>
       </PanelPie>
     </form>

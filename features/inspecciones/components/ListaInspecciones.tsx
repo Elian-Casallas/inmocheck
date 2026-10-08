@@ -1,12 +1,7 @@
 import Link from "next/link";
-import { Badge } from "@/components/ui/Badge";
 import { formatearFechaHora } from "@/lib/formato";
-import {
-  ETIQUETA_ESTADO_INSPECCION,
-  ETIQUETA_TIPO_INSPECCION,
-  TONO_ESTADO_INSPECCION,
-  type InspeccionResumen,
-} from "@/lib/inspecciones";
+import { ETIQUETA_TIPO_INSPECCION, type InspeccionResumen } from "@/lib/inspecciones";
+import { BadgeEstadoInspeccion } from "./BadgeEstadoInspeccion";
 
 type Props = {
   inspecciones: InspeccionResumen[];
@@ -39,9 +34,7 @@ export function ListaInspecciones({ inspecciones, vacio, mostrarInmueble = false
                 {!mostrarInmueble && inspeccion.inspector ? ` · ${inspeccion.inspector.nombre}` : ""}
               </span>
             </div>
-            <Badge tono={TONO_ESTADO_INSPECCION[inspeccion.estado]}>
-              {ETIQUETA_ESTADO_INSPECCION[inspeccion.estado]}
-            </Badge>
+            <BadgeEstadoInspeccion estado={inspeccion.estado} programadaPara={inspeccion.programadaPara} />
           </Link>
         </li>
       ))}

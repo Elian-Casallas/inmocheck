@@ -29,6 +29,14 @@ export function formatearFechaHora(iso: string): string {
   return FORMATO_FECHA_HORA.format(new Date(iso));
 }
 
+// Parte un instante en la fecha y la hora de Colombia, con el formato que
+// usan los campos <input type="date"> y <input type="time">.
+export function aFechaYHoraDeCampo(iso: string): { fecha: string; hora: string } {
+  const CINCO_HORAS_MS = 5 * 60 * 60 * 1000;
+  const [fecha, resto] = new Date(new Date(iso).getTime() - CINCO_HORAS_MS).toISOString().split("T");
+  return { fecha, hora: resto.slice(0, 5) };
+}
+
 export function formatearArea(areaM2: number | null): string {
   if (areaM2 === null) return "—";
   return `${new Intl.NumberFormat("es-CO").format(areaM2)} m²`;

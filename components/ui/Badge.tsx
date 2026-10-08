@@ -1,10 +1,11 @@
-type Tono = "pendiente" | "en-proceso" | "finalizada" | "cancelada" | "activo" | "inactivo";
+type Tono = "pendiente" | "en-proceso" | "finalizada" | "cancelada" | "vencida" | "activo" | "inactivo";
 
 const CLASES_TONO: Record<Tono, string> = {
   pendiente: "bg-inspeccion-pendiente-fondo text-inspeccion-pendiente",
   "en-proceso": "bg-inspeccion-en-proceso-fondo text-inspeccion-en-proceso",
   finalizada: "bg-inspeccion-finalizada-fondo text-inspeccion-finalizada",
   cancelada: "bg-inspeccion-cancelada-fondo text-inspeccion-cancelada",
+  vencida: "bg-error-fondo text-error",
   activo: "bg-inspeccion-finalizada-fondo text-inspeccion-finalizada",
   inactivo: "bg-sutil text-texto-tenue",
 };

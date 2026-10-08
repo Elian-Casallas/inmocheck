@@ -22,6 +22,8 @@ const CONFLICTOS: Record<string, string> = {
   TRANSICION_INVALIDA: "La inspección ya no está en un estado que permita esta acción.",
   INSPECCION_CERRADA: "La inspección ya está cerrada y no se puede modificar.",
   INSPECCION_NO_INICIADA: "Primero debes iniciar la inspección.",
+  INSPECCION_VENCIDA:
+    "El plazo para iniciar esta inspección ya venció. Pide al administrador que la reprograme.",
   INVENTARIO_VACIO: "El inmueble no tiene inventario. Agrega espacios y elementos antes de programar.",
   INMUEBLE_NO_DISPONIBLE: "El inmueble no existe o está inactivo.",
   INSPECTOR_NO_DISPONIBLE: "El inspector no existe o está inactivo.",

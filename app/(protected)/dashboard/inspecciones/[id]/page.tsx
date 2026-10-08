@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { EncabezadoPagina } from "@/components/layout/EncabezadoPagina";
-import { Badge } from "@/components/ui/Badge";
+import { Aviso } from "@/components/ui/Aviso";
 import { clasesBoton } from "@/components/ui/Boton";
 import { ListaDatos } from "@/components/ui/ListaDatos";
 import { PanelLateral } from "@/components/ui/PanelLateral";
@@ -10,14 +10,16 @@ import {
   BotonIniciarInspeccion,
   FormularioCancelar,
   FormularioReasignar,
+  FormularioReprogramar,
 } from "@/features/inspecciones/components/AccionesInspeccion";
+import { BadgeEstadoInspeccion } from "@/features/inspecciones/components/BadgeEstadoInspeccion";
 import { BarraProgreso } from "@/features/inspecciones/components/BarraProgreso";
 import { formatearFechaHora, plural } from "@/lib/formato";
 import {
   ESTADOS_ABIERTOS,
-  ETIQUETA_ESTADO_INSPECCION,
   ETIQUETA_TIPO_INSPECCION,
-  TONO_ESTADO_INSPECCION,
+  estaVencida,
+  limiteParaIniciar,
 } from "@/lib/inspecciones";
 import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
 import type { Detalle, Inspeccion } from "@/schemas/inspecciones";
@@ -50,6 +52,8 @@ export default async function PaginaInspeccionDetalle({
   const esAdmin = actor.rol === "ADMIN";
   const abierta = ESTADOS_ABIERTOS.includes(inspeccion.estado);
   const ruta = `/dashboard/inspecciones/${inspeccion.id}`;
+  // Pendiente cuyo plazo para iniciar ya pasó (ver lib/inspecciones.ts).
+  const vencida = estaVencida(inspeccion);
 
   const [{ data: detalles }, actividad, inspectores] = await Promise.all([
     listarDetalles(inspeccion.id),
@@ -69,15 +73,27 @@ export default async function PaginaInspeccionDetalle({
             ? { href: "/dashboard/inspecciones", etiqueta: "Inspecciones" }
             : { href: "/dashboard/mis-inspecciones", etiqueta: "Mis inspecciones" }
         }
-        junto={
-          <Badge tono={TONO_ESTADO_INSPECCION[inspeccion.estado]}>
-            {ETIQUETA_ESTADO_INSPECCION[inspeccion.estado]}
-          </Badge>
-        }
+        junto={<BadgeEstadoInspeccion estado={inspeccion.estado} programadaPara={inspeccion.programadaPara} />}
         // La misma URL muestra acciones distintas según el rol. Es solo
         // presentación: cada endpoint valida el rol por su cuenta.
-        acciones={esAdmin ? <AccionesAdmin inspeccion={inspeccion} ruta={ruta} /> : <AccionesInspector inspeccion={inspeccion} ruta={ruta} />}
+        acciones={
+          esAdmin ? (
+            <AccionesAdmin inspeccion={inspeccion} ruta={ruta} vencida={vencida} />
+          ) : (
+            <AccionesInspector inspeccion={inspeccion} ruta={ruta} vencida={vencida} />
+          )
+        }
       />
+
+      {vencida && (
+        <Aviso tipo="error">
+          Esta inspección no se inició antes del cierre del día programado (
+          {formatearFechaHora(limiteParaIniciar(inspeccion.programadaPara).toISOString())}).{" "}
+          {esAdmin
+            ? "Reprográmala, reasígnala o cancélala."
+            : "Ya no se puede iniciar. Pide al administrador que la reprograme."}
+        </Aviso>
+      )}
 
       <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_360px]">
         <div className="flex flex-col gap-6">
@@ -98,6 +114,16 @@ export default async function PaginaInspeccionDetalle({
           />
         </PanelLateral>
       )}
+      {esAdmin && inspeccion.estado === "PENDIENTE" && accion === "reprogramar" && (
+        <PanelLateral titulo="Reprogramar inspección" hrefCerrar={ruta}>
+          <FormularioReprogramar
+            inspeccionId={inspeccion.id}
+            version={inspeccion.version}
+            programadaPara={inspeccion.programadaPara}
+            hrefCerrar={ruta}
+          />
+        </PanelLateral>
+      )}
       {esAdmin && abierta && accion === "cancelar" && (
         <PanelLateral titulo="Cancelar inspección" hrefCerrar={ruta}>
           <FormularioCancelar inspeccionId={inspeccion.id} version={inspeccion.version} hrefCerrar={ruta} />
@@ -107,25 +133,41 @@ export default async function PaginaInspeccionDetalle({
   );
 }
 
-type PropsAcciones = { inspeccion: Inspeccion; ruta: string };
+type PropsAcciones = { inspeccion: Inspeccion; ruta: string; vencida: boolean };
 
-function AccionesAdmin({ inspeccion, ruta }: PropsAcciones) {
+function AccionesAdmin({ inspeccion, ruta, vencida }: PropsAcciones) {
   if (inspeccion.estado === "FINALIZADA") return <EnlaceInforme ruta={ruta} />;
   if (inspeccion.estado === "CANCELADA") return null;
 
+  // Un solo botón primario: si está vencida, lo urgente es reprogramar.
   return (
     <>
       <Link href={`${ruta}?accion=cancelar`} scroll={false} className={clasesBoton({ variante: "peligro" })}>
         Cancelar inspección
       </Link>
-      <Link href={`${ruta}?accion=reasignar`} scroll={false} className={clasesBoton()}>
+      {inspeccion.estado === "PENDIENTE" && (
+        <Link
+          href={`${ruta}?accion=reprogramar`}
+          scroll={false}
+          className={clasesBoton({ variante: vencida ? "primario" : "secundario" })}
+        >
+          Reprogramar
+        </Link>
+      )}
+      <Link
+        href={`${ruta}?accion=reasignar`}
+        scroll={false}
+        className={clasesBoton({ variante: vencida ? "secundario" : "primario" })}
+      >
         Reasignar
       </Link>
     </>
   );
 }
 
-function AccionesInspector({ inspeccion, ruta }: PropsAcciones) {
+function AccionesInspector({ inspeccion, ruta, vencida }: PropsAcciones) {
+  // Vencida: no hay botón de iniciar; el aviso de la página explica por qué.
+  if (vencida) return null;
   if (inspeccion.estado === "PENDIENTE") {
     return <BotonIniciarInspeccion inspeccionId={inspeccion.id} version={inspeccion.version} />;
   }

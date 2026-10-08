@@ -107,8 +107,22 @@ En **Inspecciones** puedes filtrar por estado:
 Al abrir una inspección ves el inventario a revisar, el avance, los datos de la
 visita y la **Actividad**: quién hizo qué y cuándo.
 
+### Inspecciones no realizadas
+
+El inspector puede iniciar antes o después de la hora programada, pero solo
+hasta las **7:00 p. m. del día programado** (o hasta la medianoche, si la visita
+era después de las 7). Si no la inicia a tiempo:
+
+- La inspección aparece en rojo como **No realizada** en todos los listados.
+- En el **Resumen** sale un aviso rojo arriba con la lista de las no realizadas.
+- El inspector ya no puede iniciarla.
+
+Ábrela y decide: **Reprogramar** (con una fecha nueva vuelve a estar disponible),
+**Reasignar** a otro inspector o **Cancelar inspección**.
+
 Mientras esté pendiente o en proceso puedes:
 
+- **Reprogramar:** cambiar la fecha y la hora. Solo mientras esté pendiente.
 - **Reasignar:** pasarla a otro inspector. Si ya está en proceso, el motivo es obligatorio.
 - **Cancelar inspección:** el motivo es obligatorio. No se borra: queda como cancelada.
 

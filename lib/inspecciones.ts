@@ -39,6 +39,37 @@ export const ETIQUETA_ESTADO_ELEMENTO: Record<EstadoElemento, string> = {
 
 export const ESTADOS_ABIERTOS: EstadoInspeccion[] = ["PENDIENTE", "EN_PROCESO"];
 
+// ---------- Plazo para iniciar ----------
+// Una inspección se puede iniciar antes o después de su hora, pero solo
+// hasta el cierre de oficina del día programado. Pasado ese momento queda
+// "No realizada": el inspector ya no puede iniciarla y el administrador
+// debe reprogramarla, reasignarla o cancelarla.
+// La misma regla está en la función SQL limite_para_iniciar(), que es la
+// que de verdad bloquea; aquí sirve para pintar la pantalla.
+
+export const HORA_CIERRE_OFICINA = 19; // 7:00 p. m., hora de Colombia
+const DESFASE_COLOMBIA_MS = 5 * 60 * 60 * 1000; // UTC-5, sin horario de verano
+const HORA_MS = 60 * 60 * 1000;
+
+export function limiteParaIniciar(programadaPara: string): Date {
+  const programada = new Date(programadaPara).getTime();
+  // Medianoche (hora de Colombia) del día programado, expresada en UTC.
+  const hoyLocal = new Date(programada - DESFASE_COLOMBIA_MS);
+  hoyLocal.setUTCHours(0, 0, 0, 0);
+  const medianoche = hoyLocal.getTime() + DESFASE_COLOMBIA_MS;
+
+  const cierre = medianoche + HORA_CIERRE_OFICINA * HORA_MS;
+  // Si se programó después del cierre, el plazo es hasta terminar ese día.
+  return new Date(programada < cierre ? cierre : medianoche + 24 * HORA_MS);
+}
+
+export function estaVencida(
+  inspeccion: { estado: EstadoInspeccion; programadaPara: string },
+  ahora: Date = new Date(),
+): boolean {
+  return inspeccion.estado === "PENDIENTE" && ahora > limiteParaIniciar(inspeccion.programadaPara);
+}
+
 export type InspeccionResumen = {
   id: string;
   tipo: TipoInspeccion;

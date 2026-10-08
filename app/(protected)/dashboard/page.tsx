@@ -7,7 +7,7 @@ import { Tarjeta } from "@/components/ui/Tarjeta";
 import { EnlaceDescarga } from "@/features/informes/components/AccionesInforme";
 import { TablaInspecciones } from "@/features/inspecciones/components/TablaInspecciones";
 import { RUTA_INICIO_POR_ROL, ZONA_HORARIA } from "@/lib/constantes";
-import { formatearFecha } from "@/lib/formato";
+import { formatearFecha, plural } from "@/lib/formato";
 import { ETIQUETA_TIPO_INSPECCION } from "@/lib/inspecciones";
 import { exigirActor } from "@/server/auth/sesion";
 import { obtenerResumen } from "@/server/services/dashboard.service";
@@ -25,7 +25,12 @@ export default async function PaginaDashboard() {
   const mes = new Intl.DateTimeFormat("es-CO", { month: "long", year: "numeric", timeZone: ZONA_HORARIA }).format(new Date());
 
   const indicadores = [
-    { etiqueta: "Pendientes", valor: resumen.inspecciones.pendientes, punto: "bg-inspeccion-pendiente" },
+    {
+      etiqueta: "Pendientes",
+      // Las no realizadas se cuentan aparte, en el aviso rojo de arriba.
+      valor: Math.max(0, resumen.inspecciones.pendientes - resumen.noRealizadas.length),
+      punto: "bg-inspeccion-pendiente",
+    },
     { etiqueta: "En proceso", valor: resumen.inspecciones.enProceso, punto: "bg-inspeccion-en-proceso" },
     { etiqueta: "Finalizadas", valor: resumen.inspecciones.finalizadas, punto: "bg-inspeccion-finalizada" },
     { etiqueta: "Inmuebles activos", valor: resumen.inmueblesActivos },
@@ -44,6 +49,28 @@ export default async function PaginaDashboard() {
           </Link>
         }
       />
+
+      {/* Lo urgente va primero: inspecciones que nadie inició antes del cierre de su día. */}
+      {resumen.noRealizadas.length > 0 && (
+        <section
+          aria-labelledby="titulo-no-realizadas"
+          className="flex flex-col gap-3 rounded-xl border border-error-borde bg-error-fondo p-4"
+        >
+          <div className="flex items-start gap-2.5 text-error">
+            <Icono nombre="alerta" className="mt-0.5 size-5" />
+            <div className="flex flex-col gap-0.5">
+              <h2 id="titulo-no-realizadas" className="text-titulo-seccion font-semibold">
+                {plural(resumen.noRealizadas.length, "inspección no realizada", "inspecciones no realizadas")}
+              </h2>
+              <p className="text-cuerpo-sm">
+                No se iniciaron antes de las 7:00 p. m. del día programado. Ábrelas para reprogramarlas,
+                reasignarlas o cancelarlas.
+              </p>
+            </div>
+          </div>
+          <TablaInspecciones inspecciones={resumen.noRealizadas} mostrarInspector vacio="" />
+        </section>
+      )}
 
       <section aria-label="Indicadores" className="grid grid-cols-2 gap-4 sm:grid-cols-3 min-[1100px]:grid-cols-5">
         {indicadores.map(({ etiqueta, valor, punto }) => (

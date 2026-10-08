@@ -1,13 +1,8 @@
 import type { ReactNode } from "react";
-import { Badge } from "@/components/ui/Badge";
 import { CeldaFlecha, CeldaPrincipal, Tabla } from "@/components/ui/Tabla";
 import { formatearFechaHora } from "@/lib/formato";
-import {
-  ETIQUETA_ESTADO_INSPECCION,
-  ETIQUETA_TIPO_INSPECCION,
-  TONO_ESTADO_INSPECCION,
-  type InspeccionResumen,
-} from "@/lib/inspecciones";
+import { ETIQUETA_TIPO_INSPECCION, type InspeccionResumen } from "@/lib/inspecciones";
+import { BadgeEstadoInspeccion } from "./BadgeEstadoInspeccion";
 
 type Props = {
   inspecciones: InspeccionResumen[];
@@ -35,9 +30,7 @@ export function TablaInspecciones({ inspecciones, vacio, mostrarInspector = fals
           <td>{formatearFechaHora(inspeccion.programadaPara)}</td>
           {mostrarInspector && <td className="solo-escritorio">{inspeccion.inspector?.nombre ?? "—"}</td>}
           <td className="a-la-derecha">
-            <Badge tono={TONO_ESTADO_INSPECCION[inspeccion.estado]}>
-              {ETIQUETA_ESTADO_INSPECCION[inspeccion.estado]}
-            </Badge>
+            <BadgeEstadoInspeccion estado={inspeccion.estado} programadaPara={inspeccion.programadaPara} />
           </td>
           <CeldaFlecha />
         </tr>

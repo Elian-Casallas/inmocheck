@@ -34,6 +34,15 @@ Solo ves las inspecciones que te asignaron y los inmuebles de esas inspecciones.
 
 La inspección pasa a **En proceso**. Abrir la ficha no la inicia: solo el botón.
 
+### Hasta cuándo puedes iniciarla
+
+La hora programada es una guía: puedes iniciar antes o después, según llegues.
+El límite es el **cierre del día programado, a las 7:00 p. m.** (si la visita se
+programó después de las 7, hasta la medianoche).
+
+Pasado ese límite la inspección aparece en rojo como **No realizada** y ya no
+tiene botón para iniciarla. Avisa al administrador para que la reprograme.
+
 ## 4. Evaluar los elementos
 
 La pantalla muestra arriba tu avance y los **espacios** del inmueble (Cocina,
