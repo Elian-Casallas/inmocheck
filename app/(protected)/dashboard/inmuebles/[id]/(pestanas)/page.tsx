@@ -19,7 +19,7 @@ export default async function PaginaInmuebleResumen({
   const recientes = await listarInspeccionesDeInmueble(inmueble.id, INSPECCIONES_RECIENTES);
 
   return (
-    <div className="grid items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_360px]">
+    <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_360px]">
       <div className="flex flex-col gap-6">
         <Tarjeta className="flex flex-col gap-4">
           <h2 className="text-titulo-seccion font-semibold">Datos del inmueble</h2>

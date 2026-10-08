@@ -35,7 +35,8 @@ export function NavegacionInferior({ nombre, rol }: Props) {
 
   const cerrarMenu = () => setMenuAbierto(false);
   const opciones = MENU_POR_ROL[rol];
-  const claseItem = "flex flex-1 cursor-pointer flex-col items-center gap-0.5 py-1 text-pequeno font-medium";
+  const claseItem =
+    "flex min-w-0 flex-1 cursor-pointer flex-col items-center gap-0.5 py-1 text-center text-pequeno font-medium whitespace-nowrap";
 
   return (
     <>
@@ -45,7 +46,7 @@ export function NavegacionInferior({ nombre, rol }: Props) {
       >
         {opciones
           .filter((opcion) => opcion.enMovil)
-          .map(({ href, etiqueta, icono }) => {
+          .map(({ href, etiqueta, etiquetaCorta, icono }) => {
             const activa = estaActiva(rutaActual, href);
             return (
               <Link
@@ -55,7 +56,15 @@ export function NavegacionInferior({ nombre, rol }: Props) {
                 className={`${claseItem} ${activa ? "text-primario" : "text-texto-tenue"}`}
               >
                 <Icono nombre={icono} className="size-[22px]" />
-                {etiqueta}
+                {/* Por debajo de 510 px se usa el texto corto para que quepa en una línea. */}
+                {etiquetaCorta ? (
+                  <>
+                    <span className="min-[510px]:hidden">{etiquetaCorta}</span>
+                    <span className="max-[509px]:hidden">{etiqueta}</span>
+                  </>
+                ) : (
+                  etiqueta
+                )}
               </Link>
             );
           })}

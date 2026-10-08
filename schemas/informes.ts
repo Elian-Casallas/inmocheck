@@ -1,7 +1,15 @@
 import type { TipoInspeccion } from "@/lib/inspecciones";
 import { z } from "./zod";
 
-export const informeCrearSchema = z.object({ tipo: z.literal("ACTA").default("ACTA") }).strict();
+export const FOTOS_MAXIMAS_EN_INFORME = 60;
+
+export const informeCrearSchema = z
+  .object({
+    tipo: z.literal("ACTA").default("ACTA"),
+    // Fotos que lleva el acta. Si no se envía, van todas las de la inspección.
+    evidenciaIds: z.array(z.uuid()).max(FOTOS_MAXIMAS_EN_INFORME).optional(),
+  })
+  .strict();
 
 export type Informe = {
   id: string;

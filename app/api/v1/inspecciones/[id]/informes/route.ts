@@ -17,8 +17,8 @@ export function POST(request: Request, { params }: ContextoConId) {
   return responder(request, async () => {
     const actor = await requireActor();
     const id = validarId((await params).id);
-    informeCrearSchema.parse(await leerJson(request));
-    const informe = await generarInforme(actor, id);
+    const { evidenciaIds } = informeCrearSchema.parse(await leerJson(request));
+    const informe = await generarInforme(actor, id, evidenciaIds);
     return creado(informe, `/api/v1/informes/${informe.id}/descarga`);
   });
 }

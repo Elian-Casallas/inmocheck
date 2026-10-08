@@ -4,6 +4,8 @@ import type { Rol } from "@/lib/constantes";
 export type OpcionMenu = {
   href: string;
   etiqueta: string;
+  // Texto para pantallas angostas, donde la etiqueta completa no cabe en una línea.
+  etiquetaCorta?: string;
   icono: NombreIcono;
   // Las 3 principales también salen en la navegación inferior del celular.
   enMovil?: boolean;
@@ -21,7 +23,13 @@ export const MENU_POR_ROL: Record<Rol, OpcionMenu[]> = {
     { href: "/dashboard/informes", etiqueta: "Informes", icono: "informe" },
   ],
   INSPECTOR: [
-    { href: "/dashboard/mis-inspecciones", etiqueta: "Mis inspecciones", icono: "inspeccion", enMovil: true },
+    {
+      href: "/dashboard/mis-inspecciones",
+      etiqueta: "Mis inspecciones",
+      etiquetaCorta: "Inspecciones",
+      icono: "inspeccion",
+      enMovil: true,
+    },
     { href: "/dashboard/inmuebles", etiqueta: "Inmuebles", icono: "inmueble", enMovil: true },
     { href: "/dashboard/informes", etiqueta: "Informes", icono: "informe", enMovil: true },
   ],

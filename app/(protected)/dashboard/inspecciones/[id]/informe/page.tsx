@@ -7,7 +7,10 @@ import { Badge } from "@/components/ui/Badge";
 import { clasesBoton } from "@/components/ui/Boton";
 import { ListaDatos } from "@/components/ui/ListaDatos";
 import { Tarjeta } from "@/components/ui/Tarjeta";
+import { PanelLateral } from "@/components/ui/PanelLateral";
 import { BotonGenerarInforme, EnlaceDescarga } from "@/features/informes/components/AccionesInforme";
+import { SelectorFotosInforme, type GrupoDeFotos } from "@/features/informes/components/SelectorFotosInforme";
+import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
 import { cargarInspeccion } from "@/features/inspecciones/cargar";
 import { EstadoElementoTexto } from "@/features/inspecciones/components/realizar/SelectorEstado";
 import { formatearFechaHora } from "@/lib/formato";
@@ -19,12 +22,16 @@ import { listarDetalles } from "@/server/services/inspecciones.service";
 
 export default async function PaginaInspeccionInforme({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<ParametrosBusqueda>;
 }) {
   const { id } = await params;
+  const { generar } = aplanarParametros(await searchParams);
   const [actor, inspeccion] = await Promise.all([exigirActor(), cargarInspeccion(id)]);
   const ruta = `/dashboard/inspecciones/${inspeccion.id}`;
+  const rutaInforme = `${ruta}/informe`;
 
   // El informe solo existe para inspecciones cerradas con éxito.
   if (inspeccion.estado !== "FINALIZADA") redirect(ruta);
@@ -35,9 +42,34 @@ export default async function PaginaInspeccionInforme({
   ]);
   const ultimo = informes[0];
   const tipo = ETIQUETA_TIPO_INSPECCION[inspeccion.tipo];
-  const fotos = detalles.flatMap((detalle) =>
-    detalle.evidencias.map((evidencia) => ({ ...evidencia, titulo: `${detalle.espacioNombre} · ${detalle.elementoNombre}` })),
-  );
+
+  // Fotos agrupadas espacio → elemento, igual que saldrán en el PDF.
+  const gruposDeFotos: GrupoDeFotos[] = [];
+  for (const detalle of detalles) {
+    if (detalle.evidencias.length === 0) continue;
+    let grupo = gruposDeFotos.find((candidato) => candidato.espacio === detalle.espacioNombre);
+    if (!grupo) {
+      grupo = { espacio: detalle.espacioNombre, elementos: [] };
+      gruposDeFotos.push(grupo);
+    }
+    grupo.elementos.push({ nombre: detalle.elementoNombre, fotoIds: detalle.evidencias.map(({ id }) => id) });
+  }
+  const hayFotos = gruposDeFotos.length > 0;
+
+  // Con fotos, "generar" abre primero el panel para elegir cuáles van en el
+  // informe. Sin fotos no hay nada que elegir y se genera de una vez.
+  const accionGenerar = (yaTieneInforme: boolean) =>
+    hayFotos ? (
+      <Link
+        href={`${rutaInforme}?generar=1`}
+        scroll={false}
+        className={clasesBoton({ variante: yaTieneInforme ? "secundario" : "primario" })}
+      >
+        {yaTieneInforme ? "Generar nueva versión" : "Generar informe PDF"}
+      </Link>
+    ) : (
+      <BotonGenerarInforme inspeccionId={inspeccion.id} yaTieneInforme={yaTieneInforme} />
+    );
 
   return (
     <>
@@ -56,13 +88,13 @@ export default async function PaginaInspeccionInforme({
             {ultimo ? (
               <EnlaceDescarga informeId={ultimo.id} etiqueta={`Descargar PDF versión ${ultimo.version}`} conTexto />
             ) : (
-              <BotonGenerarInforme inspeccionId={inspeccion.id} yaTieneInforme={false} />
+              accionGenerar(false)
             )}
           </>
         }
       />
 
-      <div className="grid items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_360px]">
         <article
           aria-label="Vista previa del informe"
           className="flex flex-col gap-5 rounded-xl border border-borde bg-tarjeta p-5 shadow-tarjeta sm:p-10"
@@ -117,22 +149,31 @@ export default async function PaginaInspeccionInforme({
             </div>
           </div>
 
-          {fotos.length > 0 && (
-            <div className="flex flex-col gap-2">
-              <h3 className="text-cuerpo-sm font-medium">Evidencias</h3>
-              <div className="flex flex-wrap gap-2">
-                {fotos.map((foto) => (
-                  // eslint-disable-next-line @next/next/no-img-element -- enlace privado que vence; next/image no puede optimizarlo
-                  <img
-                    key={foto.id}
-                    src={`/api/v1/evidencias/${foto.id}/acceso?redirigir=1`}
-                    alt={`Foto de ${foto.titulo}`}
-                    title={foto.titulo}
-                    loading="lazy"
-                    className="size-[72px] rounded-lg bg-sutil object-cover"
-                  />
-                ))}
-              </div>
+          {hayFotos && (
+            <div className="flex flex-col gap-3">
+              <h3 className="text-cuerpo-sm font-medium">Evidencias fotográficas</h3>
+              {gruposDeFotos.map((grupo) => (
+                <section key={grupo.espacio} className="flex flex-col gap-2">
+                  <h4 className="border-b border-borde pb-1 text-cuerpo-sm font-semibold">{grupo.espacio}</h4>
+                  {grupo.elementos.map((elemento) => (
+                    <div key={elemento.nombre} className="flex flex-col gap-1.5">
+                      <span className="text-pequeno font-medium text-texto-secundario">{elemento.nombre}</span>
+                      <div className="flex flex-wrap gap-2">
+                        {elemento.fotoIds.map((fotoId, indice) => (
+                          // eslint-disable-next-line @next/next/no-img-element -- enlace privado que vence; next/image no puede optimizarlo
+                          <img
+                            key={fotoId}
+                            src={`/api/v1/evidencias/${fotoId}/acceso?redirigir=1`}
+                            alt={`Foto ${indice + 1} de ${elemento.nombre} (${grupo.espacio})`}
+                            loading="lazy"
+                            className="size-[72px] rounded-lg bg-sutil object-cover"
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </section>
+              ))}
             </div>
           )}
 
@@ -164,7 +205,7 @@ export default async function PaginaInspeccionInforme({
             </ul>
           )}
           <div className="flex flex-col gap-3 px-5 py-4">
-            {ultimo && <BotonGenerarInforme inspeccionId={inspeccion.id} yaTieneInforme />}
+            {ultimo && accionGenerar(true)}
             <p className="text-pequeno font-medium text-texto-tenue">
               El PDF se guarda de forma privada. Solo pueden descargarlo usuarios autorizados de tu
               inmobiliaria.
@@ -172,6 +213,12 @@ export default async function PaginaInspeccionInforme({
           </div>
         </Tarjeta>
       </div>
+
+      {generar && hayFotos && (
+        <PanelLateral titulo="Fotos del informe" hrefCerrar={rutaInforme}>
+          <SelectorFotosInforme inspeccionId={inspeccion.id} grupos={gruposDeFotos} hrefCerrar={rutaInforme} />
+        </PanelLateral>
+      )}
     </>
   );
 }

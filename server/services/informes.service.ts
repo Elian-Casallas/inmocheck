@@ -4,7 +4,12 @@ import { URL_FIRMADA_SEGUNDOS } from "@/lib/constantes";
 import { plural } from "@/lib/formato";
 import { crearClienteAdmin } from "@/lib/supabase/admin";
 import { crearClienteServidor } from "@/lib/supabase/server";
-import { codigoDeInforme, type Informe, type InformeConInspeccion } from "@/schemas/informes";
+import {
+  FOTOS_MAXIMAS_EN_INFORME,
+  codigoDeInforme,
+  type Informe,
+  type InformeConInspeccion,
+} from "@/schemas/informes";
 import type { Detalle, Inspeccion } from "@/schemas/inspecciones";
 import type { Actor } from "@/server/auth/sesion";
 import { AppError, ConflictError, NotFoundError } from "@/server/http/errores";
@@ -17,7 +22,8 @@ import { obtenerInspeccion } from "./inspecciones.service";
 
 const BUCKET_INFORMES = "informes";
 const BUCKET_EVIDENCIAS = "evidencias";
-const FOTOS_EN_EL_ACTA = 6;
+// react-pdf solo sabe incrustar JPG y PNG.
+const FORMATO_PDF: Record<string, "jpg" | "png"> = { "image/jpeg": "jpg", "image/png": "png" };
 
 const COLUMNAS = "id, inspeccionId:inspeccion_id, version, generadoEn:generado_en, generadoPor:perfiles (nombre)";
 
@@ -48,7 +54,11 @@ export async function listarInformes(limite?: number): Promise<InformeConInspecc
   return (data ?? []) as unknown as InformeConInspeccion[];
 }
 
-export async function generarInforme(actor: Actor, inspeccionId: string): Promise<Informe> {
+export async function generarInforme(
+  actor: Actor,
+  inspeccionId: string,
+  evidenciaIds?: string[],
+): Promise<Informe> {
   const inspeccion = await obtenerInspeccion(inspeccionId);
   if (inspeccion.estado !== "FINALIZADA") {
     throw new ConflictError("El informe solo se genera para inspecciones finalizadas.", "INSPECCION_NO_FINALIZADA");
@@ -63,7 +73,9 @@ export async function generarInforme(actor: Actor, inspeccionId: string): Promis
   // reintentar. Por eso generar el informe es un paso aparte de finalizar.
   let pdf: Buffer;
   try {
-    pdf = await renderizarActa(await reunirDatosDelActa(actor, inspeccion, { id, version, generadoEn }));
+    pdf = await renderizarActa(
+      await reunirDatosDelActa(actor, inspeccion, { id, version, generadoEn }, evidenciaIds),
+    );
   } catch (error) {
     console.error("No se pudo generar el PDF:", error);
     throw new AppError(
@@ -104,6 +116,7 @@ async function reunirDatosDelActa(
   actor: Actor,
   inspeccion: Inspeccion,
   informe: { id: string; version: number; generadoEn: string },
+  evidenciaIds?: string[],
 ): Promise<DatosActa> {
   const [detalles, inmueble, resumenComparacion] = await Promise.all([
     listarDetalles(inspeccion.id),
@@ -124,7 +137,7 @@ async function reunirDatosDelActa(
     generadoEn: informe.generadoEn,
     detalles,
     resumenComparacion,
-    fotos: await descargarFotos(detalles),
+    fotos: await descargarFotos(detalles, evidenciaIds),
   };
 }
 
@@ -141,18 +154,23 @@ async function resumirComparacion(inspeccion: Inspeccion): Promise<string | null
   );
 }
 
-async function descargarFotos(detalles: Detalle[]): Promise<DatosActa["fotos"]> {
+// Descarga las fotos del acta. Si se indicaron ids, solo esas; si no, todas.
+// Los ids se buscan dentro de los detalles de ESTA inspección: uno de otra
+// inspección no coincide con ninguno y simplemente se ignora.
+async function descargarFotos(detalles: Detalle[], evidenciaIds?: string[]): Promise<DatosActa["fotos"]> {
+  const elegidas = evidenciaIds ? new Set(evidenciaIds) : null;
+
   const candidatas = detalles
     .flatMap((detalle) =>
       detalle.evidencias.map((evidencia) => ({
         id: evidencia.id,
-        // react-pdf solo sabe incrustar JPG y PNG.
-        formato: evidencia.mimeType === "image/png" ? ("png" as const) : evidencia.mimeType === "image/jpeg" ? ("jpg" as const) : null,
-        titulo: `${detalle.espacioNombre} · ${detalle.elementoNombre}`,
+        formato: FORMATO_PDF[evidencia.mimeType] ?? null,
+        espacio: detalle.espacioNombre,
+        elemento: detalle.elementoNombre,
       })),
     )
-    .filter((foto) => foto.formato !== null)
-    .slice(0, FOTOS_EN_EL_ACTA);
+    .filter((foto) => foto.formato !== null && (!elegidas || elegidas.has(foto.id)))
+    .slice(0, FOTOS_MAXIMAS_EN_INFORME);
   if (candidatas.length === 0) return [];
 
   const supabase = await crearClienteServidor();
@@ -162,15 +180,17 @@ async function descargarFotos(detalles: Detalle[]): Promise<DatosActa["fotos"]> 
     .in("id", candidatas.map(({ id }) => id));
   const rutaPorId = new Map((rutas ?? []).map((fila) => [fila.id as string, fila.storage_path as string]));
 
+  // Todas las descargas en paralelo; se conserva el orden espacio → elemento.
   const almacenamiento = crearClienteAdmin().storage.from(BUCKET_EVIDENCIAS);
-  const fotos: DatosActa["fotos"] = [];
-  for (const { id, formato, titulo } of candidatas) {
-    const ruta = rutaPorId.get(id);
-    if (!ruta || !formato) continue;
-    const { data } = await almacenamiento.download(ruta);
-    if (data) fotos.push({ titulo, formato, datos: Buffer.from(await data.arrayBuffer()) });
-  }
-  return fotos;
+  const descargadas = await Promise.all(
+    candidatas.map(async ({ id, formato, espacio, elemento }) => {
+      const ruta = rutaPorId.get(id);
+      if (!ruta || !formato) return null;
+      const { data } = await almacenamiento.download(ruta);
+      return data ? { espacio, elemento, formato, datos: Buffer.from(await data.arrayBuffer()) } : null;
+    }),
+  );
+  return descargadas.filter((foto) => foto !== null);
 }
 
 // Enlace firmado para descargar el PDF. Solo si RLS deja ver el informe.

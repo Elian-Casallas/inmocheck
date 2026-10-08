@@ -57,7 +57,7 @@ export default async function PaginaDashboard() {
         ))}
       </section>
 
-      <div className="grid items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_360px]">
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-titulo-seccion font-semibold">Próximas inspecciones</h2>

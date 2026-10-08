@@ -20,8 +20,43 @@ export type DatosActa = {
   generadoEn: string;
   detalles: Detalle[];
   resumenComparacion: string | null;
-  fotos: { titulo: string; datos: Buffer; formato: "jpg" | "png" }[];
+  fotos: FotoActa[];
 };
+
+export type FotoActa = { espacio: string; elemento: string; datos: Buffer; formato: "jpg" | "png" };
+
+type FotosPorEspacio = { nombre: string; elementos: { nombre: string; fotos: FotoActa[] }[] };
+
+// Convierte la lista plana de fotos en espacio → elemento → fotos,
+// conservando el orden en que llegan (el mismo de la tabla de resultados).
+function agruparFotos(fotos: FotoActa[]): FotosPorEspacio[] {
+  const espacios: FotosPorEspacio[] = [];
+  for (const foto of fotos) {
+    let espacio = espacios.find((candidato) => candidato.nombre === foto.espacio);
+    if (!espacio) {
+      espacio = { nombre: foto.espacio, elementos: [] };
+      espacios.push(espacio);
+    }
+    let elemento = espacio.elementos.find((candidato) => candidato.nombre === foto.elemento);
+    if (!elemento) {
+      elemento = { nombre: foto.elemento, fotos: [] };
+      espacio.elementos.push(elemento);
+    }
+    elemento.fotos.push(foto);
+  }
+  return espacios;
+}
+
+const FOTOS_POR_FILA = 3;
+
+// Parte las fotos de un elemento en filas de tres.
+function enFilas(fotos: FotoActa[]): FotoActa[][] {
+  const filas: FotoActa[][] = [];
+  for (let inicio = 0; inicio < fotos.length; inicio += FOTOS_POR_FILA) {
+    filas.push(fotos.slice(inicio, inicio + FOTOS_POR_FILA));
+  }
+  return filas;
+}
 
 const COLOR = { texto: "#0f172a", tenue: "#64748b", borde: "#e2e8f0", primario: "#1d4ed8", sutil: "#f1f5f9" };
 
@@ -41,9 +76,19 @@ const estilos = StyleSheet.create({
   cElemento: { width: "22%", paddingHorizontal: 4 },
   cEstado: { width: "14%", paddingHorizontal: 4 },
   cObservacion: { width: "44%", paddingHorizontal: 4 },
-  fotos: { flexDirection: "row", flexWrap: "wrap" },
+  espacio: {
+    fontSize: 10.5,
+    fontFamily: "Helvetica-Bold",
+    marginTop: 10,
+    marginBottom: 4,
+    paddingBottom: 3,
+    borderBottomWidth: 0.5,
+    borderBottomColor: COLOR.borde,
+  },
+  elemento: { fontSize: 9, color: COLOR.tenue, marginTop: 4, marginBottom: 4 },
+  fotos: { flexDirection: "row" },
   foto: { width: "31%", marginRight: "2%", marginBottom: 8 },
-  imagen: { width: "100%", height: 110, objectFit: "cover", borderRadius: 3 },
+  imagen: { width: "100%", height: 120, objectFit: "cover", borderRadius: 3 },
   pie: { position: "absolute", left: 40, right: 40, bottom: 24, fontSize: 8, color: COLOR.tenue, borderTopWidth: 0.5, borderTopColor: COLOR.borde, paddingTop: 6 },
 });
 
@@ -72,7 +117,7 @@ function Acta({ datos }: { datos: DatosActa }) {
         </View>
 
         <Text style={estilos.seccion}>Resultado por elemento</Text>
-        <View style={[estilos.fila, estilos.cabecera]} fixed>
+        <View style={[estilos.fila, estilos.cabecera]}>
           <Text style={estilos.cEspacio}>Espacio</Text>
           <Text style={estilos.cElemento}>Elemento</Text>
           <Text style={estilos.cEstado}>Estado</Text>
@@ -97,17 +142,32 @@ function Acta({ datos }: { datos: DatosActa }) {
         )}
 
         {datos.fotos.length > 0 && (
-          <View break={datos.detalles.length > 22}>
-            <Text style={estilos.seccion}>Evidencias seleccionadas</Text>
-            <View style={estilos.fotos}>
-              {datos.fotos.map((foto, indice) => (
-                <View key={indice} style={estilos.foto} wrap={false}>
-                  {/* eslint-disable-next-line jsx-a11y/alt-text -- es el componente Image de react-pdf, no un <img> */}
-                  <Image style={estilos.imagen} src={{ data: foto.datos, format: foto.formato }} />
-                  <Text style={[estilos.tenue, { fontSize: 8, marginTop: 2 }]}>{foto.titulo}</Text>
-                </View>
-              ))}
-            </View>
+          // Las fotos van clasificadas: espacio → elemento.
+          <View>
+            <Text style={estilos.seccion}>Evidencias fotográficas</Text>
+            {agruparFotos(datos.fotos).map((espacio) =>
+              espacio.elementos.map((elemento, indiceElemento) =>
+                enFilas(elemento.fotos).map((fila, indiceFila) => (
+                  // wrap={false}: el bloque no se parte entre páginas. Los títulos
+                  // viajan pegados a la primera fila de fotos, así nunca queda un
+                  // título solo al final de una página.
+                  <View key={`${espacio.nombre}-${elemento.nombre}-${indiceFila}`} wrap={false}>
+                    {indiceFila === 0 && indiceElemento === 0 && (
+                      <Text style={estilos.espacio}>{espacio.nombre}</Text>
+                    )}
+                    {indiceFila === 0 && <Text style={estilos.elemento}>{elemento.nombre}</Text>}
+                    <View style={estilos.fotos}>
+                      {fila.map((foto, indice) => (
+                        <View key={indice} style={estilos.foto}>
+                          {/* eslint-disable-next-line jsx-a11y/alt-text -- es el componente Image de react-pdf, no un <img> */}
+                          <Image style={estilos.imagen} src={{ data: foto.datos, format: foto.formato }} />
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                )),
+              ),
+            )}
           </View>
         )}
 
