@@ -4,6 +4,8 @@ Aplicación web para gestionar inmuebles y realizar inspecciones digitales con
 fotos, historial, comparación entrada/salida e informes PDF. Proyecto del
 Diplomado Full Stack.
 
+**Aplicación desplegada:** https://inmocheck.vercel.app
+
 - **Roles:** administrador e inspector. Propietarios y arrendatarios son datos, no cuentas.
 - **Multi-inmobiliaria:** cada registro pertenece a una organización y la base de datos impide ver los de otra.
 
