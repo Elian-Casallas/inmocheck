@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
 import { Campo } from "@/components/ui/Campo";
+import { CampoContrasena } from "@/components/ui/CampoContrasena";
 import { apiFetch, mensajeDeError } from "@/lib/api/client";
 import { RUTA_INICIO_POR_ROL, type Rol } from "@/lib/constantes";
 import { loginSchema, type LoginDatos } from "@/schemas/auth";
@@ -47,14 +48,15 @@ export function FormularioLogin() {
         etiqueta="Correo electrónico"
         type="email"
         autoComplete="email"
+        placeholder="correo@gmail.com"
         error={errors.email?.message}
         {...register("email")}
       />
-      <Campo
+      <CampoContrasena
         id="password"
         etiqueta="Contraseña"
-        type="password"
         autoComplete="current-password"
+        placeholder="********"
         error={errors.password?.message}
         {...register("password")}
       />

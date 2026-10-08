@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton, clasesBoton } from "@/components/ui/Boton";
-import { Campo } from "@/components/ui/Campo";
+import { CampoContrasena } from "@/components/ui/CampoContrasena";
 import { CONTRASENA_MINIMA } from "@/lib/constantes";
 import { apiFetch } from "@/lib/api/client";
 import { aplicarErroresDeApi } from "@/lib/formularios";
@@ -53,18 +53,16 @@ export function FormularioNuevaContrasena() {
         </p>
       </div>
       {errorGeneral && <Aviso tipo="error">{errorGeneral}</Aviso>}
-      <Campo
+      <CampoContrasena
         id="password"
         etiqueta="Nueva contraseña"
-        type="password"
         autoComplete="new-password"
         error={errors.password?.message}
         {...register("password")}
       />
-      <Campo
+      <CampoContrasena
         id="confirmacion"
         etiqueta="Confirmar contraseña"
-        type="password"
         autoComplete="new-password"
         error={errors.confirmacion?.message}
         {...register("confirmacion")}

@@ -73,7 +73,19 @@ const TRAZOS = {
   buscar: <><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></>,
   info: <><circle cx="12" cy="12" r="10" /><path d="M12 16v-4M12 8h.01" /></>,
   alerta: <><circle cx="12" cy="12" r="10" /><path d="M12 8v4M12 16h.01" /></>,
-  comparar: <path d="M16 3h5v5M8 21H3v-5M21 3l-7 7M3 21l7-7" />,
+  ojo: (
+    <>
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z" />
+      <circle cx="12" cy="12" r="3" />
+    </>
+  ),
+  "ojo-tachado": (
+    <>
+      <path d="M9.9 4.24A9.1 9.1 0 0 1 12 4c6.5 0 10 7 10 7a13.2 13.2 0 0 1-1.67 2.68M6.61 6.61A13.5 13.5 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.39-1.61" />
+      <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24M2 2l20 20" />
+    </>
+  ),
+  comparar:<path d="M16 3h5v5M8 21H3v-5M21 3l-7 7M3 21l7-7" />,
   calendario: <><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" /></>,
 } as const;
 
