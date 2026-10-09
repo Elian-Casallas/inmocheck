@@ -11,6 +11,9 @@ import {
 } from "@/lib/constantes";
 import { exigirActor } from "@/server/auth/sesion";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Configuración" };
+
 const MEGABYTE = 1024 * 1024;
 
 export default async function PaginaConfiguracion() {

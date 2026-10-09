@@ -8,6 +8,9 @@ import { exigirRol } from "@/server/auth/sesion";
 import { listarInmuebles } from "@/server/services/inmuebles.service";
 import { listarOpcionesInspector } from "@/server/services/inspectores.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Programar inspección" };
+
 export default async function PaginaInspeccionNueva({
   searchParams,
 }: {

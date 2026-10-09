@@ -5,6 +5,9 @@ import { FormularioInmueble } from "@/features/inmuebles/components/FormularioIn
 import { exigirRol } from "@/server/auth/sesion";
 import { listarOpcionesPropietario } from "@/server/services/propietarios.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Editar inmueble" };
+
 export default async function PaginaInmuebleEditar({
   params,
 }: {

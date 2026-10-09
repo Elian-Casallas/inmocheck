@@ -3,6 +3,9 @@ import { cargarInmueble } from "@/features/inmuebles/cargar";
 import { ListaInspecciones } from "@/features/inspecciones/components/ListaInspecciones";
 import { listarInspeccionesDeInmueble } from "@/server/repositories/inspecciones.repository";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Historial" };
+
 export default async function PaginaInmuebleHistorial({
   params,
 }: {

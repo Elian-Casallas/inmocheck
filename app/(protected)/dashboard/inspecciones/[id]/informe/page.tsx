@@ -20,6 +20,9 @@ import { exigirActor } from "@/server/auth/sesion";
 import { listarInformesDeInspeccion } from "@/server/services/informes.service";
 import { listarDetalles } from "@/server/services/inspecciones.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Informe" };
+
 export default async function PaginaInspeccionInforme({
   params,
   searchParams,

@@ -8,6 +8,9 @@ import { ETIQUETA_TIPO_INSPECCION } from "@/lib/inspecciones";
 import { exigirRol } from "@/server/auth/sesion";
 import { listarDetalles } from "@/server/services/inspecciones.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Realizar inspección" };
+
 // La página solo carga los datos y decide si corresponde estar aquí.
 // Toda la interacción vive en el componente cliente RealizarInspeccion.
 export default async function PaginaInspeccionRealizar({

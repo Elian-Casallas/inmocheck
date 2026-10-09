@@ -4,6 +4,9 @@ import { EditorInventario } from "@/features/inventario/components/EditorInventa
 import { exigirActor } from "@/server/auth/sesion";
 import { listarEspacios } from "@/server/services/inventario.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Inventario" };
+
 export default async function PaginaInmuebleInventario({
   params,
 }: {

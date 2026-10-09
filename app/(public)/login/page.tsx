@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Aviso } from "@/components/ui/Aviso";
 import { FormularioLogin } from "@/features/auth/components/FormularioLogin";
 
-export const metadata: Metadata = { title: "Iniciar sesión · InmoCheck" };
+export const metadata: Metadata = { title: "Iniciar sesión" };
 
 export default async function PaginaLogin({
   searchParams,

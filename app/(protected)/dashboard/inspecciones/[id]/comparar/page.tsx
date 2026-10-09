@@ -13,6 +13,9 @@ import { aplanarParametros, urlCon, type ParametrosBusqueda } from "@/lib/url";
 import { exigirActor } from "@/server/auth/sesion";
 import { compararInspecciones, listarEntradasComparables } from "@/server/services/comparacion.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Comparar entrada y salida" };
+
 const TEXTO_RESULTADO: Record<ResultadoComparacion, { texto: string; clase: string }> = {
   SIN_CAMBIO: { texto: "Sin cambio", clase: "text-texto-tenue" },
   CAMBIO: { texto: "Cambio de estado registrado", clase: "text-inspeccion-pendiente" },

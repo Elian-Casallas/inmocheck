@@ -14,6 +14,9 @@ import { inspeccionesFiltroSchema } from "@/schemas/inspecciones";
 import { exigirRol } from "@/server/auth/sesion";
 import { contarPorEstado, listarInspecciones, obtenerInspeccion } from "@/server/services/inspecciones.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Mis inspecciones" };
+
 const RUTA = "/dashboard/mis-inspecciones";
 const ESTADOS_PROXIMAS: EstadoInspeccion[] = ["PENDIENTE"];
 const ESTADOS_CERRADAS: EstadoInspeccion[] = ["FINALIZADA", "CANCELADA"];

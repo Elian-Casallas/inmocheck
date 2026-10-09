@@ -8,7 +8,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "InmoCheck",
+  // Cada página pone su título y aquí se le agrega el nombre de la app.
+  title: { default: "InmoCheck", template: "%s · InmoCheck" },
   description: "Gestión e inspección digital de inmuebles",
 };
 

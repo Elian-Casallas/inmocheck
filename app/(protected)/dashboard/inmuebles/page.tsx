@@ -12,6 +12,9 @@ import { ETIQUETA_TIPO_INMUEBLE, TIPOS_INMUEBLE, inmueblesFiltroSchema } from "@
 import { exigirActor } from "@/server/auth/sesion";
 import { contarInmueblesActivos, listarInmuebles } from "@/server/services/inmuebles.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Inmuebles" };
+
 const OPCIONES_TIPO = [
   { valor: "", texto: "Todos los tipos" },
   ...TIPOS_INMUEBLE.map((tipo) => ({ valor: tipo, texto: ETIQUETA_TIPO_INMUEBLE[tipo] })),

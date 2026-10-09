@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FormularioRecuperar } from "@/features/auth/components/FormularioRecuperar";
 
-export const metadata: Metadata = { title: "Recuperar contraseña · InmoCheck" };
+export const metadata: Metadata = { title: "Recuperar contraseña" };
 
 export default function PaginaRecuperarContrasena() {
   return (

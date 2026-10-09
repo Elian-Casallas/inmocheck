@@ -28,6 +28,9 @@ import type { Actividad } from "@/server/repositories/inspecciones.repository";
 import { listarOpcionesInspector } from "@/server/services/inspectores.service";
 import { listarActividad, listarDetalles } from "@/server/services/inspecciones.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Inspección" };
+
 const TEXTO_ACTIVIDAD: Record<string, string> = {
   PROGRAMADA: "programó la inspección",
   REPROGRAMADA: "cambió la fecha o la nota",

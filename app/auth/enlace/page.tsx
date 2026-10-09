@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { TarjetaAcceso } from "@/components/layout/TarjetaAcceso";
 import { ProcesarEnlace } from "@/features/auth/components/ProcesarEnlace";
 
-export const metadata: Metadata = { title: "Verificando enlace · InmoCheck" };
+export const metadata: Metadata = { title: "Verificando enlace" };
 
 // Destino de los enlaces que llegan por correo (invitación y recuperación).
 export default function PaginaEnlace() {

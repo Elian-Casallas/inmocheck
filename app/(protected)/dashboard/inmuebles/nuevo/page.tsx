@@ -3,6 +3,9 @@ import { FormularioInmueble } from "@/features/inmuebles/components/FormularioIn
 import { exigirRol } from "@/server/auth/sesion";
 import { listarOpcionesPropietario } from "@/server/services/propietarios.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Registrar inmueble" };
+
 export default async function PaginaInmuebleNuevo() {
   await exigirRol("ADMIN");
   // Las opciones del <select> se cargan en el servidor: RLS garantiza que

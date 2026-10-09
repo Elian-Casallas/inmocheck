@@ -3,6 +3,9 @@ import { BotonCerrarSesion } from "@/components/layout/BotonCerrarSesion";
 import { PantallaError } from "@/components/layout/PantallaError";
 import { clasesBoton } from "@/components/ui/Boton";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Sin permiso" };
+
 export default function PaginaSinPermiso() {
   return (
     <PantallaError

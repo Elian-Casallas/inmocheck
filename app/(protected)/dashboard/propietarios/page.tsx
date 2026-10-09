@@ -13,6 +13,9 @@ import { propietariosFiltroSchema } from "@/schemas/propietarios";
 import { exigirRol } from "@/server/auth/sesion";
 import { listarPropietarios } from "@/server/services/propietarios.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Propietarios" };
+
 const RUTA = "/dashboard/propietarios";
 
 export default async function PaginaPropietarios({

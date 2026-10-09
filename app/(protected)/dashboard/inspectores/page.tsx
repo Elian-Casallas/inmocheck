@@ -17,6 +17,9 @@ import { exigirRol } from "@/server/auth/sesion";
 import { listarAbiertasDeInspector } from "@/server/repositories/inspecciones.repository";
 import { listarInspectores } from "@/server/services/inspectores.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Inspectores" };
+
 const RUTA = "/dashboard/inspectores";
 
 const OPCIONES_ESTADO = [

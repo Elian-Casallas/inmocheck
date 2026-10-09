@@ -7,6 +7,9 @@ import { formatearArea, formatearFecha } from "@/lib/formato";
 import { ETIQUETA_TIPO_INMUEBLE } from "@/schemas/inmuebles";
 import { listarInspeccionesDeInmueble } from "@/server/repositories/inspecciones.repository";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Inmueble" };
+
 const INSPECCIONES_RECIENTES = 3;
 
 export default async function PaginaInmuebleResumen({

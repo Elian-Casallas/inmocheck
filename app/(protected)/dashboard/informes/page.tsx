@@ -10,6 +10,9 @@ import { informesFiltroSchema } from "@/schemas/informes";
 import { exigirActor } from "@/server/auth/sesion";
 import { listarInformes } from "@/server/services/informes.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Informes" };
+
 const RUTA = "/dashboard/informes";
 
 const OPCIONES_TIPO = [

@@ -13,6 +13,9 @@ import { exigirActor } from "@/server/auth/sesion";
 import { obtenerResumen } from "@/server/services/dashboard.service";
 import { listarInformesRecientes } from "@/server/services/informes.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Resumen" };
+
 const INFORMES_RECIENTES = 4;
 
 export default async function PaginaDashboard() {

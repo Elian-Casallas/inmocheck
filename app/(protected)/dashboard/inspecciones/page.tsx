@@ -11,6 +11,9 @@ import { inspeccionesFiltroSchema } from "@/schemas/inspecciones";
 import { exigirRol } from "@/server/auth/sesion";
 import { contarPorEstado, listarInspecciones } from "@/server/services/inspecciones.service";
 
+// Título de la pestaña del navegador.
+export const metadata = { title: "Inspecciones" };
+
 const RUTA = "/dashboard/inspecciones";
 
 export default async function PaginaInspecciones({
