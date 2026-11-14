@@ -1,1 +1,51 @@
 @AGENTS.md
+
+# Proyecto: InmoCheck
+
+Inspecciones digitales de inmuebles para inmobiliarias: inventario, visitas con fotos, comparación entrada/salida y actas PDF. App: https://inmocheck.vercel.app
+
+## Stack
+- Next.js 16.3 (App Router) + React 19.2 + TypeScript 5 + Tailwind CSS 4
+- API BFF en `app/api/v1` (Route Handlers). No hay backend aparte.
+- Supabase: PostgreSQL con RLS, Auth (cookies) y Storage privado
+- React Hook Form + Zod 4 · `@react-pdf/renderer` · Vitest
+- Despliegue: Vercel (app) y Supabase (datos)
+
+## Documentación (léela antes de cualquier cambio)
+- Qué es el producto y qué NO entra: @docs/producto.md
+- Tecnología, carpetas, rutas y entidades: @docs/arquitectura.md
+- Funcionalidades y criterios: `docs/specs/` (F1–F5)
+- Reglas de negocio, estados y permisos: @docs/reglas-de-negocio.md
+- Endpoints, errores y convenciones de la API: `docs/contratos/api.md`
+- Colores, tipografía y estilo: @docs/diseno/identidad-visual.md
+- Reglas de diseño y componentes: `docs/diseno/sistema-de-diseno.md` · Pantallas: `docs/diseno/pantallas.md`
+- Prototipo de referencia: `documentos/inmocheck-prototipo/index.html`
+- Por qué se hizo así: `docs/decisiones.md`
+- Qué está hecho y qué sigue: `docs/tareas.md`
+- Detalle ampliado: `documentos/` (especificación, diseño técnico, plan, prototipo, Postman)
+
+## Reglas de trabajo
+- Implementa UNA tarea de `docs/tareas.md` a la vez y márcala al terminar.
+- No agregues funcionalidades que no estén en `docs/specs/`. Si el alcance cambia, actualiza primero los docs.
+- No toques archivos que la tarea no requiera.
+- Nunca escribas llaves o tokens en el código: usa `.env.local`. `SUPABASE_SERVICE_ROLE_KEY` es solo de servidor.
+- Para la UI, usa la skill `ui-componentes`.
+- Al terminar cada tarea, explica cómo probarla en el navegador.
+
+## Convenciones
+- Capas: Route Handler (sesión, rol y Zod) → `server/services` (reglas) → `server/repositories` (solo Supabase). Sin lógica de negocio en páginas ni en rutas.
+- El rol y la organización salen de la sesión, nunca del cuerpo de la petición.
+- Los esquemas Zod de `schemas/` se comparten entre el formulario y la API.
+- Los cambios de estado de una inspección van por funciones SQL con `version` (control de concurrencia).
+- Nada se borra: se desactiva (`activo = false`).
+- Los filtros, la página y los paneles viven en la URL.
+- Los errores de la API van en `application/problem+json`.
+- Código, nombres y textos en español. Componentes en PascalCase. Diseño mobile first.
+- Cambios en la base solo con una migración nueva en `supabase/migrations/`.
+
+## Código limpio (de `documentos/Plan/00-guia-del-plan.md`)
+- Nombres que se explican solos: dominio en español (`crearInmueble`) e inglés solo para lo que ya viene así (`route.ts`).
+- Funciones pequeñas con una sola tarea.
+- TypeScript estricto: nada de `any`.
+- Nada de números ni textos mágicos: los límites (8 fotos, 10 MB, 60 s) van en `lib/constantes.ts`.
+- Un commit por paso con mensaje claro (`feat: …`, `fix: …`, `docs: …`).
