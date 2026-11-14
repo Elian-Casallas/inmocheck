@@ -12,7 +12,12 @@ export const propietarioCrearSchema = z
 // partial(): los mismos campos, todos opcionales. Sigue siendo strict.
 export const propietarioEditarSchema = propietarioCrearSchema.partial();
 
-export const propietariosFiltroSchema = paginacionSchema.extend({ search: busquedaSchema });
+// ?inmuebles=con|sin: propietarios con o sin inmuebles asociados. Sin valor: todos.
+// .catch() en el campo: un valor inválido se ignora sin borrar search ni page.
+export const propietariosFiltroSchema = paginacionSchema.extend({
+  search: busquedaSchema,
+  inmuebles: z.enum(["con", "sin"]).optional().catch(undefined),
+});
 
 export type PropietarioCrear = z.infer<typeof propietarioCrearSchema>;
 export type PropietarioEditar = z.infer<typeof propietarioEditarSchema>;

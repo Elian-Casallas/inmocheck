@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { EncabezadoPagina } from "@/components/layout/EncabezadoPagina";
 import { clasesBoton } from "@/components/ui/Boton";
-import { FiltroBusqueda } from "@/components/ui/FiltrosUrl";
+import { FiltroBusqueda, FiltroSeleccion } from "@/components/ui/FiltrosUrl";
 import { Icono } from "@/components/ui/Icono";
 import { Paginacion } from "@/components/ui/Paginacion";
 import { PanelLateral } from "@/components/ui/PanelLateral";
@@ -17,6 +17,12 @@ import { listarPropietarios } from "@/server/services/propietarios.service";
 export const metadata = { title: "Propietarios" };
 
 const RUTA = "/dashboard/propietarios";
+
+const OPCIONES_INMUEBLES = [
+  { valor: "", texto: "Todos" },
+  { valor: "con", texto: "Con inmuebles" },
+  { valor: "sin", texto: "Sin inmuebles" },
+];
 
 export default async function PaginaPropietarios({
   searchParams,
@@ -48,13 +54,16 @@ export default async function PaginaPropietarios({
 
       <div className="flex flex-wrap gap-3">
         <FiltroBusqueda placeholder="Buscar por nombre o correo" etiqueta="Buscar propietarios" />
+        <FiltroSeleccion parametro="inmuebles" etiqueta="Inmuebles" opciones={OPCIONES_INMUEBLES} />
       </div>
 
       <Tabla
         encabezados={["Nombre", "Correo", "Teléfono", "Inmuebles"]}
         vacio={
           propietarios.length === 0 &&
-          (filtro.search ? "Ningún propietario coincide con la búsqueda." : "Aún no hay propietarios registrados.")
+          (filtro.search || filtro.inmuebles
+            ? "Ningún propietario coincide con los filtros."
+            : "Aún no hay propietarios registrados.")
         }
         pie={
           <Paginacion page={meta.page} pageSize={meta.pageSize} total={meta.total} parametros={parametros} ruta={RUTA} />

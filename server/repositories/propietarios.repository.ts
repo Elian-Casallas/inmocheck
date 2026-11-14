@@ -25,6 +25,11 @@ export async function listarPropietarios(filtro: PropietariosFiltro) {
     consulta = consulta.or(`nombre.ilike.%${busqueda}%,email.ilike.%${busqueda}%`);
   }
 
+  // Se filtra en la consulta (no en JS) para que el total y la paginación cuadren.
+  // "inmuebles" es la relación embebida del select: null = no tiene ninguno.
+  if (filtro.inmuebles === "sin") consulta = consulta.is("inmuebles", null);
+  if (filtro.inmuebles === "con") consulta = consulta.not("inmuebles", "is", null);
+
   const { data, count, error } = await consulta;
   if (error) throw error;
   return { filas: (data ?? []) as Propietario[], total: count ?? 0 };

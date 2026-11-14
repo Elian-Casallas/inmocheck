@@ -3,6 +3,7 @@ import { contrasenaSchema, loginSchema, nuevaContrasenaSchema } from "@/schemas/
 import { paginacionSchema } from "@/schemas/comun";
 import { inmuebleCrearSchema, inmuebleEditarSchema, inmueblesFiltroSchema } from "@/schemas/inmuebles";
 import { detalleGuardarSchema, inspeccionCancelarSchema, inspeccionCrearSchema } from "@/schemas/inspecciones";
+import { propietariosFiltroSchema } from "@/schemas/propietarios";
 
 const UUID = "11111111-1111-4111-8111-111111111111";
 
@@ -70,6 +71,24 @@ describe("inmueble", () => {
   it("solo acepta valores de orden de la lista blanca", () => {
     expect(inmueblesFiltroSchema.safeParse({ sort: "-createdAt" }).success).toBe(true);
     expect(inmueblesFiltroSchema.safeParse({ sort: "codigo; drop table inmuebles" }).success).toBe(false);
+  });
+});
+
+describe("filtro de propietarios", () => {
+  it.each(["con", "sin"])("acepta inmuebles=%s", (valor) => {
+    expect(propietariosFiltroSchema.parse({ inmuebles: valor }).inmuebles).toBe(valor);
+  });
+
+  it("sin el parámetro no filtra por inmuebles", () => {
+    expect(propietariosFiltroSchema.parse({}).inmuebles).toBeUndefined();
+  });
+
+  it("ignora un valor inválido sin perder la búsqueda ni la página", () => {
+    const filtro = propietariosFiltroSchema.parse({ inmuebles: "xyz", search: "ana", page: "2" });
+
+    expect(filtro.inmuebles).toBeUndefined();
+    expect(filtro.search).toBe("ana");
+    expect(filtro.page).toBe(2);
   });
 });
 
