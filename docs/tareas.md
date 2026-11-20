@@ -60,3 +60,39 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 - [x] 4.2 Redirect URLs de Supabase para los enlaces del correo
 - [x] 4.3 Manuales del administrador y del inspector
 - [x] 4.4 Planos SDD en `docs/` (M4U3)
+
+## Backend propio en Spring Boot + AWS
+> Pedido del docente (2026-11-20). Opción A: Spring Boot reemplaza el BFF y Supabase se queda como
+> base, Auth y Storage. Diseño: `docs/arquitectura.md`. Decisiones: `docs/decisiones.md`.
+> Regla: un módulo a la vez. Un módulo está "hecho" cuando su carpeta de Postman pasa contra Spring
+> y el proxy ya lo manda a Spring.
+
+**Base**
+- [ ] 5.1 Confirmar con el docente que Supabase puede seguir como base de datos, y revisar si el proyecto firma los JWT con JWKS o con el secreto HS256
+- [ ] 5.2 Crear `backend/` con Spring Boot 3, Java 21 y Maven (Web, Security, OAuth2 Resource Server, JDBC, Validation); `GET /actuator/health` responde
+- [ ] 5.3 Validar el JWT de Supabase y armar `Actor` desde `perfiles` (401 sin token, 403 con la cuenta desactivada)
+- [ ] 5.4 `EjecutorRls`: transacción con `role authenticated` y `request.jwt.claims`; prueba de que un admin de otra organización no ve los datos
+- [ ] 5.5 `ManejadorErrores` con `ProblemDetail` (400, 401, 403, 404, 409, 413, 415, 422, 500) y `Pagina<T>` con `data` y `meta`
+- [ ] 5.6 `GET /api/v1/auth/me` en Spring
+
+**Puente con el front**
+- [ ] 5.7 Proxy `app/api/v1/[...ruta]/route.ts` con una lista de módulos migrados y `BACKEND_URL`
+- [ ] 5.8 `lib/api/servidor.ts` para que los Server Components lean de Spring
+
+**Módulos** (en cada uno: endpoints, Bean Validation con los mensajes de Zod, pruebas MockMvc, páginas pasadas a `lib/api/servidor.ts`, módulo agregado al proxy y carpeta de Postman pasando)
+- [ ] 5.9 Propietarios
+- [ ] 5.10 Inmuebles
+- [ ] 5.11 Inventario (espacios y elementos)
+- [ ] 5.12 Inspectores (invitación y reenvío con Auth Admin)
+- [ ] 5.13 Inspecciones (crear, reprogramar, iniciar, reasignar, cancelar)
+- [ ] 5.14 Detalles y finalización
+- [ ] 5.15 Evidencias (subida multipart a Storage, enlace de 60 s, retiro)
+- [ ] 5.16 Comparación entrada/salida
+- [ ] 5.17 Informes PDF con OpenPDF y descarga firmada
+- [ ] 5.18 Dashboard y auditoría
+
+**Nube y cierre**
+- [ ] 5.19 Desplegar en AWS Elastic Beanstalk (Java 21) con HTTPS y variables de entorno
+- [ ] 5.20 Configurar `BACKEND_URL` en Vercel y probar en producción el flujo central (login → inmueble → programar → realizar con fotos → finalizar → PDF)
+- [ ] 5.21 Borrar el BFF viejo (`server/services`, `server/repositories`, `server/pdf`, `lib/supabase/admin.ts`, rutas migradas) y quitar `SUPABASE_SERVICE_ROLE_KEY` de Vercel
+- [ ] 5.22 Actualizar los manuales, el README y `docs/contratos/api.md` (base y autenticación)

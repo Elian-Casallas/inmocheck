@@ -5,11 +5,11 @@
 Inspecciones digitales de inmuebles para inmobiliarias: inventario, visitas con fotos, comparación entrada/salida y actas PDF. App: https://inmocheck.vercel.app
 
 ## Stack
-- Next.js 16.3 (App Router) + React 19.2 + TypeScript 5 + Tailwind CSS 4
-- API BFF en `app/api/v1` (Route Handlers). No hay backend aparte.
-- Supabase: PostgreSQL con RLS, Auth (cookies) y Storage privado
-- React Hook Form + Zod 4 · `@react-pdf/renderer` · Vitest
-- Despliegue: Vercel (app) y Supabase (datos)
+- Front: Next.js 16.3 (App Router) + React 19.2 + TypeScript 5 + Tailwind CSS 4 · React Hook Form + Zod 4 · Vitest
+- Back: **Spring Boot 3 + Java 21** en `backend/` (Maven, Spring Security con el JWT de Supabase, `JdbcClient`, Bean Validation, OpenPDF, JUnit 5)
+- **En migración** (sección 5 de `docs/tareas.md`): los módulos que aún no están en Spring siguen en el BFF viejo de `app/api/v1` y `server/`. Next.js reenvía `/api/v1` a Spring con un proxy.
+- Supabase: PostgreSQL con RLS y funciones SQL, Auth (cookies en el front, JWT en el back) y Storage privado
+- Despliegue: Vercel (front), AWS Elastic Beanstalk (back) y Supabase (datos)
 
 ## Documentación (léela antes de cualquier cambio)
 - Qué es el producto y qué NO entra: @docs/producto.md
@@ -33,7 +33,8 @@ Inspecciones digitales de inmuebles para inmobiliarias: inventario, visitas con 
 - Al terminar cada tarea, explica cómo probarla en el navegador.
 
 ## Convenciones
-- Capas: Route Handler (sesión, rol y Zod) → `server/services` (reglas) → `server/repositories` (solo Supabase). Sin lógica de negocio en páginas ni en rutas.
+- Capas del back: Controller (rol y `@Valid`) → Service (reglas) → Repository (`JdbcClient`, siempre dentro de `EjecutorRls`). Sin lógica de negocio en páginas, en el proxy ni en los controllers.
+- Spring respeta `docs/contratos/api.md` tal cual; si algo del contrato cambia, primero se actualiza el doc.
 - El rol y la organización salen de la sesión, nunca del cuerpo de la petición.
 - Los esquemas Zod de `schemas/` se comparten entre el formulario y la API.
 - Los cambios de estado de una inspección van por funciones SQL con `version` (control de concurrencia).

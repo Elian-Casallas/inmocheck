@@ -6,6 +6,7 @@
 
 ## Convenciones
 - **Base:** mismo dominio que el front (`http://localhost:3000/api/v1` en desarrollo). La sesión va en cookies httpOnly de Supabase.
+- **Backend (desde 2026-11-20):** el proxy de Next.js reenvía estas rutas a Spring Boot (`BACKEND_URL/api/v1/...`) con `Authorization: Bearer <JWT de Supabase>`. Spring responde exactamente este contrato. `login`, `logout`, `recuperar-contrasena` y `contrasena` se quedan en Next.js porque manejan las cookies.
 - **Formato:** JSON. Las fotos se suben como `multipart/form-data`.
 - **Métodos:**
   - `GET` lee, `POST` crea o ejecuta una acción, `PATCH` actualiza parcialmente.
