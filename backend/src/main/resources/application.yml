@@ -1,6 +1,15 @@
 spring:
   application:
     name: inmocheck-backend
+  config:
+    # En local, las variables salen de backend/.env (no se sube a git).
+    # En AWS no existe ese archivo: se usan las variables del entorno.
+    import: optional:file:.env[.properties]
+
+inmocheck:
+  supabase:
+    # Si falta, la app no arranca (ver PropiedadesSupabase).
+    url: ${SUPABASE_URL:}
 
 server:
   # Elastic Beanstalk entrega el puerto en la variable PORT; en local es 8080

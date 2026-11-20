@@ -68,10 +68,10 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 > y el proxy ya lo manda a Spring.
 
 **Base**
-- [ ] 5.1 Confirmar con el docente que Supabase puede seguir como base de datos, y revisar si el proyecto firma los JWT con JWKS o con el secreto HS256
+- [ ] 5.1 Confirmar con el docente que Supabase puede seguir como base de datos (pendiente). Firma de los JWT revisada: ES256 con JWKS
 - [x] 5.2 Crear `backend/` con Spring Boot 4.1, Java 21 y Maven Wrapper (Web MVC, Actuator, Validation); `GET /actuator/health` responde `UP`
-- [ ] 5.3 Agregar Security y OAuth2 Resource Server; validar el JWT de Supabase y armar `Actor` desde `perfiles` (401 sin token, 403 con la cuenta desactivada)
-- [ ] 5.4 Agregar JDBC y el driver de PostgreSQL; `EjecutorRls`: transacción con `role authenticated` y `request.jwt.claims`; prueba de que un admin de otra organización no ve los datos
+- [x] 5.3 Agregar Security y OAuth2 Resource Server; validar el JWT de Supabase (firma ES256, vencimiento, emisor y audiencia) y responder 401/403 en `problem+json`
+- [ ] 5.4 Agregar JDBC y el driver de PostgreSQL; armar `Actor` desde `perfiles` (403 `CUENTA_INACTIVA` con la cuenta desactivada); `EjecutorRls`: transacción con `role authenticated` y `request.jwt.claims`; prueba de que un admin de otra organización no ve los datos
 - [ ] 5.5 `ManejadorErrores` con `ProblemDetail` (400, 401, 403, 404, 409, 413, 415, 422, 500) y `Pagina<T>` con `data` y `meta`
 - [ ] 5.6 `GET /api/v1/auth/me` en Spring
 

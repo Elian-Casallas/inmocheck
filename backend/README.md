@@ -5,6 +5,9 @@ API REST de InmoCheck. Diseño y plan: `../docs/arquitectura.md` y la sección 5
 ## Requisitos
 - Java 21. No hace falta instalar Maven: el wrapper `mvnw` descarga la versión correcta.
 
+## Configuración
+Copia `.env.example` como `.env` y llena los valores (`.env` no se sube a git). Sin `SUPABASE_URL` la app no arranca.
+
 ## Comandos (desde `backend/`)
 | Qué | Windows (PowerShell) |
 |---|---|
@@ -13,6 +16,8 @@ API REST de InmoCheck. Diseño y plan: `../docs/arquitectura.md` y la sección 5
 | Generar el `.jar` para AWS | `.\mvnw.cmd package` → `target/inmocheck-backend-0.0.1-SNAPSHOT.jar` |
 
 Comprobar que está vivo: http://localhost:8080/actuator/health → `{"status":"UP"}`.
+
+Todo lo demás exige `Authorization: Bearer <JWT de Supabase>`. Sin token, o con un token inválido, responde `401` en `application/problem+json`.
 
 ## Problema conocido en Windows
 Si al arrancar aparece `Unable to establish loopback connection`, Java no logra crear su socket interno en la carpeta temporal del usuario (pasa cuando el nombre de usuario tiene espacios). Se arregla indicándole una carpeta sin espacios:
