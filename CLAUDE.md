@@ -6,7 +6,7 @@ Inspecciones digitales de inmuebles para inmobiliarias: inventario, visitas con 
 
 ## Stack
 - Front: Next.js 16.3 (App Router) + React 19.2 + TypeScript 5 + Tailwind CSS 4 · React Hook Form + Zod 4 · Vitest
-- Back: **Spring Boot 3 + Java 21** en `backend/` (Maven, Spring Security con el JWT de Supabase, `JdbcClient`, Bean Validation, OpenPDF, JUnit 5)
+- Back: **Spring Boot 4.1 + Java 21** en `backend/` (Maven, Spring Security con el JWT de Supabase, `JdbcClient`, Bean Validation, OpenPDF, JUnit 5)
 - **En migración** (sección 5 de `docs/tareas.md`): los módulos que aún no están en Spring siguen en el BFF viejo de `app/api/v1` y `server/`. Next.js reenvía `/api/v1` a Spring con un proxy.
 - Supabase: PostgreSQL con RLS y funciones SQL, Auth (cookies en el front, JWT en el back) y Storage privado
 - Despliegue: Vercel (front), AWS Elastic Beanstalk (back) y Supabase (datos)

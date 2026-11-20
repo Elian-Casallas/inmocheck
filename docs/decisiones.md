@@ -39,7 +39,8 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 
 | Fecha | Decisión | Por qué |
 |---|---|---|
-| 2026-11-20 | Backend en **Spring Boot 3 + Java 21**, en la carpeta `backend/` del mismo repositorio | Es el stack del diplomado y cumple el pedido de un backend propio; un solo repositorio mantiene juntos el SDD, el front y el back |
+| 2026-11-20 | Backend en **Spring Boot 4.1 + Java 21**, en la carpeta `backend/` del mismo repositorio | Es el stack del diplomado y cumple el pedido de un backend propio; un solo repositorio mantiene juntos el SDD, el front y el back. Se usa la 4.1 y no la 3 porque la 3.5 ya no tiene soporte y es la misma versión de los otros proyectos del curso |
+| 2026-11-20 | Las dependencias entran con la tarea que las usa: Security y OAuth2 en la 5.3, JDBC y el driver de PostgreSQL en la 5.4 | Con Security sin configurar, la salud respondería 401; con JDBC sin base, la app no arrancaría |
 | 2026-11-20 | Supabase se mantiene: PostgreSQL (con RLS y funciones SQL), Auth y Storage | No se rehacen el esquema, la seguridad ni las funciones de estado que ya están probadas (`supabase/tests/rls.sql`) |
 | 2026-11-20 | Spring respeta **el mismo contrato** `docs/contratos/api.md` (rutas, cuerpos, códigos y `problem+json`) | El front casi no cambia y la colección de Postman sirve para comprobar que Spring hace lo mismo que el BFF |
 | 2026-11-20 | Next.js **reenvía** `/api/v1/*` a Spring con un proxy (`app/api/v1/[...ruta]/route.ts`) que agrega `Authorization: Bearer <token de la sesión>` | El navegador sigue llamando a su propio dominio: sin CORS, y las cookies de sesión no salen de Vercel |

@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: inmocheck-backend
+
+server:
+  # Elastic Beanstalk entrega el puerto en la variable PORT; en local es 8080
+  # para no chocar con Next.js (3000).
+  port: ${PORT:8080}
+
+management:
+  endpoints:
+    web:
+      # Solo la salud: el balanceador de AWS la usa para saber si la app está viva.
+      exposure:
+        include: health
+  endpoint:
+    health:
+      # Sin detalles: no se publica qué componentes tiene el servidor.
+      show-details: never

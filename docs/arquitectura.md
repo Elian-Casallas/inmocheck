@@ -34,7 +34,7 @@ flowchart TD
 | Capa | Tecnología |
 |---|---|
 | Front | Next.js 16.3 (App Router), React 19.2, TypeScript 5, Tailwind CSS 4, React Hook Form 7, Zod 4 (formularios) |
-| Back | Spring Boot 3 con Java 21, Maven, Spring Web, Spring Security (OAuth2 Resource Server), Spring JDBC (`JdbcClient`), Bean Validation, OpenPDF |
+| Back | Spring Boot 4.1 con Java 21, Maven (wrapper `mvnw`), Spring Web MVC, Actuator, Spring Security (OAuth2 Resource Server), Spring JDBC (`JdbcClient`), Bean Validation, OpenPDF |
 | Datos | Supabase: PostgreSQL con RLS y funciones SQL, Auth (cookies httpOnly con `@supabase/ssr` en el front, JWT en el back) y Storage privado |
 | Pruebas | JUnit 5 + MockMvc (back), Vitest (front), SQL de RLS (`supabase/tests/rls.sql`), Postman (contrato) |
 | Despliegue | Vercel (front), AWS Elastic Beanstalk (back), Supabase en la nube (datos) |
