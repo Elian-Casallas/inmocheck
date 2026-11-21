@@ -1,7 +1,11 @@
 package com.inmocheck.inspecciones;
 
 import com.inmocheck.comun.http.ParametrosPagina;
+import com.inmocheck.inspecciones.InspeccionesDtos.DetalleRespuesta;
+import com.inmocheck.inspecciones.InspeccionesDtos.EstadoElemento;
 import com.inmocheck.inspecciones.InspeccionesDtos.EstadoInspeccion;
+import com.inmocheck.inspecciones.InspeccionesDtos.Evidencia;
+import com.inmocheck.inspecciones.InspeccionesDtos.GuardarDetalle;
 import com.inmocheck.inspecciones.InspeccionesDtos.InspeccionRespuesta;
 import com.inmocheck.inspecciones.InspeccionesDtos.Progreso;
 import com.inmocheck.inspecciones.InspeccionesDtos.TipoInspeccion;
@@ -17,6 +21,8 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.json.JsonMapper;
 
 // Corre dentro de EjecutorRls: RLS deja al administrador ver las inspecciones
 // de su organización y al inspector solo las asignadas a él (CA-06).
@@ -26,6 +32,15 @@ import org.springframework.stereotype.Repository;
 // la auditoría. Aquí nunca se hace un UPDATE directo a inspecciones.
 @Repository
 public class InspeccionesRepository {
+
+	private static final TypeReference<List<Evidencia>> LISTA_EVIDENCIAS = new TypeReference<>() {
+	};
+
+	private final JsonMapper json;
+
+	public InspeccionesRepository(JsonMapper json) {
+		this.json = json;
+	}
 
 	private static final String COLUMNAS_RESUMEN = """
 			select s.id, s.tipo::text as tipo, s.estado::text as estado, s.programada_para, s.finalizada_en,
@@ -135,6 +150,45 @@ public class InspeccionesRepository {
 				.param("motivo", motivo == null ? "" : motivo).param("version", version));
 	}
 
+	public void finalizar(JdbcClient jdbc, UUID id, int version) {
+		ejecutar(jdbc.sql("select public.finalizar_inspeccion(:id, :version)")
+				.param("id", id).param("version", version));
+	}
+
+	// Devuelve la versión nueva del elemento.
+	public int guardarDetalle(JdbcClient jdbc, UUID inspeccionId, UUID detalleId, GuardarDetalle datos) {
+		return jdbc.sql("""
+				select public.guardar_detalle(:inspeccion, :detalle, :estado::public.elemento_estado, :observacion, :version)
+				""")
+				.param("inspeccion", inspeccionId)
+				.param("detalle", detalleId)
+				.param("estado", datos.estado().name())
+				.param("observacion", datos.observacion(), java.sql.Types.VARCHAR)
+				.param("version", datos.version())
+				.query(Integer.class)
+				.single();
+	}
+
+	// Elementos de la inspección en el orden del inventario (copia guardada al
+	// programar), con sus fotos de la más antigua a la más nueva.
+	public List<DetalleRespuesta> listarDetalles(JdbcClient jdbc, UUID inspeccionId) {
+		return jdbc.sql("""
+				select d.id, d.elemento_id, d.espacio_nombre_snapshot, d.elemento_nombre_snapshot,
+				       d.obligatorio_snapshot, d.estado::text as estado, d.observacion, d.version,
+				       coalesce((select json_agg(json_build_object(
+				                   'id', e.id, 'mimeType', e.mime_type, 'sizeBytes', e.size_bytes,
+				                   'descripcion', e.descripcion, 'createdAt', e.created_at)
+				                   order by e.created_at)
+				                 from public.evidencias e where e.detalle_id = d.id), '[]') as evidencias
+				from public.detalles_inspeccion d
+				where d.inspeccion_id = :id
+				order by d.espacio_orden_snapshot, d.espacio_nombre_snapshot, d.elemento_orden_snapshot
+				""")
+				.param("id", inspeccionId)
+				.query(this::aDetalle)
+				.list();
+	}
+
 	// Las funciones que devuelven "void" igual entregan una fila: se lee y se descarta.
 	private static void ejecutar(JdbcClient.StatementSpec llamada) {
 		llamada.query((fila, numero) -> Boolean.TRUE).list();
@@ -190,6 +244,20 @@ public class InspeccionesRepository {
 						inmuebleId, fila.getString("inmueble_codigo"), fila.getString("inmueble_direccion")),
 				inspectorId == null ? null : new InspeccionResumen.Inspector(
 						inspectorId, fila.getString("inspector_nombre")));
+	}
+
+	private DetalleRespuesta aDetalle(ResultSet fila, int numero) throws SQLException {
+		String estado = fila.getString("estado");
+		return new DetalleRespuesta(
+				fila.getObject("id", UUID.class),
+				fila.getObject("elemento_id", UUID.class),
+				fila.getString("espacio_nombre_snapshot"),
+				fila.getString("elemento_nombre_snapshot"),
+				fila.getBoolean("obligatorio_snapshot"),
+				estado == null ? null : EstadoElemento.valueOf(estado),
+				fila.getString("observacion"),
+				fila.getInt("version"),
+				json.readValue(fila.getString("evidencias"), LISTA_EVIDENCIAS));
 	}
 
 	private static InspeccionRespuesta aInspeccion(ResultSet fila, int numero) throws SQLException {

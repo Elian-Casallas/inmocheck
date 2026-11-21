@@ -10,7 +10,12 @@ import com.inmocheck.comun.http.ParametrosPagina;
 import com.inmocheck.comun.sesion.Actor;
 import com.inmocheck.inspecciones.InspeccionesDtos.Cancelar;
 import com.inmocheck.inspecciones.InspeccionesDtos.CrearInspeccion;
+import com.inmocheck.inspecciones.InspeccionesDtos.DetalleGuardado;
+import com.inmocheck.inspecciones.InspeccionesDtos.DetalleRespuesta;
+import com.inmocheck.inspecciones.InspeccionesDtos.GuardarDetalle;
 import com.inmocheck.inspecciones.InspeccionesDtos.InspeccionRespuesta;
+import com.inmocheck.inspecciones.InspeccionesDtos.ListaDetalles;
+import com.inmocheck.inspecciones.InspeccionesDtos.Progreso;
 import com.inmocheck.inspecciones.InspeccionesDtos.Reasignar;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -99,6 +104,34 @@ public class InspeccionesService {
 	public InspeccionRespuesta reasignar(Actor actor, UUID id, Reasignar datos) {
 		return accion(actor, jdbc -> {
 			repositorio.reasignar(jdbc, id, datos.inspectorId(), datos.motivo(), datos.version());
+			return id;
+		});
+	}
+
+	// ---------- Realizar la inspección ----------
+
+	// Elementos a evaluar y el progreso. Si la inspección no es visible: 404.
+	public ListaDetalles detalles(Actor actor, UUID id) {
+		return ejecutor.ejecutar(actor.token(), jdbc -> {
+			buscar(jdbc, id);
+			List<DetalleRespuesta> detalles = repositorio.listarDetalles(jdbc, id);
+			return new ListaDetalles(detalles, Progreso.de(detalles));
+		});
+	}
+
+	// Guarda la evaluación de UN elemento con su versión: si otra petición ya
+	// lo cambió, guardar_detalle responde VERSION_CONFLICT en vez de pisarlo.
+	public DetalleGuardado guardarDetalle(Actor actor, UUID inspeccionId, UUID detalleId, GuardarDetalle datos) {
+		int version = ErroresDeFlujo.traducir(() -> ejecutor.ejecutar(actor.token(),
+				jdbc -> repositorio.guardarDetalle(jdbc, inspeccionId, detalleId, datos)));
+		return new DetalleGuardado(detalleId, datos.estado(), datos.observacion(), version);
+	}
+
+	// Cierra solo si no quedan obligatorios pendientes (INSPECCION_INCOMPLETA
+	// con cuántos faltan). Una vez finalizada no se modifica más (RN-05).
+	public InspeccionRespuesta finalizar(Actor actor, UUID id, int version) {
+		return accion(actor, jdbc -> {
+			repositorio.finalizar(jdbc, id, version);
 			return id;
 		});
 	}

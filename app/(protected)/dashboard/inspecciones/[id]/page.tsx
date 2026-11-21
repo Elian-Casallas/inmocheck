@@ -26,7 +26,8 @@ import type { Detalle, Inspeccion } from "@/schemas/inspecciones";
 import { exigirActor } from "@/server/auth/sesion";
 import type { Actividad } from "@/server/repositories/inspecciones.repository";
 import { listarOpcionesInspector } from "@/features/personas/opcionesInspector";
-import { listarActividad, listarDetalles } from "@/server/services/inspecciones.service";
+import { listarDetalles } from "@/features/inspecciones/consultas";
+import { listarActividad } from "@/server/services/inspecciones.service";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Inspección" };

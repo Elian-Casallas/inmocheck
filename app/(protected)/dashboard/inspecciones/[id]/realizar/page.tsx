@@ -6,7 +6,7 @@ import { RealizarInspeccion } from "@/features/inspecciones/components/realizar/
 import { formatearFechaHora } from "@/lib/formato";
 import { ETIQUETA_TIPO_INSPECCION } from "@/lib/inspecciones";
 import { exigirRol } from "@/server/auth/sesion";
-import { listarDetalles } from "@/server/services/inspecciones.service";
+import { listarDetalles } from "@/features/inspecciones/consultas";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Realizar inspección" };

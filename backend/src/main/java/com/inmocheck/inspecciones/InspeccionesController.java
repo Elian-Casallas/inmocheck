@@ -8,7 +8,10 @@ import com.inmocheck.comun.sesion.Rol;
 import com.inmocheck.inspecciones.InspeccionesDtos.Cancelar;
 import com.inmocheck.inspecciones.InspeccionesDtos.ConVersion;
 import com.inmocheck.inspecciones.InspeccionesDtos.CrearInspeccion;
+import com.inmocheck.inspecciones.InspeccionesDtos.DetalleGuardado;
+import com.inmocheck.inspecciones.InspeccionesDtos.GuardarDetalle;
 import com.inmocheck.inspecciones.InspeccionesDtos.InspeccionRespuesta;
+import com.inmocheck.inspecciones.InspeccionesDtos.ListaDetalles;
 import com.inmocheck.inspecciones.InspeccionesDtos.Reasignar;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
@@ -30,7 +33,6 @@ import tools.jackson.databind.JsonNode;
 // /api/v1/inspecciones (docs/contratos/api.md, "Inspecciones").
 // Las transiciones son acciones POST sobre un subrecurso (/inicio,
 // /cancelacion…): no son un simple cambio de campo, tienen reglas propias.
-// Detalles y finalización llegan en la tarea 5.14.
 @RestController
 @RequestMapping("/api/v1/inspecciones")
 public class InspeccionesController {
@@ -82,6 +84,28 @@ public class InspeccionesController {
 	Datos<InspeccionRespuesta> iniciar(Actor actor, @PathVariable UUID id, @Valid @RequestBody ConVersion datos) {
 		actor.exigirRol(Rol.INSPECTOR);
 		return Datos.de(servicio.iniciar(actor, id, datos.version()));
+	}
+
+	// ---------- Realizar la inspección (inspector asignado) ----------
+
+	@GetMapping("/{id}/detalles")
+	ListaDetalles detalles(Actor actor, @PathVariable UUID id) {
+		return servicio.detalles(actor, id);
+	}
+
+	// Guarda la evaluación de un elemento. Exige la versión que el cliente
+	// tenía: si ya cambió, 409 VERSION_CONFLICT en lugar de pisar el cambio.
+	@PatchMapping("/{id}/detalles/{detalleId}")
+	Datos<DetalleGuardado> guardarDetalle(
+			Actor actor, @PathVariable UUID id, @PathVariable UUID detalleId, @Valid @RequestBody GuardarDetalle datos) {
+		actor.exigirRol(Rol.INSPECTOR);
+		return Datos.de(servicio.guardarDetalle(actor, id, detalleId, datos));
+	}
+
+	@PostMapping("/{id}/finalizacion")
+	Datos<InspeccionRespuesta> finalizar(Actor actor, @PathVariable UUID id, @Valid @RequestBody ConVersion datos) {
+		actor.exigirRol(Rol.INSPECTOR);
+		return Datos.de(servicio.finalizar(actor, id, datos.version()));
 	}
 
 	@PostMapping("/{id}/reasignaciones")

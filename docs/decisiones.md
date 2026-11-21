@@ -100,3 +100,5 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 | 2026-11-21 | Spring llama las MISMAS funciones SQL del flujo y traduce su `raise exception 'CODIGO'` (`ErroresDeFlujo`) | Las reglas de estado, versión y plazo viven en la base; Spring no las repite, solo las traduce a 403/404/409 con el mismo mensaje del BFF |
 | 2026-11-21 | La regla de "fecha pasada" (RN-16) usa la función SQL `limite_para_iniciar` | Una sola regla para programar y para iniciar, en vez de repetir el cálculo de la hora de Colombia en Java |
 | 2026-11-21 | El driver de PostgreSQL pasa de `runtime` a compilación | `ErroresDeFlujo` lee el mensaje y el detalle de `PSQLException` |
+| 2026-11-21 | Guardar un elemento y finalizar van solo por `guardar_detalle` y `finalizar_inspeccion` | La versión por elemento evita pisar cambios entre pestañas o dispositivos (RN-14) y la regla de obligatorios pendientes vive en un solo lugar (RN-07) |
+| 2026-11-21 | El progreso de `GET /detalles` se calcula en Java con la misma regla que `lib/progreso.ts` y la función SQL | Ya están los detalles en memoria; la regla es la misma en los tres lugares |

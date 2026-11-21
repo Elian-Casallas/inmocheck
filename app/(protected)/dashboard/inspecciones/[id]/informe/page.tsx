@@ -18,7 +18,7 @@ import { ETIQUETA_TIPO_INSPECCION } from "@/lib/inspecciones";
 import { codigoDeInforme } from "@/schemas/informes";
 import { exigirActor } from "@/server/auth/sesion";
 import { listarInformesDeInspeccion } from "@/server/services/informes.service";
-import { listarDetalles } from "@/server/services/inspecciones.service";
+import { listarDetalles } from "@/features/inspecciones/consultas";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Informe" };
