@@ -27,5 +27,5 @@ description: Crear o modificar pantallas y componentes de InmoCheck respetando s
    - Diseña para 390 px. Por debajo de 760 px las tablas pasan a lista (`solo-escritorio` oculta columnas).
    - En el celular hay barra inferior con 3 accesos.
 10. **Accesibilidad:** cada input con `label` (o `etiqueta`), botones con texto claro, y estados con texto además de color.
-11. **Estados siempre visibles:** cargando (`loading.tsx`, `cargando` en `Boton` y la barra superior: para navegar desde código usa `useNavegacion()` de `components/layout/ProveedorNavegacion`, nunca `useRouter()`), vacío (prop `vacio` de `Tabla`, con un mensaje distinto si hay filtros) y error (`Aviso tipo="error"`, `error.tsx`).
+11. **Estados siempre visibles:** cargando (`loading.tsx` con `<Cargando />` de `components/ui`, `cargando` en `Boton` y la barra superior: para navegar desde código usa `useNavegacion()` de `components/layout/ProveedorNavegacion`, nunca `useRouter()`), vacío (prop `vacio` de `Tabla`, con un mensaje distinto si hay filtros) y error (`Aviso tipo="error"`, `error.tsx`).
 12. **Al terminar:** di qué archivos cambiaste, cómo probarlo en el navegador a 390 px y a 1280 px, y qué criterio de la spec cubre.
