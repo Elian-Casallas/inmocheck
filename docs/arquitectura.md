@@ -89,7 +89,8 @@ Cuando termine la migración se borran `server/services`, `server/repositories` 
 | `/dashboard/informes`, `/dashboard/configuracion` | Ambos |
 
 ### Patrones
-- Las páginas son Server Components que leen los datos **de Spring** con `lib/api/servidor.ts`, que agrega el token de la sesión. `"use client"` solo para lo interactivo.
+- Las páginas son Server Components que leen los datos **de Spring** con `leerDeSpring()` de `lib/api/servidor.ts`, que agrega el token de la sesión y reacciona al estado: 401 → `/login`, 403 → `/403`, 404 → no encontrado, otro → `app/error.tsx` o `dashboard/error.tsx`. `"use client"` solo para lo interactivo.
+- `exigirActor()` ya pide el actor a Spring (`GET /auth/me`). Los datos de cada módulo pasan a `leerDeSpring()` en la tarea de ese módulo.
 - Filtros, página y paneles laterales viven en la URL (`?search=`, `?page=`, `?nuevo=1`, `?ver=ID`).
 - Formularios con React Hook Form y Zod. Las mutaciones van a `/api/v1` con `lib/api/client.ts`; el proxy las reenvía a Spring.
 - Mobile first: menú lateral en escritorio y barra inferior en el celular. Las tablas pasan a lista por debajo de 760 px.

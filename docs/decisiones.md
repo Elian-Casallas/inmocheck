@@ -74,3 +74,6 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 | 2026-11-20 | El proxy rechaza los segmentos `.` y `..` | Una petición armada a mano como `/auth/me/../../actuator` saldría de `/api/v1` al llegar a Spring |
 | 2026-11-20 | Migrar un módulo = agregarlo a `MODULOS_EN_SPRING` y borrar sus `route.ts` del BFF | En Next.js una ruta específica le gana al catch-all; la lista evita reenviar a ciegas lo que aún no existe en Spring |
 | 2026-11-20 | El proxy lee el token con `getSession()` y no con `getUser()` | `proxy.ts` ya valida y refresca la sesión en cada petición, y Spring verifica la firma del token; evita una llamada extra a Supabase Auth |
+| 2026-11-20 | Las páginas obtienen el actor de Spring (`exigirActor()` → `GET /auth/me`); `requireActor()` de las rutas del BFF sigue leyendo de Supabase hasta la 5.21 | Es el único módulo que ya existe en Spring y lo usan todas las páginas; las rutas del BFF desaparecen con su módulo |
+| 2026-11-20 | `leerDeSpring()` va directo a Spring desde el servidor de Next.js, sin pasar por el proxy | El proxy existe para el navegador (cookies y CSRF); en el servidor ya se tiene el token |
+| 2026-11-20 | `app/error.tsx` con `retry()` para errores del layout protegido | `dashboard/error.tsx` no envuelve el layout que está encima; sin Spring se veía la pantalla genérica de Next.js en inglés |

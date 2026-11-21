@@ -77,7 +77,7 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 
 **Puente con el front**
 - [x] 5.7 Proxy `app/api/v1/[...ruta]/route.ts` con una lista de módulos migrados y `BACKEND_URL` (primer módulo: `auth/me`)
-- [ ] 5.8 `lib/api/servidor.ts` para que los Server Components lean de Spring
+- [x] 5.8 `lib/api/servidor.ts` para que los Server Components lean de Spring (primer uso: `exigirActor()` pide el actor a `GET /auth/me`)
 
 **Módulos** (en cada uno: endpoints, Bean Validation con los mensajes de Zod, pruebas MockMvc, páginas pasadas a `lib/api/servidor.ts`, módulo agregado al proxy y carpeta de Postman pasando)
 - [ ] 5.9 Propietarios

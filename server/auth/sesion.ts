@@ -2,6 +2,7 @@ import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { leerDeSpring } from "@/lib/api/servidor";
 import { crearClienteServidor } from "@/lib/supabase/server";
 import type { Rol } from "@/lib/constantes";
 import { ForbiddenError, UnauthenticatedError } from "@/server/http/errores";
@@ -75,11 +76,18 @@ export async function requireRole(...rolesPermitidos: Rol[]): Promise<Actor> {
 
 // ---------- Para páginas y layouts: redirigen ----------
 
+// Las páginas preguntan a SPRING quién es el usuario (GET /auth/me).
+// leerDeSpring() ya redirige: sin sesión → /login, cuenta desactivada → /403.
+// cache(): el layout y la página lo piden en la misma petición y se llama una vez.
+// (requireActor, de las rutas del BFF que aún no se migran, sigue leyendo de
+// Supabase hasta que el BFF se borre en la tarea 5.21.)
+const obtenerActorDeSpring = cache(async (): Promise<Actor> => {
+  const { data } = await leerDeSpring<{ data: Actor }>("auth/me");
+  return data;
+});
+
 export async function exigirActor(): Promise<Actor> {
-  const actor = await obtenerActor();
-  if (!actor) redirect("/login");
-  if (!actor.activo) redirect("/403");
-  return actor;
+  return obtenerActorDeSpring();
 }
 
 export async function exigirRol(...rolesPermitidos: Rol[]): Promise<Actor> {

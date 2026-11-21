@@ -7,7 +7,7 @@ import { exigirActor } from "@/server/auth/sesion";
 // Estructura común de /dashboard/...: menú lateral en escritorio, barra
 // superior y navegación inferior en celular. Las páginas solo ponen su contenido.
 export default async function LayoutDashboard({ children }: { children: React.ReactNode }) {
-  // No repite la consulta: obtenerActor() está en cache() por petición.
+  // No repite la consulta: exigirActor() está en cache() por petición.
   const actor = await exigirActor();
 
   return (
