@@ -110,6 +110,46 @@ public class InspeccionesRepository {
 				.single();
 	}
 
+	// ---------- Para el resumen del administrador ----------
+
+	// Cuántas hay en cada estado (una sola consulta). El rango aplica sobre la
+	// fecha programada, igual que en GET /inspecciones.
+	public Map<EstadoInspeccion, Long> contarPorEstado(JdbcClient jdbc, java.time.LocalDate desde,
+			java.time.LocalDate hasta) {
+		Consulta consulta = filtrar(new FiltroInspecciones(List.of(), null, null, null, desde, hasta));
+		Map<EstadoInspeccion, Long> conteo = new java.util.EnumMap<>(EstadoInspeccion.class);
+		for (EstadoInspeccion estado : EstadoInspeccion.values()) conteo.put(estado, 0L);
+		jdbc.sql("select s.estado::text as estado, count(*) as total from public.inspecciones s"
+						+ consulta.where() + " group by s.estado")
+				.params(consulta.parametros())
+				.query((fila, numero) -> conteo.put(EstadoInspeccion.valueOf(fila.getString("estado")),
+						fila.getLong("total")))
+				.list();
+		return conteo;
+	}
+
+	// Pendientes o en proceso que todavía se pueden hacer, de la más próxima a
+	// la más lejana. Una pendiente cuyo plazo pasó va en "no realizadas".
+	public List<InspeccionResumen> listarProximas(JdbcClient jdbc, int limite) {
+		return jdbc.sql(COLUMNAS_RESUMEN + """
+				 where s.estado = 'EN_PROCESO'
+				    or (s.estado = 'PENDIENTE' and public.limite_para_iniciar(s.programada_para) >= now())
+				 order by s.programada_para, s.id limit :limite""")
+				.param("limite", limite)
+				.query(InspeccionesRepository::aResumen)
+				.list();
+	}
+
+	// Pendientes que nadie inició antes de las 7:00 p. m. de su día (RN-15):
+	// la MISMA función SQL que usa iniciar_inspeccion.
+	public List<InspeccionResumen> listarNoRealizadas(JdbcClient jdbc) {
+		return jdbc.sql(COLUMNAS_RESUMEN + """
+				 where s.estado = 'PENDIENTE' and public.limite_para_iniciar(s.programada_para) < now()
+				 order by s.programada_para, s.id""")
+				.query(InspeccionesRepository::aResumen)
+				.list();
+	}
+
 	// ---------- Escrituras: siempre por función SQL ----------
 
 	public UUID crear(JdbcClient jdbc, InspeccionesDtos.CrearInspeccion datos) {

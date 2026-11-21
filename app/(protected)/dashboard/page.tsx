@@ -10,7 +10,7 @@ import { RUTA_INICIO_POR_ROL, ZONA_HORARIA } from "@/lib/constantes";
 import { formatearFecha, plural } from "@/lib/formato";
 import { ETIQUETA_TIPO_INSPECCION } from "@/lib/inspecciones";
 import { exigirActor } from "@/server/auth/sesion";
-import { obtenerResumen } from "@/server/services/dashboard.service";
+import { obtenerResumen } from "@/features/dashboard/consultas";
 import { listarInformesRecientes } from "@/features/informes/consultas";
 
 // Título de la pestaña del navegador.

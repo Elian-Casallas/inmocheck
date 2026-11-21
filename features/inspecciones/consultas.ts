@@ -33,6 +33,14 @@ export function listarAbiertasDeInspector(inspectorId: string): Promise<Inspecci
   });
 }
 
+// Actividad de una inspección, de lo más reciente a lo más antiguo
+// (GET /auditoria, solo el administrador). La escriben las funciones SQL.
+export type Actividad = { id: string; accion: string; fecha: string; actor: { nombre: string } | null };
+
+export function listarActividad(inspeccionId: string): Promise<Actividad[]> {
+  return leerTodasLasPaginas<Actividad>("auditoria", { recursoId: inspeccionId });
+}
+
 // Elementos a evaluar de una inspección y su progreso (GET /inspecciones/{id}/detalles).
 export function listarDetalles(inspeccionId: string): Promise<{ data: Detalle[]; meta: Progreso }> {
   return leerDeSpring<{ data: Detalle[]; meta: Progreso }>(`inspecciones/${encodeURIComponent(inspeccionId)}/detalles`);

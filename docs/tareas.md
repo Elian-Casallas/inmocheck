@@ -91,7 +91,7 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 - [x] 5.15 Evidencias (subida multipart a Storage, enlace de 60 s, retiro)
 - [x] 5.16 Comparación entrada/salida
 - [x] 5.17 Informes PDF con OpenPDF y descarga firmada (más `GET /informes` para la biblioteca)
-- [ ] 5.18 Dashboard y auditoría (los conteos de inmuebles e inspectores activos siguen en los repositorios del BFF)
+- [x] 5.18 Dashboard y auditoría (`GET /dashboard/resumen` y `GET /auditoria`; la actividad del detalle de inspección sale de `GET /auditoria?recursoId=`). En el BFF solo quedan las 4 rutas de sesión
 
 **Nube y cierre**
 - [ ] 5.19 Desplegar en AWS Elastic Beanstalk (Java 21) con HTTPS y variables de entorno

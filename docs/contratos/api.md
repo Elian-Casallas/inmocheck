@@ -91,8 +91,8 @@ A = administrador · I = inspector asignado · A/I = ambos, cada uno en su ámbi
 | GET / POST | `/inspecciones/{id}/informes` | A/I | Versiones del acta / genera un PDF nuevo |
 | GET | `/informes` | A/I | Biblioteca de informes (`search, tipo, page`), del más reciente al más antiguo |
 | GET | `/informes/{id}/descarga` | A/I | Enlace firmado del PDF |
-| GET | `/dashboard/resumen` | A | Indicadores de la organización |
-| GET | `/auditoria` | A | Eventos de auditoría paginados |
+| GET | `/dashboard/resumen` | A | Indicadores de la organización (`desde, hasta` filtran los conteos por fecha programada) |
+| GET | `/auditoria` | A | Eventos de auditoría paginados (`recurso, recursoId, desde, hasta, page`), del más reciente al más antiguo |
 
 ## Filtros de `GET /inspecciones` (desde 2026-11-21)
 - `estado` acepta uno o varios valores separados por coma: `?estado=FINALIZADA,CANCELADA`. Si todos son cerrados (finalizada o cancelada), la lista va de la más reciente a la más antigua; si no, de la más próxima a la más lejana.
@@ -102,6 +102,12 @@ A = administrador · I = inspector asignado · A/I = ambos, cada uno en su ámbi
 
 ## `GET /informes` (desde 2026-11-21)
 Lista los informes que el usuario puede ver (admin: los de su organización; inspector: los de sus inspecciones), con su inspección e inmueble. Filtros opcionales: `search` (código, dirección o barrio del inmueble) y `tipo` de inspección. Lo usan la biblioteca de informes y el resumen del administrador, que antes leían la base directamente.
+
+## `GET /dashboard/resumen`
+`{ data: { inmueblesActivos, inspectoresActivos, inspecciones: { pendientes, enProceso, finalizadas, canceladas }, proximas: [...], noRealizadas: [...] } }`
+- `proximas`: hasta 5 pendientes o en proceso que todavía se pueden hacer, de la más próxima a la más lejana.
+- `noRealizadas`: pendientes cuyo plazo para iniciar ya pasó (RN-15). Se calcula con la misma función SQL `limite_para_iniciar`.
+- Desde 2026-11-21 las vencidas se excluyen **antes** de tomar las 5 próximas (antes se tomaban 5 y luego se quitaban, y podían salir menos).
 
 ## Diferencias con el diseño técnico
 - Se agregaron `PUT /auth/contrasena` y `POST /inspectores/{id}/acceso` (reenviar la invitación).
