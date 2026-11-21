@@ -2,7 +2,8 @@ import "server-only";
 import { leerDeSpring, leerTodasLasPaginas, parametrosDeFiltro } from "@/lib/api/servidor";
 import { ESTADOS_INSPECCION, type EstadoInspeccion, type InspeccionResumen } from "@/lib/inspecciones";
 import type { Paginado } from "@/schemas/comun";
-import type { Detalle, Progreso } from "@/schemas/inspecciones";
+import type { Comparacion } from "@/lib/comparacion";
+import type { Detalle, Inspeccion, Progreso } from "@/schemas/inspecciones";
 
 // Consultas de inspecciones que usan varias páginas. Todas van a Spring
 // (GET /inspecciones); RLS decide qué ve cada rol.
@@ -35,4 +36,28 @@ export function listarAbiertasDeInspector(inspectorId: string): Promise<Inspecci
 // Elementos a evaluar de una inspección y su progreso (GET /inspecciones/{id}/detalles).
 export function listarDetalles(inspeccionId: string): Promise<{ data: Detalle[]; meta: Progreso }> {
   return leerDeSpring<{ data: Detalle[]; meta: Progreso }>(`inspecciones/${encodeURIComponent(inspeccionId)}/detalles`);
+}
+
+// Comparación entrada/salida, calculada por Spring al momento.
+export function compararInspecciones(salidaId: string, entradaId: string): Promise<Comparacion> {
+  return leerDeSpring<{ data: Comparacion }>(
+    `inspecciones/${encodeURIComponent(salidaId)}/comparacion`,
+    parametrosDeFiltro({ contra: entradaId }),
+  ).then(({ data }) => data);
+}
+
+// Entradas finalizadas del mismo inmueble y anteriores a la salida, de la
+// más reciente a la más antigua (el historial ya viene en ese orden).
+export async function listarEntradasComparables(salida: Inspeccion): Promise<InspeccionResumen[]> {
+  const { data } = await leerDeSpring<{ data: InspeccionResumen[] }>(
+    `inmuebles/${encodeURIComponent(salida.inmueble.id)}/historial`,
+  );
+  const finSalida = salida.finalizadaEn ? Date.parse(salida.finalizadaEn) : 0;
+  return data.filter(
+    (inspeccion) =>
+      inspeccion.tipo === "ENTRADA" &&
+      inspeccion.estado === "FINALIZADA" &&
+      inspeccion.finalizadaEn !== null &&
+      Date.parse(inspeccion.finalizadaEn) < finSalida,
+  );
 }

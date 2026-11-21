@@ -11,7 +11,7 @@ import type { ElementoComparado, LadoComparado, ResultadoComparacion } from "@/l
 import { formatearFecha } from "@/lib/formato";
 import { aplanarParametros, urlCon, type ParametrosBusqueda } from "@/lib/url";
 import { exigirActor } from "@/server/auth/sesion";
-import { compararInspecciones, listarEntradasComparables } from "@/server/services/comparacion.service";
+import { compararInspecciones, listarEntradasComparables } from "@/features/inspecciones/consultas";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Comparar entrada y salida" };
