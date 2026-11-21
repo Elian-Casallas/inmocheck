@@ -224,7 +224,7 @@ Reglas y estados: `docs/reglas-de-negocio.md`.
 
 ## Despliegue
 - **Front:** Vercel, https://inmocheck.vercel.app, con despliegue continuo desde `main`.
-- **Back:** Render, servicio web con la imagen de `backend/Dockerfile` (compila con Maven y corre en Java 21). La configuración está en `render.yaml`: carpeta raíz `backend/` y solo se redespliega cuando cambia esa carpeta. Render da **HTTPS** automático (`https://<servicio>.onrender.com`), obligatorio porque viaja el token del usuario. Salud: `GET /actuator/health`.
+- **Back:** Render, servicio web con la imagen de `backend/Dockerfile` (compila con Maven y corre en Java 21). La configuración está en `render.yaml`: carpeta raíz `backend/` y solo se redespliega cuando cambia esa carpeta. Render da **HTTPS** automático (https://inmocheck-backend-qskl.onrender.com), obligatorio porque viaja el token del usuario. Salud: `GET /actuator/health`.
 - **Plan gratis de Render:** se duerme tras 15 minutos sin tráfico y la primera petición después tarda mientras Spring arranca; tiene 512 MB de RAM (la JVM se limita en el Dockerfile).
 - **Ramas:** `main` es la versión con Spring (front en Vercel y back en Render). `version-nextjs-fullstack` conserva la versión anterior, en la que Next.js hacía de front y de back (BFF).
 - **Datos, auth y archivos:** proyecto de Supabase en la nube. Las migraciones se aplican con `npx supabase db push` y luego `seed.sql`.

@@ -95,7 +95,7 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 
 **Nube y cierre**
 - [x] 5.19a Guardar el `main` anterior en la rama `version-nextjs-fullstack` (Next.js como front y back)
-- [ ] 5.19 Desplegar en Render con Docker (`backend/Dockerfile` y `render.yaml`), HTTPS y variables de entorno
+- [x] 5.19 Desplegar en Render con Docker (`backend/Dockerfile` y `render.yaml`), HTTPS y variables de entorno. Servicio `inmocheck-backend-qskl`: https://inmocheck-backend-qskl.onrender.com (salud en `/actuator/health`)
 - [ ] 5.20 Configurar `BACKEND_URL` en Vercel, probar primero en el preview de la rama, unir `feat/backend-spring-boot` a `main`, correr la colección de Postman completa contra Spring y probar en producción el flujo central (login → inmueble → programar → realizar con fotos → finalizar → PDF)
 - [ ] 5.21 Borrar el BFF viejo (`server/services`, `server/repositories`, `server/pdf`, `lib/supabase/admin.ts`, rutas migradas) y quitar `SUPABASE_SERVICE_ROLE_KEY` de Vercel
 - [ ] 5.22 Actualizar los manuales, el README y `docs/contratos/api.md` (base y autenticación)
