@@ -11,7 +11,7 @@ import { formatearFecha, plural } from "@/lib/formato";
 import { ETIQUETA_TIPO_INSPECCION } from "@/lib/inspecciones";
 import { exigirActor } from "@/server/auth/sesion";
 import { obtenerResumen } from "@/server/services/dashboard.service";
-import { listarInformesRecientes } from "@/server/services/informes.service";
+import { listarInformesRecientes } from "@/features/informes/consultas";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Resumen" };

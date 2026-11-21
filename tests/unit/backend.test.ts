@@ -21,7 +21,8 @@ describe("estaEnSpring", () => {
     expect(estaEnSpring(["inspectores", "invitaciones"])).toBe(true);
     expect(estaEnSpring(["inspecciones", "x", "inicio"])).toBe(true);
     expect(estaEnSpring(["evidencias", "x", "acceso"])).toBe(true);
-    expect(estaEnSpring(["informes"])).toBe(false);
+    expect(estaEnSpring(["informes", "x", "descarga"])).toBe(true);
+    expect(estaEnSpring(["dashboard", "resumen"])).toBe(false);
     expect(estaEnSpring(["inmuebles", "a3000000-0000-4000-8000-000000000001", "historial"])).toBe(true);
     expect(estaEnSpring(["propietarios", "a2000000-0000-4000-8000-000000000001"])).toBe(true);
   });

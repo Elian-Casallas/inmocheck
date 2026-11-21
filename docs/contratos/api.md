@@ -89,6 +89,7 @@ A = administrador · I = inspector asignado · A/I = ambos, cada uno en su ámbi
 | DELETE | `/evidencias/{id}` | I | Retira una foto mientras la inspección está abierta |
 | GET | `/inspecciones/{id}/comparacion?contra={entradaId}` | A/I | Diferencias entrada/salida, calculadas al momento |
 | GET / POST | `/inspecciones/{id}/informes` | A/I | Versiones del acta / genera un PDF nuevo |
+| GET | `/informes` | A/I | Biblioteca de informes (`search, tipo, page`), del más reciente al más antiguo |
 | GET | `/informes/{id}/descarga` | A/I | Enlace firmado del PDF |
 | GET | `/dashboard/resumen` | A | Indicadores de la organización |
 | GET | `/auditoria` | A | Eventos de auditoría paginados |
@@ -98,6 +99,9 @@ A = administrador · I = inspector asignado · A/I = ambos, cada uno en su ámbi
 - `inspectorId` (opcional) filtra por inspector. RLS sigue mandando: el inspector solo ve las suyas aunque mande otro id.
 - `desde` y `hasta` (`AAAA-MM-DD`) limitan por fecha programada.
 - Se agregaron para que las páginas dejen de leer la base directamente ("Mis inspecciones" cerradas y el panel de Inspectores). Son opcionales: lo que ya funcionaba sigue igual.
+
+## `GET /informes` (desde 2026-11-21)
+Lista los informes que el usuario puede ver (admin: los de su organización; inspector: los de sus inspecciones), con su inspección e inmueble. Filtros opcionales: `search` (código, dirección o barrio del inmueble) y `tipo` de inspección. Lo usan la biblioteca de informes y el resumen del administrador, que antes leían la base directamente.
 
 ## Diferencias con el diseño técnico
 - Se agregaron `PUT /auth/contrasena` y `POST /inspectores/{id}/acceso` (reenviar la invitación).

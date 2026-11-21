@@ -17,7 +17,7 @@ import { formatearFechaHora } from "@/lib/formato";
 import { ETIQUETA_TIPO_INSPECCION } from "@/lib/inspecciones";
 import { codigoDeInforme } from "@/schemas/informes";
 import { exigirActor } from "@/server/auth/sesion";
-import { listarInformesDeInspeccion } from "@/server/services/informes.service";
+import { listarInformesDeInspeccion } from "@/features/informes/consultas";
 import { listarDetalles } from "@/features/inspecciones/consultas";
 
 // Título de la pestaña del navegador.

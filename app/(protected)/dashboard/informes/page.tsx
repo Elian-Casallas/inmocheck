@@ -8,7 +8,7 @@ import { ETIQUETA_TIPO_INSPECCION, TIPOS_INSPECCION } from "@/lib/inspecciones";
 import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
 import { informesFiltroSchema } from "@/schemas/informes";
 import { exigirActor } from "@/server/auth/sesion";
-import { listarInformes } from "@/server/services/informes.service";
+import { listarInformes } from "@/features/informes/consultas";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Informes" };

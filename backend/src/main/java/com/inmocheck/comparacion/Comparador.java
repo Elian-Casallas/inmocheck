@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 //   - está en las dos y el estado es distinto   → CAMBIO
 //   - está solo en una (se agregó o se retiró)  → NO_COMPARABLE
 // Un CAMBIO es solo "el estado registrado difiere": NO dice quién lo causó (RN-13).
-final class Comparador {
+public final class Comparador {
 
 	enum Resultado { SIN_CAMBIO, CAMBIO, NO_COMPARABLE }
 
@@ -30,7 +30,7 @@ final class Comparador {
 			Resultado resultado) {
 	}
 
-	record Resumen(int elementosComparados, int cambios, int noComparables) {
+	public record Resumen(int elementosComparados, int cambios, int noComparables) {
 	}
 
 	record Comparacion(Resumen resumen, List<ElementoComparado> elementos) {

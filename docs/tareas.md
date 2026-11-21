@@ -90,7 +90,7 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 - [x] 5.14 Detalles y finalización
 - [x] 5.15 Evidencias (subida multipart a Storage, enlace de 60 s, retiro)
 - [x] 5.16 Comparación entrada/salida
-- [ ] 5.17 Informes PDF con OpenPDF y descarga firmada
+- [x] 5.17 Informes PDF con OpenPDF y descarga firmada (más `GET /informes` para la biblioteca)
 - [ ] 5.18 Dashboard y auditoría (los conteos de inmuebles e inspectores activos siguen en los repositorios del BFF)
 
 **Nube y cierre**

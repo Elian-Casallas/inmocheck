@@ -11,7 +11,9 @@ import com.inmocheck.inspecciones.InspeccionesDtos.EstadoInspeccion;
 import com.inmocheck.inspecciones.InspeccionesDtos.InspeccionRespuesta;
 import com.inmocheck.inspecciones.InspeccionesDtos.TipoInspeccion;
 import com.inmocheck.inspecciones.InspeccionesRepository;
+import com.inmocheck.inmuebles.InmueblesRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Service;
@@ -25,10 +27,12 @@ public class ComparacionService {
 
 	private final EjecutorRls ejecutor;
 	private final InspeccionesRepository inspecciones;
+	private final InmueblesRepository inmuebles;
 
-	public ComparacionService(EjecutorRls ejecutor, InspeccionesRepository inspecciones) {
+	public ComparacionService(EjecutorRls ejecutor, InspeccionesRepository inspecciones, InmueblesRepository inmuebles) {
 		this.ejecutor = ejecutor;
 		this.inspecciones = inspecciones;
+		this.inmuebles = inmuebles;
 	}
 
 	// Respuesta: { entradaId, salidaId, resumen, elementos }.
@@ -44,6 +48,23 @@ public class ComparacionService {
 					inspecciones.listarDetalles(jdbc, entradaId), inspecciones.listarDetalles(jdbc, salidaId));
 			return new Resultado(entradaId, salidaId, comparacion.resumen(), comparacion.elementos());
 		});
+	}
+
+	// Para el acta de una salida: resume las diferencias con la entrada
+	// finalizada más reciente y anterior. Vacío si no es salida o no hay entrada.
+	// Corre dentro de la transacción de quien llama (mismo RLS).
+	public Optional<Resumen> resumirContraEntradaAnterior(JdbcClient jdbc, InspeccionRespuesta salida) {
+		if (salida.tipo() != TipoInspeccion.SALIDA || salida.finalizadaEn() == null) {
+			return Optional.empty();
+		}
+		return inmuebles.historial(jdbc, salida.inmueble().id()).stream()
+				.filter(inspeccion -> "ENTRADA".equals(inspeccion.tipo()) && "FINALIZADA".equals(inspeccion.estado()))
+				.filter(inspeccion -> inspeccion.finalizadaEn() != null
+						&& inspeccion.finalizadaEn().isBefore(salida.finalizadaEn()))
+				.findFirst()
+				.map(entrada -> Comparador.comparar(
+						inspecciones.listarDetalles(jdbc, entrada.id()),
+						inspecciones.listarDetalles(jdbc, salida.id())).resumen());
 	}
 
 	// La salida solo se compara con una entrada anterior del mismo inmueble (RN-06).

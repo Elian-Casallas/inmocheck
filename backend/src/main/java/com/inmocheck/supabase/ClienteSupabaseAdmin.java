@@ -124,6 +124,21 @@ public class ClienteSupabaseAdmin {
 		return supabase.base() + "/storage/v1" + firmado.signedURL();
 	}
 
+	// Enlace firmado que el navegador descarga con ese nombre de archivo
+	// (Supabase lo indica con el parámetro "download").
+	public String firmarEnlaceDeDescarga(String bucket, String ruta, int segundos, String nombreArchivo) {
+		return firmarEnlace(bucket, ruta, segundos) + "&download="
+				+ java.net.URLEncoder.encode(nombreArchivo, java.nio.charset.StandardCharsets.UTF_8);
+	}
+
+	public byte[] descargarArchivo(String bucket, String ruta) {
+		return http.get()
+				.uri(uri -> uri.path("/storage/v1/object/" + bucket + "/" + ruta).build())
+				.headers(this::autorizar)
+				.retrieve()
+				.body(byte[].class);
+	}
+
 	public void borrarArchivo(String bucket, String ruta) {
 		http.delete()
 				.uri(uri -> uri.path("/storage/v1/object/" + bucket + "/" + ruta).build())
