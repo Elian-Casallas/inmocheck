@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Aviso } from "@/components/ui/Aviso";
@@ -16,7 +16,7 @@ import { loginSchema, type LoginDatos } from "@/schemas/auth";
 type RespuestaLogin = { data: { rol: Rol } };
 
 export function FormularioLogin() {
-  const router = useRouter();
+  const router = useNavegacion();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
 
   // zodResolver conecta el formulario con el MISMO esquema que usa la API.

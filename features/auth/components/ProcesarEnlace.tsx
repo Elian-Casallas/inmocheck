@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { crearClienteNavegador } from "@/lib/supabase/client";
 
 // Solo se permite continuar hacia rutas internas de la app.
@@ -14,7 +15,7 @@ function destinoSeguro(siguiente: string | null): string {
 // al servidor, así que solo un componente cliente puede leerlo.
 // Este componente crea la sesión y sigue a la pantalla de nueva contraseña.
 export function ProcesarEnlace() {
-  const router = useRouter();
+  const router = useNavegacion();
   const parametros = useSearchParams();
   const procesado = useRef(false);
 

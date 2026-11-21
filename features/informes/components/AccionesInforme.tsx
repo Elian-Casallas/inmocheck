@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { Boton } from "@/components/ui/Boton";
 import { Icono } from "@/components/ui/Icono";
 import { apiFetch, mensajeDeError } from "@/lib/api/client";
@@ -14,7 +14,7 @@ type Props = {
 // Genera el PDF. Si falla, se muestra el error y el botón queda listo para
 // reintentar: la inspección no cambia.
 export function BotonGenerarInforme({ inspeccionId, yaTieneInforme }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [generando, setGenerando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

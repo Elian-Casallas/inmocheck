@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { Boton } from "@/components/ui/Boton";
 import { apiFetch, mensajeDeError } from "@/lib/api/client";
 
@@ -13,7 +13,7 @@ type Props = {
 // Desactivar no borra nada: el inmueble deja de aparecer para programar
 // inspecciones, pero su historial se conserva.
 export function BotonEstadoInmueble({ inmuebleId, activo }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -44,6 +44,8 @@ Contraste: el texto principal sobre el fondo da ≈ 17:1 y el texto blanco sobre
 ## Estados de la UI
 Toda vista que consume la API muestra cuatro estados: **cargando, con datos, vacío y error**. Los formularios muestran además "cambios sin guardar", "guardando" y "guardado". La subida de fotos muestra el progreso y el error de cada archivo. Nunca se marca algo como guardado solo cambiando el estado de React.
 
+Mientras se espera al servidor (navegar, filtrar, abrir o cerrar un panel, refrescar después de guardar) aparece una **barra de carga** fina en el borde superior (`BarraCarga`, color primario, con un pequeño retraso para no parpadear y texto "Cargando…" para lectores de pantalla).
+
 ## Referencia
 - Reglas, medidas y catálogo de componentes: `docs/diseno/sistema-de-diseno.md`
 - Las 22 pantallas con su ruta, rol, spec y botón principal: `docs/diseno/pantallas.md`

@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { apiFetch } from "@/lib/api/client";
 
 export function BotonCerrarSesion() {
-  const router = useRouter();
+  const router = useNavegacion();
   const [saliendo, setSaliendo] = useState(false);
 
   async function cerrarSesion() {

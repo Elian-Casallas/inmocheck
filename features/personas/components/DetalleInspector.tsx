@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
 import { ListaDatos } from "@/components/ui/ListaDatos";
@@ -17,7 +17,7 @@ type Props = {
 };
 
 export function DetalleInspector({ inspector, children }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [accesoEnviado, setAccesoEnviado] = useState(false);

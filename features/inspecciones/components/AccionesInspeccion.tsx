@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Aviso } from "@/components/ui/Aviso";
@@ -28,7 +28,7 @@ type PropsIniciar = { inspeccionId: string; version: number };
 
 // Iniciar es una acción explícita (POST /inicio): abrir la ficha no cambia el estado.
 export function BotonIniciarInspeccion({ inspeccionId, version }: PropsIniciar) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,7 +71,7 @@ type PropsReasignar = {
 };
 
 export function FormularioReasignar({ inspeccionId, version, inspectorActualId, inspectores, hrefCerrar }: PropsReasignar) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
   const {
     register,
@@ -134,7 +134,7 @@ export function FormularioReasignar({ inspeccionId, version, inspectorActualId, 
 type PropsCancelar = { inspeccionId: string; version: number; hrefCerrar: string };
 
 export function FormularioCancelar({ inspeccionId, version, hrefCerrar }: PropsCancelar) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
   const {
     register,
@@ -214,7 +214,7 @@ export function FormularioReprogramar({
   hrefCerrar,
 }: PropsReprogramar) {
   const actual = aFechaYHoraDeCampo(programadaPara);
-  const router = useRouter();
+  const router = useNavegacion();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
   const {
     register,

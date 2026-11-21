@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Aviso } from "@/components/ui/Aviso";
@@ -32,7 +32,7 @@ type Props = {
 // Un solo formulario para crear y editar: mismos campos, mismo esquema.
 // Lo único que cambia es el método (POST o PATCH) y a dónde se va después.
 export function FormularioInmueble({ propietarios, inmueble }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const esEdicion = Boolean(inmueble);
   const rutaCancelar = inmueble ? `/dashboard/inmuebles/${inmueble.id}` : "/dashboard/inmuebles";
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);

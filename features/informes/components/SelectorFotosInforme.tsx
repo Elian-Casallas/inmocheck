@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton, clasesBoton } from "@/components/ui/Boton";
 import { Icono } from "@/components/ui/Icono";
@@ -25,7 +25,7 @@ type Props = {
 // Paso previo a generar el PDF: elegir qué fotos lleva el informe.
 // Empieza con todas marcadas; la persona quita las que no quiere.
 export function SelectorFotosInforme({ inspeccionId, grupos, hrefCerrar }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const todas = grupos.flatMap((grupo) => grupo.elementos.flatMap((elemento) => elemento.fotoIds));
   const [elegidas, setElegidas] = useState<Set<string>>(() => new Set(todas));
   const [generando, setGenerando] = useState(false);

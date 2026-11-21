@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
 import { ApiError, apiFetch, mensajeDeError } from "@/lib/api/client";
@@ -27,7 +27,7 @@ type Pendiente = { detalle: Detalle; motivo: string };
 // Separar "confirmado" de "borrador" es lo que permite no mostrar nunca
 // "Guardado" antes de que el servidor responda (CA-15).
 export function RealizarInspeccion({ inspeccion, detallesIniciales }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [detalles, setDetalles] = useState(detallesIniciales);
   const [borradores, setBorradores] = useState<Record<string, Borrador>>({});
   const [guardados, setGuardados] = useState<Record<string, EstadoGuardado>>({});

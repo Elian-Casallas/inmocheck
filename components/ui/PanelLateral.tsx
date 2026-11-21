@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { Icono } from "./Icono";
 
 type Props = {
@@ -20,7 +20,7 @@ const SELECTOR_ENFOCABLE = "input, select, textarea, button, a[href]";
 //  * Al abrir, el foco pasa al primer campo; al cerrar, vuelve a donde estaba.
 //  * Esc lo cierra y Tab no se sale del panel.
 export function PanelLateral({ titulo, hrefCerrar, children }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const panel = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

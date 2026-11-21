@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { Aviso } from "@/components/ui/Aviso";
 import { Boton } from "@/components/ui/Boton";
 import { CLASES_ENTRADA } from "@/components/ui/Campo";
@@ -21,7 +21,7 @@ type Props = {
 // acción llama a la API y, cuando responde bien, router.refresh() vuelve a
 // pedir la lista al servidor. Así lo que se ve es siempre lo guardado.
 export function EditorInventario({ inmuebleId, espacios, editable }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [actualizando, iniciarTransicion] = useTransition();
   const [error, setError] = useState<string | null>(null);
 

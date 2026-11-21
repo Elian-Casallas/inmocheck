@@ -67,6 +67,18 @@
   /* ---------- Formas y sombras ---------- */
   --radius-boton: 10px;              /* rounded-boton */
   --shadow-tarjeta: 0 8px 24px rgb(15 23 42 / 0.06); /* shadow-tarjeta */
+
+  /* ---------- Animaciones ---------- */
+  --animate-barra-carga: barra-carga 1.2s ease-in-out infinite; /* animate-barra-carga */
+
+  @keyframes barra-carga {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(300%);
+    }
+  }
 }
 
 /* La fuente Inter la carga next/font en layout.tsx (variable --font-inter).

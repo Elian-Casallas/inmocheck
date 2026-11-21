@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { CLASES_ENTRADA } from "./Campo";
 import { Icono } from "./Icono";
 
@@ -11,7 +12,7 @@ const ESPERA_BUSQUEDA_MS = 350;
 // así sobreviven a recargar, se pueden compartir por enlace y el botón
 // "atrás" funciona. Este hook cambia un parámetro y vuelve a la página 1.
 function useParametroUrl() {
-  const router = useRouter();
+  const router = useNavegacion();
   const ruta = usePathname();
   const parametros = useSearchParams();
 

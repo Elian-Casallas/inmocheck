@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useNavegacion } from "@/components/layout/ProveedorNavegacion";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Aviso } from "@/components/ui/Aviso";
@@ -56,7 +56,7 @@ type Props = {
 };
 
 export function FormularioInspeccion({ inmuebles, inspectores, inmuebleInicial, fechaMinima }: Props) {
-  const router = useRouter();
+  const router = useNavegacion();
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null);
 
   const {
