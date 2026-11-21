@@ -34,4 +34,9 @@ public record Problema(
 				UUID.randomUUID().toString(),
 				null);
 	}
+
+	// Mismo problema con la lista de errores por campo (422).
+	public Problema conErrores(List<ErrorDeCampo> erroresDeCampo) {
+		return new Problema(type, title, status, detail, instance, code, traceId, List.copyOf(erroresDeCampo));
+	}
 }

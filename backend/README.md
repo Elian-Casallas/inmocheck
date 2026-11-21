@@ -21,6 +21,9 @@ Comprobar que está vivo: http://localhost:8080/actuator/health → `{"status":"
 
 Todo lo demás exige `Authorization: Bearer <JWT de Supabase>`. Sin token, o con un token inválido, responde `401` en `application/problem+json`.
 
+## Falla intermitente de DNS en local
+A veces `AislamientoRlsTest` falla con `UnknownHostException: aws-…pooler.supabase.com` aunque el host sea correcto: el pooler apunta a un balanceador de AWS cuyo nombre rota y la red local no siempre lo resuelve a tiempo. Vuelve a correr las pruebas; si pasa sola, no es un error del código.
+
 ## Problema conocido en Windows
 Si al arrancar aparece `Unable to establish loopback connection`, Java no logra crear su socket interno en la carpeta temporal del usuario (pasa cuando el nombre de usuario tiene espacios). Se arregla indicándole una carpeta sin espacios:
 

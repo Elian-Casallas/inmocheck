@@ -65,3 +65,7 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 | 2026-11-20 | La base no cuenta para `/actuator/health` | Si Supabase falla, reiniciar el servidor en AWS no lo arregla; la salud solo dice si la app está viva |
 | 2026-11-20 | Pool de 5 conexiones | El pooler del plan gratuito de Supabase admite pocas conexiones |
 | 2026-11-20 | Las pruebas sin base usan el perfil `test`; la prueba de aislamiento usa la base real y se salta si `backend/.env` no tiene `SUPABASE_DB_URL` | La seguridad de los datos se prueba contra el RLS real, sin simularlo |
+| 2026-11-20 | Un id de la ruta que no es UUID responde `404`; un parámetro de búsqueda mal escrito, `400` | Igual que `validarId()` del BFF: un id inválido no puede existir y no se revela nada |
+| 2026-11-20 | Se agrega `405 METHOD_NOT_ALLOWED`, que el BFF no tenía | Spring distingue el método equivocado de la ruta inexistente; antes ambos caían en 404 o 500 |
+| 2026-11-20 | Idioma fijo en español (`spring.web.locale: es`) | Los mensajes de validación sin texto propio salen en español también en AWS, cuyo sistema está en inglés |
+| 2026-11-20 | Los límites (página 20/100, foto 10 MB) van en `comun/Limites.java` | Equivale a `lib/constantes.ts`; nada de números mágicos. El tamaño máximo de subida de Spring se configura en la 5.15 |
