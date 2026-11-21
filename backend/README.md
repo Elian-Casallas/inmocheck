@@ -6,7 +6,9 @@ API REST de InmoCheck. Diseño y plan: `../docs/arquitectura.md` y la sección 5
 - Java 21. No hace falta instalar Maven: el wrapper `mvnw` descarga la versión correcta.
 
 ## Configuración
-Copia `.env.example` como `.env` y llena los valores (`.env` no se sube a git). Sin `SUPABASE_URL` la app no arranca.
+Copia `.env.example` como `.env` y llena los valores (`.env` no se sube a git). Sin `SUPABASE_URL` o sin los datos de la base, la app no arranca.
+
+Las pruebas que no necesitan base corren siempre. `AislamientoRlsTest` usa la base real de Supabase (solo lee) y se salta si `.env` no tiene `SUPABASE_DB_URL`.
 
 ## Comandos (desde `backend/`)
 | Qué | Windows (PowerShell) |

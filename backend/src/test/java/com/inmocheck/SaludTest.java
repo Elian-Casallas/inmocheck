@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 // Comprueba que la aplicación arranca completa y que la ruta de salud que
 // usará AWS responde UP.
-@SpringBootTest(properties = "inmocheck.supabase.url=https://prueba.supabase.co")
+@SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 class SaludTest {
 

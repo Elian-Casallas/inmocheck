@@ -1,0 +1,13 @@
+# Perfil de las pruebas que NO tocan la base real.
+# La URL de la base no existe a propósito: el pool de conexiones solo se
+# conecta cuando alguien hace una consulta, y estas pruebas no hacen ninguna
+# (o simulan EjecutorRls).
+inmocheck:
+  supabase:
+    url: https://prueba.supabase.co
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sin-base
+    username: prueba
+    password: prueba

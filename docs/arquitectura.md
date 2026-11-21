@@ -116,7 +116,7 @@ backend/
     InmocheckApplication.java
     config/        SeguridadConfig (JWT de Supabase), PropiedadesSupabase
     comun/
-      sesion/      Actor, ActorResolver (perfil + organización desde perfiles), @RequiereRol
+      sesion/      Actor (con exigirRol), Rol, ActorResolver y PerfilesRepository (perfil + organización)
       datos/       EjecutorRls (abre la transacción con el rol y los claims del usuario)
       http/        ManejadorErrores (@RestControllerAdvice → ProblemDetail), Pagina<T>, ErrorDeCampo
       errores/     NoEncontradoException, ConflictoException, ProhibidoException…
@@ -139,7 +139,7 @@ backend/
 ### Capas
 | Capa | Clase | Hace | Nunca |
 |---|---|---|---|
-| Controller | `*Controller` | Recibe la petición, exige rol (`@RequiereRol`), valida el DTO (`@Valid`) y responde con el código del contrato | Acepta `organizacionId` o rol enviados por el cliente |
+| Controller | `*Controller` | Recibe la petición y el `Actor`, exige rol (`actor.exigirRol(...)`), valida el DTO (`@Valid`) y responde con el código del contrato | Acepta `organizacionId` o rol enviados por el cliente |
 | Service | `*Service` | Aplica reglas y traduce errores (404, 409) | Arma SQL o conoce HTTP |
 | Repository | `*Repository` | Hace consultas y llama funciones SQL con `JdbcClient` dentro de la transacción RLS | Decide reglas |
 | Soporte | `comun/*`, `supabase/*`, `informes/ActaPdf` | Sesión, transacción RLS, errores, clientes de Storage y Auth Admin, PDF | — |
@@ -155,7 +155,7 @@ backend/
    Desde ahí `auth.uid()`, `mi_organizacion()` y todas las políticas RLS funcionan igual que con el BFF.
 4. El repositorio hace sus consultas o llama a la función SQL (`iniciar_inspeccion`, `finalizar_inspeccion`…), que valida estado y `version`.
 
-Si una consulta se hiciera fuera de `EjecutorRls`, correría con el usuario de conexión y saltaría RLS. Por eso los repositorios solo reciben la conexión desde `EjecutorRls`, y hay una prueba que lo verifica.
+Si una consulta se hiciera fuera de `EjecutorRls`, correría con el usuario de conexión y saltaría RLS. Por eso los repositorios no inyectan `JdbcClient`: lo reciben como argumento dentro de `ejecutor.ejecutar(token, jdbc -> ...)`. `EjecutorRlsUnicaPuertaTest` falla si otra clase recibe acceso directo a la base, y `AislamientoRlsTest` comprueba contra la base real que un admin de una inmobiliaria no ve la otra.
 
 ### Módulos
 `auth/me`, `inmuebles`, `inventario`, `propietarios`, `inspectores`, `inspecciones`, `evidencias`, `comparacion`, `informes`, `dashboard` y `auditoria`.

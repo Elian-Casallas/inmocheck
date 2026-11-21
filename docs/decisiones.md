@@ -55,8 +55,13 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 | 2026-11-20 | Despliegue en **AWS Elastic Beanstalk** (plataforma Java 21, una instancia) con HTTPS; el front sigue en Vercel | Es la forma más simple de subir un `.jar` a AWS y cabe en la capa gratuita; el HTTPS es obligatorio porque viaja el token |
 | 2026-11-20 | Migración **por módulos**: el proxy manda a Spring solo los módulos ya migrados y el resto sigue en el BFF hasta que se borre | La app nunca queda rota y cada módulo se prueba de punta a punta antes de seguir |
 | 2026-11-20 | El proyecto de Supabase firma los JWT de usuario con una llave asimétrica **ES256**, publicada en `/auth/v1/.well-known/jwks.json` | Verificado en la tarea 5.1. Spring valida con JWKS y no necesita guardar ningún secreto de JWT |
-| 2026-11-20 | **Supuesto:** "backend propio" permite seguir usando Supabase como base de datos | Se eligió la opción A; falta confirmarlo con el docente |
+| 2026-11-20 | "Backend propio" permite seguir usando Supabase como base de datos | El docente aprobó la opción A el 2026-11-20 |
 | 2026-11-20 | Armar el `Actor` desde `perfiles` pasa de la 5.3 a la 5.4 | Leer `perfiles` necesita la base y la transacción con RLS, que llegan en la 5.4 |
 | 2026-11-20 | Los errores usan un `record Problema` propio en vez del `ProblemDetail` de Spring | Así el JSON tiene exactamente los campos del BFF (`type, title, status, detail, instance, code, traceId, errors`) y el front no nota el cambio |
 | 2026-11-20 | El token debe tener firma ES256 válida, `exp` vigente, `iss` = `SUPABASE_URL/auth/v1` y `aud` = `authenticated` | Rechaza tokens vencidos, de otro proyecto de Supabase o la llave anónima; si falta `SUPABASE_URL`, la app no arranca |
 | 2026-11-20 | En local, Spring lee las variables de `backend/.env` (plantilla en `backend/.env.example`) | Mismo patrón que `.env.local` del front; en AWS se usan las variables del entorno |
+| 2026-11-20 | El `Actor` llega a los controllers como parámetro (`ActorResolver`) y el rol se exige con `actor.exigirRol(...)`, no con una anotación | Es explícito, se prueba fácil y equivale a `requireRole` del BFF |
+| 2026-11-20 | La consulta del perfil usa `left join` con `organizaciones` | A un usuario desactivado RLS le oculta su organización; con `join` normal respondería 401 en vez de `403 CUENTA_INACTIVA` |
+| 2026-11-20 | La base no cuenta para `/actuator/health` | Si Supabase falla, reiniciar el servidor en AWS no lo arregla; la salud solo dice si la app está viva |
+| 2026-11-20 | Pool de 5 conexiones | El pooler del plan gratuito de Supabase admite pocas conexiones |
+| 2026-11-20 | Las pruebas sin base usan el perfil `test`; la prueba de aislamiento usa la base real y se salta si `backend/.env` no tiene `SUPABASE_DB_URL` | La seguridad de los datos se prueba contra el RLS real, sin simularlo |

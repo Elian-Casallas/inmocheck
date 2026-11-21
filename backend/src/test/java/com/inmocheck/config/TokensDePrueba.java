@@ -23,6 +23,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 // solo existe en las pruebas. Así se prueba la seguridad sin red.
 final class TokensDePrueba {
 
+	// La misma de src/test/resources/application-test.yml.
 	static final String URL_SUPABASE = "https://prueba.supabase.co";
 	static final String EMISOR = URL_SUPABASE + "/auth/v1";
 	static final String USUARIO = "11111111-1111-1111-1111-111111111111";

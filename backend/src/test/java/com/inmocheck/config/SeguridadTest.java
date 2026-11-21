@@ -22,12 +22,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@SpringBootTest(properties = "inmocheck.supabase.url=" + TokensDePrueba.URL_SUPABASE)
+@SpringBootTest
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @Import(SeguridadTest.Configuracion.class)
 class SeguridadTest {

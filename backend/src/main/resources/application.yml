@@ -5,6 +5,15 @@ spring:
     # En local, las variables salen de backend/.env (no se sube a git).
     # En AWS no existe ese archivo: se usan las variables del entorno.
     import: optional:file:.env[.properties]
+  datasource:
+    # PostgreSQL de Supabase por el pooler de SESIÓN (IPv4, puerto 5432).
+    # Toda consulta debe pasar por EjecutorRls; este usuario se salta RLS.
+    url: ${SUPABASE_DB_URL:}
+    username: ${SUPABASE_DB_USER:}
+    password: ${SUPABASE_DB_PASSWORD:}
+    hikari:
+      # El plan gratuito de Supabase admite pocas conexiones por el pooler.
+      maximum-pool-size: 5
 
 inmocheck:
   supabase:
@@ -26,3 +35,8 @@ management:
     health:
       # Sin detalles: no se publica qué componentes tiene el servidor.
       show-details: never
+  health:
+    db:
+      # La salud dice si ESTA app está viva. Si Supabase falla, reiniciar el
+      # servidor en AWS no lo arregla, así que la base no cuenta para la salud.
+      enabled: false
