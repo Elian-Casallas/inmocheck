@@ -72,7 +72,7 @@ A = administrador · I = inspector asignado · A/I = ambos, cada uno en su ámbi
 ### Inspecciones
 | Método | Ruta | Actor | Qué hace |
 |---|---|---|---|
-| GET / POST | `/inspecciones` | A/I · A | Lista (`estado, tipo, inmuebleId, page`) / programa `{inmuebleId,inspectorId,tipo,programadaPara}` |
+| GET / POST | `/inspecciones` | A/I · A | Lista (`estado, tipo, inmuebleId, inspectorId, desde, hasta, page`) / programa `{inmuebleId,inspectorId,tipo,programadaPara,nota?}` |
 | GET / PATCH | `/inspecciones/{id}` | A/I · A | Cabecera y progreso / reprograma (solo pendiente, con `version`) |
 | POST | `/inspecciones/{id}/reasignaciones` | A | `{inspectorId,motivo?,version}` |
 | POST | `/inspecciones/{id}/inicio` | I | `{version}` pasa a EN_PROCESO (solo dentro del plazo) |
@@ -92,6 +92,12 @@ A = administrador · I = inspector asignado · A/I = ambos, cada uno en su ámbi
 | GET | `/informes/{id}/descarga` | A/I | Enlace firmado del PDF |
 | GET | `/dashboard/resumen` | A | Indicadores de la organización |
 | GET | `/auditoria` | A | Eventos de auditoría paginados |
+
+## Filtros de `GET /inspecciones` (desde 2026-11-21)
+- `estado` acepta uno o varios valores separados por coma: `?estado=FINALIZADA,CANCELADA`. Si todos son cerrados (finalizada o cancelada), la lista va de la más reciente a la más antigua; si no, de la más próxima a la más lejana.
+- `inspectorId` (opcional) filtra por inspector. RLS sigue mandando: el inspector solo ve las suyas aunque mande otro id.
+- `desde` y `hasta` (`AAAA-MM-DD`) limitan por fecha programada.
+- Se agregaron para que las páginas dejen de leer la base directamente ("Mis inspecciones" cerradas y el panel de Inspectores). Son opcionales: lo que ya funcionaba sigue igual.
 
 ## Diferencias con el diseño técnico
 - Se agregaron `PUT /auth/contrasena` y `POST /inspectores/{id}/acceso` (reenviar la invitación).

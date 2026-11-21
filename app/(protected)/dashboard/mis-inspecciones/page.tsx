@@ -8,11 +8,14 @@ import { Tarjeta } from "@/components/ui/Tarjeta";
 import { BarraProgreso } from "@/features/inspecciones/components/BarraProgreso";
 import { TablaInspecciones } from "@/features/inspecciones/components/TablaInspecciones";
 import { ZONA_HORARIA } from "@/lib/constantes";
-import { ETIQUETA_TIPO_INSPECCION, type EstadoInspeccion } from "@/lib/inspecciones";
+import { ETIQUETA_TIPO_INSPECCION, type EstadoInspeccion, type InspeccionResumen } from "@/lib/inspecciones";
 import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
+import { cargarInspeccion } from "@/features/inspecciones/cargar";
+import { contarPorEstado } from "@/features/inspecciones/consultas";
+import { leerDeSpring, parametrosDeFiltro } from "@/lib/api/servidor";
+import type { Paginado } from "@/schemas/comun";
 import { inspeccionesFiltroSchema } from "@/schemas/inspecciones";
 import { exigirRol } from "@/server/auth/sesion";
-import { contarPorEstado, listarInspecciones, obtenerInspeccion } from "@/server/services/inspecciones.service";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Mis inspecciones" };
@@ -35,11 +38,14 @@ export default async function PaginaMisInspecciones({
   // No hace falta filtrar por inspector: RLS solo devuelve las asignadas a
   // quien tiene la sesión. Aunque alguien cambie la consulta, no verá otras.
   const [{ data: inspecciones, meta }, enCurso, conteo] = await Promise.all([
-    listarInspecciones(filtro, verFinalizadas ? ESTADOS_CERRADAS : ESTADOS_PROXIMAS),
-    listarInspecciones(inspeccionesFiltroSchema.parse({ estado: "EN_PROCESO" })),
+    leerDeSpring<Paginado<InspeccionResumen>>(
+      "inspecciones",
+      parametrosDeFiltro({ ...filtro, estado: (verFinalizadas ? ESTADOS_CERRADAS : ESTADOS_PROXIMAS).join(",") }),
+    ),
+    leerDeSpring<Paginado<InspeccionResumen>>("inspecciones", parametrosDeFiltro({ estado: "EN_PROCESO" })),
     contarPorEstado(),
   ]);
-  const actuales = await Promise.all(enCurso.data.map((inspeccion) => obtenerInspeccion(inspeccion.id)));
+  const actuales = await Promise.all(enCurso.data.map((inspeccion) => cargarInspeccion(inspeccion.id)));
 
   const hoy = new Intl.DateTimeFormat("es-CO", { dateStyle: "full", timeZone: ZONA_HORARIA }).format(new Date());
 

@@ -1,10 +1,9 @@
-package com.inmocheck.inmuebles;
+package com.inmocheck.inspecciones;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-// Una inspección en el historial del inmueble (tipo InspeccionResumen de
-// lib/inspecciones.ts). Cuando se migre Inspecciones (5.13) se moverá allá.
+// Una inspección en listados e historial (tipo InspeccionResumen de lib/inspecciones.ts).
 public record InspeccionResumen(
 		UUID id,
 		String tipo,

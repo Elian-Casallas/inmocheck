@@ -9,7 +9,10 @@ import { ESTADOS_INSPECCION, ETIQUETA_ESTADO_INSPECCION } from "@/lib/inspeccion
 import { aplanarParametros, urlCon, type ParametrosBusqueda } from "@/lib/url";
 import { inspeccionesFiltroSchema } from "@/schemas/inspecciones";
 import { exigirRol } from "@/server/auth/sesion";
-import { contarPorEstado, listarInspecciones } from "@/server/services/inspecciones.service";
+import { contarPorEstado } from "@/features/inspecciones/consultas";
+import { leerDeSpring, parametrosDeFiltro } from "@/lib/api/servidor";
+import type { InspeccionResumen } from "@/lib/inspecciones";
+import type { Paginado } from "@/schemas/comun";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Inspecciones" };
@@ -26,7 +29,7 @@ export default async function PaginaInspecciones({
   const parametros = aplanarParametros(await searchParams);
   const filtro = inspeccionesFiltroSchema.catch(inspeccionesFiltroSchema.parse({})).parse(parametros);
   const [{ data: inspecciones, meta }, conteo] = await Promise.all([
-    listarInspecciones(filtro),
+    leerDeSpring<Paginado<InspeccionResumen>>("inspecciones", parametrosDeFiltro(filtro)),
     contarPorEstado(),
   ]);
 

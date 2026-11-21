@@ -4,6 +4,8 @@ import com.inmocheck.comun.Textos;
 import com.inmocheck.comun.errores.DatosInvalidosException;
 import com.inmocheck.comun.errores.SolicitudInvalidaException;
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,6 +61,12 @@ public final class CuerpoParcial {
 		return leer(campo, JsonNode::isNumber, JsonNode::decimalValue, "Escribe un número.");
 	}
 
+	// Fecha y hora ISO con zona horaria ("2026-11-21T10:00:00-05:00"), como z.iso.datetime({ offset: true }).
+	public Optional<OffsetDateTime> fechaHora(String campo) {
+		return leer(campo, valor -> valor.isString() && esFechaHora(valor.asString()),
+				valor -> OffsetDateTime.parse(valor.asString()), "Fecha inválida.");
+	}
+
 	public Optional<Boolean> booleano(String campo) {
 		return leer(campo, JsonNode::isBoolean, JsonNode::asBoolean, "Debe ser verdadero o falso.");
 	}
@@ -97,6 +105,15 @@ public final class CuerpoParcial {
 			return null;
 		}
 		return Optional.of(convertir.apply(valor));
+	}
+
+	private static boolean esFechaHora(String texto) {
+		try {
+			OffsetDateTime.parse(texto);
+			return true;
+		} catch (DateTimeParseException e) {
+			return false;
+		}
 	}
 
 	private static boolean esUuid(String texto) {

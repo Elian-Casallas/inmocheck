@@ -16,7 +16,7 @@ import { leerDeSpring, parametrosDeFiltro } from "@/lib/api/servidor";
 import type { Paginado } from "@/schemas/comun";
 import { inspectoresFiltroSchema, type Inspector } from "@/schemas/inspectores";
 import { exigirRol } from "@/server/auth/sesion";
-import { listarAbiertasDeInspector } from "@/server/repositories/inspecciones.repository";
+import { listarAbiertasDeInspector } from "@/features/inspecciones/consultas";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Inspectores" };

@@ -2,6 +2,7 @@ package com.inmocheck.inmuebles;
 
 import com.inmocheck.comun.datos.Busqueda;
 import com.inmocheck.comun.http.ParametrosPagina;
+import com.inmocheck.inspecciones.InspeccionResumen;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;

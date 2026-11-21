@@ -3,6 +3,7 @@ package com.inmocheck.inmuebles;
 import com.inmocheck.comun.http.Datos;
 import com.inmocheck.comun.http.Pagina;
 import com.inmocheck.comun.http.ParametrosPagina;
+import com.inmocheck.inspecciones.InspeccionResumen;
 import com.inmocheck.comun.sesion.Actor;
 import com.inmocheck.comun.sesion.Rol;
 import jakarta.validation.Valid;

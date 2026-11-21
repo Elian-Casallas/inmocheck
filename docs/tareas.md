@@ -86,7 +86,7 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 - [x] 5.10 Inmuebles (CRUD, filtros, historial y desactivación; opciones de propietario desde `GET /propietarios`)
 - [x] 5.11 Inventario (espacios y elementos)
 - [x] 5.12 Inspectores (invitación y reenvío con Auth Admin)
-- [ ] 5.13 Inspecciones (crear, reprogramar, iniciar, reasignar, cancelar; mover `InspeccionResumen` del paquete `inmuebles`; el panel de Inspectores usa `listarAbiertasDeInspector` del BFF)
+- [x] 5.13 Inspecciones (crear, reprogramar, iniciar, reasignar, cancelar; filtros `estado` múltiple e `inspectorId`)
 - [ ] 5.14 Detalles y finalización
 - [ ] 5.15 Evidencias (subida multipart a Storage, enlace de 60 s, retiro)
 - [ ] 5.16 Comparación entrada/salida

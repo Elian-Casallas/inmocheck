@@ -8,6 +8,7 @@ import com.inmocheck.comun.errores.NoEncontradoException;
 import com.inmocheck.comun.http.ErrorDeCampo;
 import com.inmocheck.comun.http.Pagina;
 import com.inmocheck.comun.http.ParametrosPagina;
+import com.inmocheck.inspecciones.InspeccionResumen;
 import com.inmocheck.comun.sesion.Actor;
 import jakarta.validation.Validator;
 import java.util.ArrayList;
