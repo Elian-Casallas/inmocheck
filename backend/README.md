@@ -24,6 +24,8 @@ Todo lo demás exige `Authorization: Bearer <JWT de Supabase>`. Sin token, o con
 ## Falla intermitente de DNS en local
 A veces las pruebas que usan la base (`AislamientoRlsTest`, `MeIntegracionTest`) fallan con `UnknownHostException: aws-…pooler.supabase.com` aunque el host sea correcto. Pasó en unas 4 de 12 corridas, sin un patrón reproducible (no depende de recompilar ni de la caché de DNS del sistema). Cuando ocurre fallan todas a la vez, porque Java recuerda una búsqueda fallida durante 10 s. Vuelve a correr las pruebas: si pasan, no es un error del código.
 
+Desde la tarea 5.9 esto se mitiga: Hikari reintenta la conexión en segundo plano y Java no recuerda las búsquedas de DNS fallidas, así que un tropiezo de DNS ya no debería romper la app ni las pruebas.
+
 ## Problema conocido en Windows
 Si al arrancar aparece `Unable to establish loopback connection`, Java no logra crear su socket interno en la carpeta temporal del usuario (pasa cuando el nombre de usuario tiene espacios). Se arregla indicándole una carpeta sin espacios:
 

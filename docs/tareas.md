@@ -64,8 +64,10 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 ## Backend propio en Spring Boot + AWS
 > Pedido del docente (2026-11-20). Opción A: Spring Boot reemplaza el BFF y Supabase se queda como
 > base, Auth y Storage. Diseño: `docs/arquitectura.md`. Decisiones: `docs/decisiones.md`.
-> Regla: un módulo a la vez. Un módulo está "hecho" cuando su carpeta de Postman pasa contra Spring
-> y el proxy ya lo manda a Spring.
+> Regla: un módulo a la vez. Un módulo está "hecho" cuando sus pruebas de integración pasan contra
+> la base real (en transacciones que se deshacen), el proxy ya lo manda a Spring y se probó en el navegador.
+> La colección de Postman no se corre por módulo: es un recorrido completo que crea datos en Supabase;
+> se corre entera en la 5.20.
 
 **Base**
 - [x] 5.1 Confirmar con el docente que Supabase puede seguir como base de datos (aprobado el 2026-11-20). Firma de los JWT revisada: ES256 con JWKS
@@ -79,9 +81,9 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 - [x] 5.7 Proxy `app/api/v1/[...ruta]/route.ts` con una lista de módulos migrados y `BACKEND_URL` (primer módulo: `auth/me`)
 - [x] 5.8 `lib/api/servidor.ts` para que los Server Components lean de Spring (primer uso: `exigirActor()` pide el actor a `GET /auth/me`)
 
-**Módulos** (en cada uno: endpoints, Bean Validation con los mensajes de Zod, pruebas MockMvc, páginas pasadas a `lib/api/servidor.ts`, módulo agregado al proxy y carpeta de Postman pasando)
-- [ ] 5.9 Propietarios
-- [ ] 5.10 Inmuebles
+**Módulos** (en cada uno: endpoints, Bean Validation con los mensajes de Zod, pruebas MockMvc contra la base real, páginas pasadas a `lib/api/servidor.ts`, módulo agregado al proxy y rutas del BFF borradas)
+- [x] 5.9 Propietarios
+- [ ] 5.10 Inmuebles (incluye las opciones de propietario del formulario, que hoy siguen en `listarOpcionesPropietario` del BFF)
 - [ ] 5.11 Inventario (espacios y elementos)
 - [ ] 5.12 Inspectores (invitación y reenvío con Auth Admin)
 - [ ] 5.13 Inspecciones (crear, reprogramar, iniciar, reasignar, cancelar)
@@ -93,6 +95,6 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 
 **Nube y cierre**
 - [ ] 5.19 Desplegar en AWS Elastic Beanstalk (Java 21) con HTTPS y variables de entorno
-- [ ] 5.20 Configurar `BACKEND_URL` en Vercel y probar en producción el flujo central (login → inmueble → programar → realizar con fotos → finalizar → PDF)
+- [ ] 5.20 Configurar `BACKEND_URL` en Vercel, correr la colección de Postman completa contra Spring y probar en producción el flujo central (login → inmueble → programar → realizar con fotos → finalizar → PDF)
 - [ ] 5.21 Borrar el BFF viejo (`server/services`, `server/repositories`, `server/pdf`, `lib/supabase/admin.ts`, rutas migradas) y quitar `SUPABASE_SERVICE_ROLE_KEY` de Vercel
 - [ ] 5.22 Actualizar los manuales, el README y `docs/contratos/api.md` (base y autenticación)

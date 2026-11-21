@@ -14,6 +14,15 @@ spring:
     hikari:
       # El plan gratuito de Supabase admite pocas conexiones por el pooler.
       maximum-pool-size: 5
+      # Si la primera conexión falla (p. ej. un tropiezo de DNS al arrancar),
+      # el pool sigue reintentando en segundo plano en vez de rendirse, y una
+      # petición espera hasta 10 s a que haya conexión antes de dar error.
+      initialization-fail-timeout: -1
+      connection-timeout: 10000
+  jackson:
+    deserialization:
+      # Un campo desconocido en el JSON es un error (422), como .strict() de Zod.
+      fail-on-unknown-properties: true
   web:
     # Los mensajes de validación que no traen texto propio salen en español,
     # también en AWS (donde el sistema está en inglés).

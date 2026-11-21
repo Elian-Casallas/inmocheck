@@ -15,6 +15,8 @@ const {
 describe("estaEnSpring", () => {
   it("reenvía los módulos migrados", () => {
     expect(estaEnSpring(["auth", "me"])).toBe(true);
+    expect(estaEnSpring(["propietarios"])).toBe(true);
+    expect(estaEnSpring(["propietarios", "a2000000-0000-4000-8000-000000000001"])).toBe(true);
   });
 
   it("no reenvía lo que sigue en el BFF ni rutas parecidas", () => {

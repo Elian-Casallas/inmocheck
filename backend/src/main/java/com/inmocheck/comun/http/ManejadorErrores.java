@@ -1,6 +1,7 @@
 package com.inmocheck.comun.http;
 
 import com.inmocheck.comun.Limites;
+import com.inmocheck.comun.errores.DatosInvalidosException;
 import com.inmocheck.comun.errores.ErrorDeApi;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -25,6 +26,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import tools.jackson.databind.exc.UnrecognizedPropertyException;
 
 // Convierte CUALQUIER error en application/problem+json con la misma forma y
 // los mismos códigos que el BFF (server/http/problem.ts). Ningún controller
@@ -38,8 +40,12 @@ public class ManejadorErrores {
 
 	@ExceptionHandler(ErrorDeApi.class)
 	ResponseEntity<Problema> errorDeNegocio(ErrorDeApi error, HttpServletRequest peticion) {
-		return responder(Problema.de(
-				error.estado(), error.codigo(), error.titulo(), error.getMessage(), peticion.getRequestURI()));
+		Problema problema = Problema.de(
+				error.estado(), error.codigo(), error.titulo(), error.getMessage(), peticion.getRequestURI());
+		if (error instanceof DatosInvalidosException invalidos) {
+			problema = problema.conErrores(invalidos.errores());
+		}
+		return responder(problema);
 	}
 
 	// ---------- 422: los datos no cumplen las reglas (equivale a ZodError) ----------
@@ -75,8 +81,14 @@ public class ManejadorErrores {
 
 	// ---------- 400 y 404 por la forma de la petición ----------
 
+	// Un campo que el esquema no conoce (p. ej. "organizacionId" u "organizacion_id")
+	// es 422, como .strict() de Zod: nadie cuela datos que el servidor no espera.
 	@ExceptionHandler(HttpMessageNotReadableException.class)
-	ResponseEntity<Problema> jsonInvalido(HttpServletRequest peticion) {
+	ResponseEntity<Problema> jsonInvalido(HttpMessageNotReadableException error, HttpServletRequest peticion) {
+		if (error.getCause() instanceof UnrecognizedPropertyException campoDesconocido) {
+			return responder(validacion(peticion).conErrores(List.of(
+					new ErrorDeCampo(campoDesconocido.getPropertyName(), "Este campo no está permitido."))));
+		}
 		return responder(Problema.de(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "Solicitud inválida",
 				"El cuerpo debe ser JSON válido.", peticion.getRequestURI()));
 	}
