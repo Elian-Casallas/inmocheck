@@ -38,9 +38,3 @@ export class NotFoundError extends AppError {
     super(404, "NOT_FOUND", "No encontrado", detail);
   }
 }
-
-export class ConflictError extends AppError {
-  constructor(detail: string, code = "CONFLICT") {
-    super(409, code, "Conflicto", detail);
-  }
-}

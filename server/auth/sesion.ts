@@ -3,9 +3,7 @@ import { cache } from "react";
 import { redirect } from "next/navigation";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { leerDeSpring } from "@/lib/api/servidor";
-import { crearClienteServidor } from "@/lib/supabase/server";
 import type { Rol } from "@/lib/constantes";
-import { ForbiddenError, UnauthenticatedError } from "@/server/http/errores";
 
 // El "actor" es quien hace la petición. Su rol y su organización salen SIEMPRE
 // de la sesión y de la tabla perfiles, nunca de lo que mande el navegador.
@@ -27,6 +25,9 @@ type FilaPerfil = {
   organizaciones: { id: string; nombre: string };
 };
 
+// Perfil del usuario recién autenticado. Solo lo usa el login (que se queda en
+// Next.js porque crea las cookies de la sesión) para rechazar cuentas sin perfil
+// o desactivadas antes de dejar la sesión abierta.
 export async function buscarPerfil(
   supabase: SupabaseClient,
   usuarioId: string,
@@ -45,42 +46,11 @@ export async function buscarPerfil(
   return { ...perfil, organizacion: organizaciones };
 }
 
-// cache() de React: si el layout y la página piden el actor en la misma
-// petición, la consulta se hace una sola vez.
-export const obtenerActor = cache(async (): Promise<Actor | null> => {
-  const supabase = await crearClienteServidor();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return null;
-  return buscarPerfil(supabase, user.id);
-});
-
-// ---------- Para Route Handlers (/api/v1): lanzan errores HTTP ----------
-
-export async function requireActor(): Promise<Actor> {
-  const actor = await obtenerActor();
-  if (!actor) throw new UnauthenticatedError();
-  if (!actor.activo) {
-    throw new ForbiddenError("Tu cuenta está desactivada.", "CUENTA_INACTIVA");
-  }
-  return actor;
-}
-
-export async function requireRole(...rolesPermitidos: Rol[]): Promise<Actor> {
-  const actor = await requireActor();
-  if (!rolesPermitidos.includes(actor.rol)) throw new ForbiddenError();
-  return actor;
-}
-
 // ---------- Para páginas y layouts: redirigen ----------
 
 // Las páginas preguntan a SPRING quién es el usuario (GET /auth/me).
 // leerDeSpring() ya redirige: sin sesión → /login, cuenta desactivada → /403.
 // cache(): el layout y la página lo piden en la misma petición y se llama una vez.
-// (requireActor, de las rutas del BFF que aún no se migran, sigue leyendo de
-// Supabase hasta que el BFF se borre en la tarea 5.21.)
 const obtenerActorDeSpring = cache(async (): Promise<Actor> => {
   const { data } = await leerDeSpring<{ data: Actor }>("auth/me");
   return data;

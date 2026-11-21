@@ -7,7 +7,7 @@ Inspecciones digitales de inmuebles para inmobiliarias: inventario, visitas con 
 ## Stack
 - Front: Next.js 16.3 (App Router) + React 19.2 + TypeScript 5 + Tailwind CSS 4 · React Hook Form + Zod 4 · Vitest
 - Back: **Spring Boot 4.1 + Java 21** en `backend/` (Maven, Spring Security con el JWT de Supabase, `JdbcClient`, Bean Validation, OpenPDF, JUnit 5)
-- **En migración** (sección 5 de `docs/tareas.md`): los módulos que aún no están en Spring siguen en el BFF viejo de `app/api/v1` y `server/`. Next.js reenvía `/api/v1` a Spring con un proxy.
+- Todos los módulos están en Spring. Next.js reenvía `/api/v1` a Spring con un proxy; solo las 4 rutas de sesión (`login`, `logout`, `recuperar-contrasena`, `contrasena`) se quedan en Next.js. La versión anterior (Next.js como front y back) está en la rama `version-nextjs-fullstack`.
 - Supabase: PostgreSQL con RLS y funciones SQL, Auth (cookies en el front, JWT en el back) y Storage privado
 - Despliegue: Vercel (front), Render con Docker (back) y Supabase (datos)
 
@@ -28,7 +28,7 @@ Inspecciones digitales de inmuebles para inmobiliarias: inventario, visitas con 
 - Implementa UNA tarea de `docs/tareas.md` a la vez y márcala al terminar.
 - No agregues funcionalidades que no estén en `docs/specs/`. Si el alcance cambia, actualiza primero los docs.
 - No toques archivos que la tarea no requiera.
-- Nunca escribas llaves o tokens en el código: usa `.env.local`. `SUPABASE_SERVICE_ROLE_KEY` es solo de servidor.
+- Nunca escribas llaves o tokens en el código: usa `.env.local`. `SUPABASE_SERVICE_ROLE_KEY` solo la usa el backend (`backend/.env` y Render), nunca el front.
 - Para la UI, usa la skill `ui-componentes`.
 - Al terminar cada tarea, explica cómo probarla en el navegador.
 

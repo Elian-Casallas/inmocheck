@@ -74,7 +74,7 @@ lib/        api/client.ts (fetch tipado desde el navegador), api/servidor.ts (fe
 schemas/    Zod de los formularios (mismos campos y mensajes que el back)
 proxy.ts    refresca la sesión y bloquea /dashboard sin sesión
 ```
-Cuando termine la migración se borran `server/services`, `server/repositories` y `server/pdf` del proyecto Next.js.
+El BFF viejo (`server/services`, `server/repositories`, `server/pdf`) se borró en la tarea 5.21. En `server/` solo quedan la sesión (`auth/sesion.ts`) y los errores `problem+json` (`http/`) que usan el proxy y las 4 rutas de sesión.
 
 ### Pantallas
 | Ruta | Rol |
@@ -172,7 +172,7 @@ Los mismos endpoints REST de `/api/v1`. El contrato completo está en `docs/cont
 ### Acceso a Supabase desde el back
 - **Base de datos:** JDBC por el pooler de sesión de Supabase (IPv4, puerto 5432). Siempre dentro de `EjecutorRls`.
 - **Storage y Auth Admin:** API REST de Supabase con `SUPABASE_SERVICE_ROLE_KEY`. Solo los usan los servicios de inspectores (invitar y reenviar acceso), evidencias e informes, **después** de autorizar al usuario con una consulta bajo RLS.
-- El front conserva `lib/supabase/server.ts` (leer la sesión y obtener el token) y `lib/supabase/client.ts` (solo `ProcesarEnlace`). `lib/supabase/admin.ts` se borra al terminar la migración.
+- El front conserva `lib/supabase/server.ts` (leer la sesión y obtener el token) y `lib/supabase/client.ts` (solo `ProcesarEnlace`). `lib/supabase/admin.ts` se borró en la tarea 5.21: la llave `service_role` solo vive en el backend.
 
 ---
 
@@ -239,4 +239,4 @@ Reglas y estados: `docs/reglas-de-negocio.md`.
 | Render | `SUPABASE_SERVICE_ROLE_KEY` | Storage e invitaciones. **Nunca** en el front ni en el código |
 | Render | `FRONT_URL` | Dirección de la app web, para los enlaces de los correos (`https://inmocheck.vercel.app`) |
 
-Durante la migración, Vercel conserva `SUPABASE_SERVICE_ROLE_KEY` para los módulos que aún están en el BFF. Se retira al terminar.
+Vercel **no** tiene `SUPABASE_SERVICE_ROLE_KEY` (se retiró en la tarea 5.21): solo la tiene Render.

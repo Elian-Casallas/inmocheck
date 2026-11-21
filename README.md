@@ -30,14 +30,16 @@ Requisitos: Node.js 20 o superior y un proyecto de Supabase.
 npm install
 ```
 
-Copia `.env.example` como `.env.local` y completa los tres valores
+Copia `.env.example` como `.env.local` y completa los valores
 (Supabase → Project Settings → API Keys):
 
 | Variable | Qué es |
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave pública (`anon`). Puede ir en el navegador |
-| `SUPABASE_SERVICE_ROLE_KEY` | Clave `service_role`. **Solo servidor**: salta RLS. Nunca con `NEXT_PUBLIC_` |
+| `BACKEND_URL` | URL del backend en Spring Boot (`http://localhost:8080` en local). **Solo servidor** |
+
+La clave `service_role` ya no va en el front: solo la usa el backend (`backend/.env` y Render).
 
 Base de datos: ejecuta en orden los archivos de `supabase/migrations/` y luego
 `supabase/seed.sql` (SQL Editor de Supabase o `npx supabase db push`).
@@ -126,9 +128,9 @@ página o formulario → /api/v1 (Route Handler) → servicio → repositorio �
 ## Despliegue en Vercel
 
 1. Importa el repositorio en Vercel.
-2. Agrega las tres variables de entorno de `.env.example`. `SUPABASE_SERVICE_ROLE_KEY` va sin el prefijo `NEXT_PUBLIC_`.
+2. Agrega las variables de entorno de `.env.example`; `BACKEND_URL` apunta al backend en Render. La clave `service_role` **no** va en Vercel.
 3. Agrega la URL de producción con `/**` a las Redirect URLs de Supabase.
-4. Verifica que la clave de servicio no quedó expuesta: en el navegador, busca su valor en las fuentes de la página; no debe aparecer.
+4. El backend se despliega aparte en Render (ver `backend/README.md` y `render.yaml`).
 
 ## Fuera del alcance de esta versión
 
