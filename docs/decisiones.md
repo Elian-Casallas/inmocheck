@@ -102,3 +102,8 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 | 2026-11-21 | El driver de PostgreSQL pasa de `runtime` a compilación | `ErroresDeFlujo` lee el mensaje y el detalle de `PSQLException` |
 | 2026-11-21 | Guardar un elemento y finalizar van solo por `guardar_detalle` y `finalizar_inspeccion` | La versión por elemento evita pisar cambios entre pestañas o dispositivos (RN-14) y la regla de obligatorios pendientes vive en un solo lugar (RN-07) |
 | 2026-11-21 | El progreso de `GET /detalles` se calcula en Java con la misma regla que `lib/progreso.ts` y la función SQL | Ya están los detalles en memoria; la regla es la misma en los tres lugares |
+| 2026-11-21 | Las fotos se validan por sus primeros bytes (JPG, PNG, WebP), no por la extensión ni el `Content-Type` | Ambos se pueden falsear; igual que el BFF |
+| 2026-11-21 | Subir foto: Storage primero, luego `registrar_evidencia`; si el registro falla se borra el archivo | Storage y la base no comparten transacción; así no quedan archivos huérfanos |
+| 2026-11-21 | `?redirigir=1` responde `302` hacia el enlace firmado, con `Cache-Control: private, no-store` | Las `<img>` lo usan directo y cada carga vuelve a pasar por la autorización; el enlace firmado nunca se guarda |
+| 2026-11-21 | Límite de subida de Spring: 10 MB por archivo y 11 MB por petición | Igual que `FOTO_TAMANO_MAXIMO_BYTES` del front; más que eso responde `413` sin leer el archivo entero |
+| 2026-11-21 | El código que lanzan las funciones SQL se lee en un solo lugar (`ErroresSql.errorDeFuncion`) y cada módulo pone sus mensajes | Fotos e inspecciones comparten códigos (`NO_ENCONTRADA`, `INSPECCION_CERRADA`) pero con mensajes distintos |

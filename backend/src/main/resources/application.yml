@@ -23,6 +23,13 @@ spring:
       # petición espera hasta 10 s a que haya conexión antes de dar error.
       initialization-fail-timeout: -1
       connection-timeout: 10000
+  servlet:
+    multipart:
+      # Fotos: máximo 10 MB cada una (Limites.FOTO_TAMANO_MAXIMO_MB). La petición
+      # completa admite un poco más por los separadores del formulario. Más que
+      # eso responde 413 FILE_TOO_LARGE sin leer el archivo entero.
+      max-file-size: 10MB
+      max-request-size: 11MB
   jackson:
     deserialization:
       # Un campo desconocido en el JSON es un error (422), como .strict() de Zod.

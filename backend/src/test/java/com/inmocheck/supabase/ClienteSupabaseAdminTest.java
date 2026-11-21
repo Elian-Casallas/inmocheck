@@ -96,6 +96,45 @@ class ClienteSupabaseAdminTest {
 		supabase.verify();
 	}
 
+	// ---------- Storage ----------
+
+	private static final String RUTA = "org/o1/inspecciones/i1/detalles/d1/f1.jpg";
+
+	@Test
+	void subirArchivoVaAlBucketConSuTipo() {
+		supabase.expect(requestTo(URL + "/storage/v1/object/evidencias/" + RUTA))
+				.andExpect(method(HttpMethod.POST))
+				.andExpect(header("Content-Type", "image/jpeg"))
+				.andExpect(header("apikey", LLAVE))
+				.andExpect(content().bytes(new byte[] { 1, 2, 3 }))
+				.andRespond(withSuccess("{\"Key\":\"evidencias/" + RUTA + "\"}", MediaType.APPLICATION_JSON));
+
+		cliente.subirArchivo("evidencias", RUTA, new byte[] { 1, 2, 3 }, "image/jpeg");
+		supabase.verify();
+	}
+
+	@Test
+	void firmarEnlaceDevuelveLaDireccionCompletaYPideLosSegundos() {
+		supabase.expect(requestTo(URL + "/storage/v1/object/sign/evidencias/" + RUTA))
+				.andExpect(method(HttpMethod.POST))
+				.andExpect(content().json("{\"expiresIn\":60}", true))
+				.andRespond(withSuccess("{\"signedURL\":\"/object/sign/evidencias/" + RUTA + "?token=abc\"}",
+						MediaType.APPLICATION_JSON));
+
+		assertThat(cliente.firmarEnlace("evidencias", RUTA, 60))
+				.isEqualTo(URL + "/storage/v1/object/sign/evidencias/" + RUTA + "?token=abc");
+	}
+
+	@Test
+	void borrarArchivoUsaDelete() {
+		supabase.expect(requestTo(URL + "/storage/v1/object/evidencias/" + RUTA))
+				.andExpect(method(HttpMethod.DELETE))
+				.andRespond(withSuccess());
+
+		cliente.borrarArchivo("evidencias", RUTA);
+		supabase.verify();
+	}
+
 	@Test
 	void sinLlaveResponde503SinLlamarASupabase() {
 		ClienteSupabaseAdmin sinLlave = new ClienteSupabaseAdmin(new PropiedadesSupabase(URL, ""));

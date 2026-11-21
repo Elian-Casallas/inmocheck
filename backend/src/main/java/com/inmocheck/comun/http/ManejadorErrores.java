@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import tools.jackson.databind.exc.MismatchedInputException;
 import tools.jackson.databind.exc.UnrecognizedPropertyException;
@@ -111,6 +113,16 @@ public class ManejadorErrores {
 		}
 		return responder(Problema.de(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "Solicitud inválida",
 				"El parámetro " + error.getName() + " no tiene un valor válido.", peticion.getRequestURI()));
+	}
+
+	// Subida de foto sin el campo "archivo" o con un formulario mal armado.
+	@ExceptionHandler({ MissingServletRequestPartException.class, MultipartException.class })
+	ResponseEntity<Problema> archivoFaltante(Exception error, HttpServletRequest peticion) {
+		if (error instanceof MaxUploadSizeExceededException) {
+			return archivoDemasiadoGrande(peticion);
+		}
+		return responder(Problema.de(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "Solicitud inválida",
+				"Falta el campo archivo.", peticion.getRequestURI()));
 	}
 
 	@ExceptionHandler(MissingServletRequestParameterException.class)

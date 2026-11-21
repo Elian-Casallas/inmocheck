@@ -1,13 +1,12 @@
 package com.inmocheck.inspecciones;
 
+import com.inmocheck.comun.datos.ErroresSql;
+import com.inmocheck.comun.datos.ErroresSql.ErrorDeFuncion;
 import com.inmocheck.comun.errores.ConflictoException;
 import com.inmocheck.comun.errores.NoEncontradoException;
 import com.inmocheck.comun.errores.SinPermisoException;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Supplier;
-import org.postgresql.util.PSQLException;
-import org.postgresql.util.ServerErrorMessage;
 
 // Las reglas del flujo (transiciones, versión, plazo, obligatorios) viven en
 // las funciones SQL de flujo_inspecciones.sql. Cuando una regla no se cumple,
@@ -15,9 +14,6 @@ import org.postgresql.util.ServerErrorMessage;
 // una respuesta HTTP con un mensaje claro (equivale a traducirErrorDeFlujo
 // de inspecciones.service.ts).
 final class ErroresDeFlujo {
-
-	// SQLSTATE de "raise exception" sin código propio en PL/pgSQL.
-	private static final String RAISE_EXCEPTION = "P0001";
 
 	private static final Map<String, String> CONFLICTOS = Map.ofEntries(
 			Map.entry("VERSION_CONFLICT", "Alguien más modificó estos datos. Recarga para ver la versión actual."),
@@ -42,33 +38,21 @@ final class ErroresDeFlujo {
 		try {
 			return accion.get();
 		} catch (RuntimeException error) {
-			throw errorDeFlujo(error).orElseThrow(() -> error);
+			RuntimeException traducido = ErroresSql.errorDeFuncion(error).map(ErroresDeFlujo::traducir).orElse(null);
+			throw traducido != null ? traducido : error;
 		}
 	}
 
-	private static Optional<RuntimeException> errorDeFlujo(Throwable error) {
-		return mensajeDeLaFuncion(error).map(mensaje -> switch (mensaje.getMessage()) {
+	private static RuntimeException traducir(ErrorDeFuncion error) {
+		return switch (error.codigo()) {
 			case "NO_ENCONTRADA" -> new NoEncontradoException();
 			case "SIN_PERMISO" -> new SinPermisoException();
 			case "INSPECCION_INCOMPLETA" -> new ConflictoException(
-					"Hay " + (mensaje.getDetail() != null ? mensaje.getDetail() : "algunos")
-							+ " elementos obligatorios sin evaluar.",
+					"Hay " + (error.detalle() != null ? error.detalle() : "algunos") + " elementos obligatorios sin evaluar.",
 					"INSPECCION_INCOMPLETA");
-			default -> CONFLICTOS.containsKey(mensaje.getMessage())
-					? new ConflictoException(CONFLICTOS.get(mensaje.getMessage()), mensaje.getMessage())
+			default -> CONFLICTOS.containsKey(error.codigo())
+					? new ConflictoException(CONFLICTOS.get(error.codigo()), error.codigo())
 					: null;
-		});
-	}
-
-	// Spring envuelve el error de PostgreSQL: se busca en la cadena de causas.
-	private static Optional<ServerErrorMessage> mensajeDeLaFuncion(Throwable error) {
-		for (Throwable actual = error; actual != null; actual = actual.getCause()) {
-			if (actual instanceof PSQLException psql
-					&& RAISE_EXCEPTION.equals(psql.getSQLState())
-					&& psql.getServerErrorMessage() != null) {
-				return Optional.of(psql.getServerErrorMessage());
-			}
-		}
-		return Optional.empty();
+		};
 	}
 }

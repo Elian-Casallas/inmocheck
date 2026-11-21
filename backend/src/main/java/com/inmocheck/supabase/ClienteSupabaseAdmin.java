@@ -99,6 +99,42 @@ public class ClienteSupabaseAdmin {
 				.toBodilessEntity();
 	}
 
+	// ---------- Storage (buckets privados) ----------
+	// La ruta la arma SIEMPRE el servidor (con UUIDs): nunca viene del cliente.
+
+	public void subirArchivo(String bucket, String ruta, byte[] contenido, String tipo) {
+		http.post()
+				.uri(uri -> uri.path("/storage/v1/object/" + bucket + "/" + ruta).build())
+				.headers(this::autorizar)
+				.contentType(MediaType.parseMediaType(tipo))
+				.body(contenido)
+				.retrieve()
+				.toBodilessEntity();
+	}
+
+	// Enlace que vence en "segundos". Supabase lo devuelve relativo a /storage/v1.
+	public String firmarEnlace(String bucket, String ruta, int segundos) {
+		EnlaceFirmado firmado = http.post()
+				.uri(uri -> uri.path("/storage/v1/object/sign/" + bucket + "/" + ruta).build())
+				.headers(this::autorizar)
+				.contentType(MediaType.APPLICATION_JSON)
+				.body(Map.of("expiresIn", segundos))
+				.retrieve()
+				.body(EnlaceFirmado.class);
+		return supabase.base() + "/storage/v1" + firmado.signedURL();
+	}
+
+	public void borrarArchivo(String bucket, String ruta) {
+		http.delete()
+				.uri(uri -> uri.path("/storage/v1/object/" + bucket + "/" + ruta).build())
+				.headers(this::autorizar)
+				.retrieve()
+				.toBodilessEntity();
+	}
+
+	private record EnlaceFirmado(String signedURL) {
+	}
+
 	private void autorizar(org.springframework.http.HttpHeaders cabeceras) {
 		if (!supabase.tieneServiceRole()) {
 			throw new ServicioNoDisponibleException("Falta configurar SUPABASE_SERVICE_ROLE_KEY en el servidor.");
