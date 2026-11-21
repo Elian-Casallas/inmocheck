@@ -8,7 +8,7 @@ import "server-only";
 //   2. borrar sus route.ts del BFF (una ruta específica le gana al catch-all,
 //      así que mientras exista, Next.js la sigue atendiendo).
 // Lo que no esté en la lista responde 404: el proxy nunca reenvía a ciegas.
-export const MODULOS_EN_SPRING: readonly string[] = ["auth/me", "propietarios"];
+export const MODULOS_EN_SPRING: readonly string[] = ["auth/me", "propietarios", "inmuebles"];
 
 // Cabeceras de la petición que sí viajan a Spring. Las cookies NO: Spring
 // recibe el token en Authorization y nunca ve la sesión del navegador.

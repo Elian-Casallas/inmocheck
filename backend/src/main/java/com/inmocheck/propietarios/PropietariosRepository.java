@@ -1,5 +1,6 @@
 package com.inmocheck.propietarios;
 
+import com.inmocheck.comun.datos.Busqueda;
 import com.inmocheck.comun.http.ParametrosPagina;
 import com.inmocheck.propietarios.PropietarioRespuesta.InmuebleResumen;
 import java.sql.ResultSet;
@@ -109,18 +110,13 @@ public class PropietariosRepository {
 
 		if (filtro.busqueda() != null) {
 			condiciones.add("(p.nombre ilike :patron or p.email ilike :patron)");
-			parametros.put("patron", "%" + escaparComodines(filtro.busqueda()) + "%");
+			parametros.put("patron", Busqueda.contiene(filtro.busqueda()));
 		}
 		String tieneInmuebles = "exists (select 1 from public.inmuebles i where i.propietario_id = p.id)";
 		if (filtro.inmuebles() == FiltroPropietarios.ConInmuebles.CON) condiciones.add(tieneInmuebles);
 		if (filtro.inmuebles() == FiltroPropietarios.ConInmuebles.SIN) condiciones.add("not " + tieneInmuebles);
 
 		return new Consulta(" where " + String.join(" and ", condiciones), parametros);
-	}
-
-	// En ILIKE, % y _ son comodines: buscar "50%" debe encontrar "50%", no todo.
-	static String escaparComodines(String texto) {
-		return texto.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 	}
 
 	private PropietarioRespuesta aRespuesta(ResultSet fila, int numero) throws SQLException {

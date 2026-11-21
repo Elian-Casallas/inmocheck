@@ -3,7 +3,7 @@ import { cargarInmueble } from "@/features/inmuebles/cargar";
 import { BotonEstadoInmueble } from "@/features/inmuebles/components/BotonEstadoInmueble";
 import { FormularioInmueble } from "@/features/inmuebles/components/FormularioInmueble";
 import { exigirRol } from "@/server/auth/sesion";
-import { listarOpcionesPropietario } from "@/server/services/propietarios.service";
+import { listarOpcionesPropietario } from "@/features/personas/opcionesPropietario";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Editar inmueble" };

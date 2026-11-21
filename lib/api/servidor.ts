@@ -1,7 +1,9 @@
 import "server-only";
 import { notFound, redirect } from "next/navigation";
 import { cabecerasParaSpring, urlEnSpring } from "@/lib/api/backend";
+import { PAGINA_TAMANO_MAXIMO } from "@/lib/constantes";
 import { crearClienteServidor } from "@/lib/supabase/server";
+import type { Paginado } from "@/schemas/comun";
 
 // Cliente para que los SERVER COMPONENTS (páginas y layouts) lean datos de
 // Spring. Es la contraparte de lib/api/client.ts, que usan los componentes
@@ -58,6 +60,35 @@ export async function leerDeSpring<T>(ruta: string, busqueda?: URLSearchParams):
 
   const problema = (await respuesta.json().catch(() => ({}))) as { code?: string };
   throw new ErrorDeSpring(respuesta.status, problema.code ?? "HTTP_ERROR");
+}
+
+type ValorDeFiltro = string | number | boolean | null | undefined;
+
+// Un filtro ya validado ({ page: 2, search: "casa", tipo: undefined }) como
+// ?page=2&search=casa. Los valores vacíos no se mandan.
+export function parametrosDeFiltro(filtro: Record<string, ValorDeFiltro>): URLSearchParams {
+  const parametros = new URLSearchParams();
+  for (const [nombre, valor] of Object.entries(filtro)) {
+    if (valor !== undefined && valor !== null && valor !== "") parametros.set(nombre, String(valor));
+  }
+  return parametros;
+}
+
+// Trae TODAS las filas de un listado paginado, de a 100 por página. Para las
+// opciones de un <select> (propietarios, inmuebles): así no se cortan en 100.
+export async function leerTodasLasPaginas<T>(
+  ruta: string,
+  filtro: Record<string, ValorDeFiltro> = {},
+): Promise<T[]> {
+  const filas: T[] = [];
+  for (let pagina = 1; ; pagina++) {
+    const { data, meta } = await leerDeSpring<Paginado<T>>(
+      ruta,
+      parametrosDeFiltro({ ...filtro, page: pagina, pageSize: PAGINA_TAMANO_MAXIMO }),
+    );
+    filas.push(...data);
+    if (pagina >= meta.totalPages) return filas;
+  }
 }
 
 async function tokenDeLaSesion(): Promise<string | null> {

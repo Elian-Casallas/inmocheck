@@ -23,6 +23,8 @@ spring:
     deserialization:
       # Un campo desconocido en el JSON es un error (422), como .strict() de Zod.
       fail-on-unknown-properties: true
+      # 2.5 habitaciones es un error, no 2 (como z.number().int()).
+      accept-float-as-int: false
   web:
     # Los mensajes de validación que no traen texto propio salen en español,
     # también en AWS (donde el sistema está en inglés).

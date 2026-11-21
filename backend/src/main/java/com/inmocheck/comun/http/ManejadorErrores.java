@@ -26,6 +26,7 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import tools.jackson.databind.exc.MismatchedInputException;
 import tools.jackson.databind.exc.UnrecognizedPropertyException;
 
 // Convierte CUALQUIER error en application/problem+json con la misma forma y
@@ -88,6 +89,14 @@ public class ManejadorErrores {
 		if (error.getCause() instanceof UnrecognizedPropertyException campoDesconocido) {
 			return responder(validacion(peticion).conErrores(List.of(
 					new ErrorDeCampo(campoDesconocido.getPropertyName(), "Este campo no está permitido."))));
+		}
+		// Valor del tipo equivocado en un campo: texto donde va un número, un
+		// tipo de inmueble que no existe, un UUID mal escrito… También es 422.
+		if (error.getCause() instanceof MismatchedInputException tipoEquivocado && !tipoEquivocado.getPath().isEmpty()) {
+			String campo = tipoEquivocado.getPath().stream()
+					.map(parte -> parte.getPropertyName() != null ? parte.getPropertyName() : String.valueOf(parte.getIndex()))
+					.collect(java.util.stream.Collectors.joining("."));
+			return responder(validacion(peticion).conErrores(List.of(new ErrorDeCampo(campo, "El valor no es válido."))));
 		}
 		return responder(Problema.de(HttpStatus.BAD_REQUEST, "BAD_REQUEST", "Solicitud inválida",
 				"El cuerpo debe ser JSON válido.", peticion.getRequestURI()));

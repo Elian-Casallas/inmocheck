@@ -83,15 +83,15 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 
 **Módulos** (en cada uno: endpoints, Bean Validation con los mensajes de Zod, pruebas MockMvc contra la base real, páginas pasadas a `lib/api/servidor.ts`, módulo agregado al proxy y rutas del BFF borradas)
 - [x] 5.9 Propietarios
-- [ ] 5.10 Inmuebles (incluye las opciones de propietario del formulario, que hoy siguen en `listarOpcionesPropietario` del BFF)
+- [x] 5.10 Inmuebles (CRUD, filtros, historial y desactivación; opciones de propietario desde `GET /propietarios`)
 - [ ] 5.11 Inventario (espacios y elementos)
 - [ ] 5.12 Inspectores (invitación y reenvío con Auth Admin)
-- [ ] 5.13 Inspecciones (crear, reprogramar, iniciar, reasignar, cancelar)
+- [ ] 5.13 Inspecciones (crear, reprogramar, iniciar, reasignar, cancelar; mover `InspeccionResumen` del paquete `inmuebles`)
 - [ ] 5.14 Detalles y finalización
 - [ ] 5.15 Evidencias (subida multipart a Storage, enlace de 60 s, retiro)
 - [ ] 5.16 Comparación entrada/salida
 - [ ] 5.17 Informes PDF con OpenPDF y descarga firmada
-- [ ] 5.18 Dashboard y auditoría
+- [ ] 5.18 Dashboard y auditoría (el conteo de inmuebles activos sigue en `inmuebles.repository` del BFF)
 
 **Nube y cierre**
 - [ ] 5.19 Desplegar en AWS Elastic Beanstalk (Java 21) con HTTPS y variables de entorno

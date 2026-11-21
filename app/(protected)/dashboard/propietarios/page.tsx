@@ -9,9 +9,9 @@ import { CeldaFlecha, CeldaPrincipal, Tabla } from "@/components/ui/Tabla";
 import { FormularioPropietario } from "@/features/personas/components/FormularioPropietario";
 import { plural } from "@/lib/formato";
 import { aplanarParametros, urlCon, type ParametrosBusqueda } from "@/lib/url";
-import { leerDeSpring } from "@/lib/api/servidor";
+import { leerDeSpring, parametrosDeFiltro } from "@/lib/api/servidor";
 import type { Paginado } from "@/schemas/comun";
-import { propietariosFiltroSchema, type Propietario, type PropietariosFiltro } from "@/schemas/propietarios";
+import { propietariosFiltroSchema, type Propietario } from "@/schemas/propietarios";
 import { exigirRol } from "@/server/auth/sesion";
 
 // Título de la pestaña del navegador.
@@ -35,7 +35,7 @@ export default async function PaginaPropietarios({
   // El panel lateral se abre con la URL: ?nuevo=1 para registrar, ?ver=ID para editar.
   const { nuevo, ver, ...parametros } = aplanarParametros(await searchParams);
   const filtro = propietariosFiltroSchema.catch(propietariosFiltroSchema.parse({})).parse(parametros);
-  const { data: propietarios, meta } = await leerDeSpring<Paginado<Propietario>>("propietarios", aParametros(filtro));
+  const { data: propietarios, meta } = await leerDeSpring<Paginado<Propietario>>("propietarios", parametrosDeFiltro(filtro));
 
   const hrefCerrar = urlCon(RUTA, parametros, {});
   const seleccionado = ver ? propietarios.find((propietario) => propietario.id === ver) : undefined;
@@ -97,12 +97,4 @@ export default async function PaginaPropietarios({
       )}
     </>
   );
-}
-
-// El filtro ya validado, como ?page=&pageSize=&search=&inmuebles= para Spring.
-function aParametros(filtro: PropietariosFiltro): URLSearchParams {
-  const parametros = new URLSearchParams({ page: String(filtro.page), pageSize: String(filtro.pageSize) });
-  if (filtro.search) parametros.set("search", filtro.search);
-  if (filtro.inmuebles) parametros.set("inmuebles", filtro.inmuebles);
-  return parametros;
 }

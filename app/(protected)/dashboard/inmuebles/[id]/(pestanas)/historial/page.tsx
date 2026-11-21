@@ -1,7 +1,8 @@
 import { Tarjeta } from "@/components/ui/Tarjeta";
 import { cargarInmueble } from "@/features/inmuebles/cargar";
 import { ListaInspecciones } from "@/features/inspecciones/components/ListaInspecciones";
-import { listarInspeccionesDeInmueble } from "@/server/repositories/inspecciones.repository";
+import { leerDeSpring } from "@/lib/api/servidor";
+import type { InspeccionResumen } from "@/lib/inspecciones";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Historial" };
@@ -13,7 +14,7 @@ export default async function PaginaInmuebleHistorial({
 }) {
   const { id } = await params;
   const inmueble = await cargarInmueble(id);
-  const inspecciones = await listarInspeccionesDeInmueble(inmueble.id);
+  const { data: inspecciones } = await leerDeSpring<{ data: InspeccionResumen[] }>(`inmuebles/${inmueble.id}/historial`);
 
   return (
     <Tarjeta relleno={false}>

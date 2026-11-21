@@ -16,6 +16,7 @@ describe("estaEnSpring", () => {
   it("reenvía los módulos migrados", () => {
     expect(estaEnSpring(["auth", "me"])).toBe(true);
     expect(estaEnSpring(["propietarios"])).toBe(true);
+    expect(estaEnSpring(["inmuebles", "a3000000-0000-4000-8000-000000000001", "historial"])).toBe(true);
     expect(estaEnSpring(["propietarios", "a2000000-0000-4000-8000-000000000001"])).toBe(true);
   });
 
@@ -23,7 +24,7 @@ describe("estaEnSpring", () => {
     expect(estaEnSpring(["auth", "login"])).toBe(false);
     expect(estaEnSpring(["auth"])).toBe(false);
     expect(estaEnSpring(["auth", "meme"])).toBe(false);
-    expect(estaEnSpring(["inmuebles"])).toBe(false);
+    expect(estaEnSpring(["inspecciones"])).toBe(false);
   });
 
   it("no deja salir de /api/v1 con . o ..", () => {

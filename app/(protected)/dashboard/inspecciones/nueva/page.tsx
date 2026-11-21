@@ -1,11 +1,10 @@
 import { EncabezadoPagina } from "@/components/layout/EncabezadoPagina";
 import { FormularioInspeccion } from "@/features/inspecciones/components/FormularioInspeccion";
-import { PAGINA_TAMANO_MAXIMO } from "@/lib/constantes";
 import { aFechaYHoraDeCampo } from "@/lib/formato";
 import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
-import { inmueblesFiltroSchema } from "@/schemas/inmuebles";
+import type { Inmueble } from "@/schemas/inmuebles";
 import { exigirRol } from "@/server/auth/sesion";
-import { listarInmuebles } from "@/server/services/inmuebles.service";
+import { leerTodasLasPaginas } from "@/lib/api/servidor";
 import { listarOpcionesInspector } from "@/server/services/inspectores.service";
 
 // Título de la pestaña del navegador.
@@ -21,8 +20,8 @@ export default async function PaginaInspeccionNueva({
 
   // Las opciones se cargan en el servidor con la sesión del admin: RLS
   // garantiza que solo sean inmuebles e inspectores de su organización.
-  const [{ data: inmuebles }, inspectores] = await Promise.all([
-    listarInmuebles(inmueblesFiltroSchema.parse({ activo: "true", pageSize: PAGINA_TAMANO_MAXIMO })),
+  const [inmuebles, inspectores] = await Promise.all([
+    leerTodasLasPaginas<Inmueble>("inmuebles", { activo: true }),
     listarOpcionesInspector(),
   ]);
 

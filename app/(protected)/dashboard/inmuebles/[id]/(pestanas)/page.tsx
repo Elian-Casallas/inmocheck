@@ -5,7 +5,8 @@ import { cargarInmueble } from "@/features/inmuebles/cargar";
 import { ListaInspecciones } from "@/features/inspecciones/components/ListaInspecciones";
 import { formatearArea, formatearFecha } from "@/lib/formato";
 import { ETIQUETA_TIPO_INMUEBLE } from "@/schemas/inmuebles";
-import { listarInspeccionesDeInmueble } from "@/server/repositories/inspecciones.repository";
+import { leerDeSpring } from "@/lib/api/servidor";
+import type { InspeccionResumen } from "@/lib/inspecciones";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Inmueble" };
@@ -19,7 +20,9 @@ export default async function PaginaInmuebleResumen({
 }) {
   const { id } = await params;
   const inmueble = await cargarInmueble(id);
-  const recientes = await listarInspeccionesDeInmueble(inmueble.id, INSPECCIONES_RECIENTES);
+  // El historial viene de la más reciente a la más antigua: las primeras son las recientes.
+  const { data: historial } = await leerDeSpring<{ data: InspeccionResumen[] }>(`inmuebles/${inmueble.id}/historial`);
+  const recientes = historial.slice(0, INSPECCIONES_RECIENTES);
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-6 min-[1100px]:grid-cols-[minmax(0,1fr)_360px]">

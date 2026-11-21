@@ -8,9 +8,10 @@ import { Paginacion } from "@/components/ui/Paginacion";
 import { CeldaFlecha, CeldaPrincipal, Tabla } from "@/components/ui/Tabla";
 import { plural } from "@/lib/formato";
 import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
-import { ETIQUETA_TIPO_INMUEBLE, TIPOS_INMUEBLE, inmueblesFiltroSchema } from "@/schemas/inmuebles";
+import { ETIQUETA_TIPO_INMUEBLE, TIPOS_INMUEBLE, inmueblesFiltroSchema, type Inmueble } from "@/schemas/inmuebles";
+import { leerDeSpring, parametrosDeFiltro } from "@/lib/api/servidor";
+import type { Paginado } from "@/schemas/comun";
 import { exigirActor } from "@/server/auth/sesion";
-import { contarInmueblesActivos, listarInmuebles } from "@/server/services/inmuebles.service";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Inmuebles" };
@@ -42,8 +43,8 @@ export default async function PaginaInmuebles({
     .parse({ ...parametros, activo: estado === "todos" ? undefined : estado });
 
   const [{ data: inmuebles, meta }, activos] = await Promise.all([
-    listarInmuebles(filtro),
-    esAdmin ? contarInmueblesActivos() : Promise.resolve(0),
+    leerDeSpring<Paginado<Inmueble>>("inmuebles", parametrosDeFiltro(filtro)),
+    esAdmin ? contarActivos() : Promise.resolve(0),
   ]);
 
   const hayFiltros = Boolean(filtro.search || filtro.tipo || estado !== "true");
@@ -116,4 +117,10 @@ export default async function PaginaInmuebles({
       </Tabla>
     </>
   );
+}
+
+// Cuántos inmuebles activos hay: el total de la lista filtrada, pidiendo una sola fila.
+async function contarActivos(): Promise<number> {
+  const { meta } = await leerDeSpring<Paginado<Inmueble>>("inmuebles", parametrosDeFiltro({ activo: true, pageSize: 1 }));
+  return meta.total;
 }
