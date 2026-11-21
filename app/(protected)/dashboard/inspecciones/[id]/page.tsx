@@ -25,7 +25,7 @@ import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
 import type { Detalle, Inspeccion } from "@/schemas/inspecciones";
 import { exigirActor } from "@/server/auth/sesion";
 import type { Actividad } from "@/server/repositories/inspecciones.repository";
-import { listarOpcionesInspector } from "@/server/services/inspectores.service";
+import { listarOpcionesInspector } from "@/features/personas/opcionesInspector";
 import { listarActividad, listarDetalles } from "@/server/services/inspecciones.service";
 
 // Título de la pestaña del navegador.

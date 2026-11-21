@@ -5,6 +5,8 @@
 inmocheck:
   supabase:
     url: https://prueba.supabase.co
+  front:
+    url: http://localhost:3000
 
 spring:
   datasource:

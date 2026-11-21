@@ -12,8 +12,12 @@ spring:
     username: ${SUPABASE_DB_USER:}
     password: ${SUPABASE_DB_PASSWORD:}
     hikari:
-      # El plan gratuito de Supabase admite pocas conexiones por el pooler.
+      # El pooler de sesión de Supabase admite 15 conexiones EN TOTAL (entre
+      # esta app, las pruebas y cualquier otra instancia). Máximo 5 aquí, y
+      # solo 1 abierta mientras no haya trabajo.
       maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 60000
       # Si la primera conexión falla (p. ej. un tropiezo de DNS al arrancar),
       # el pool sigue reintentando en segundo plano en vez de rendirse, y una
       # petición espera hasta 10 s a que haya conexión antes de dar error.
@@ -35,6 +39,11 @@ inmocheck:
   supabase:
     # Si falta, la app no arranca (ver PropiedadesSupabase).
     url: ${SUPABASE_URL:}
+    # Solo servidor. Salta RLS: se usa únicamente después de autorizar.
+    service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:}
+  front:
+    # Para los enlaces de los correos. Si falta, la app no arranca.
+    url: ${FRONT_URL:}
 
 server:
   # Elastic Beanstalk entrega el puerto en la variable PORT; en local es 8080

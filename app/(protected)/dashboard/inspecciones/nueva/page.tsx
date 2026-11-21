@@ -5,7 +5,7 @@ import { aplanarParametros, type ParametrosBusqueda } from "@/lib/url";
 import type { Inmueble } from "@/schemas/inmuebles";
 import { exigirRol } from "@/server/auth/sesion";
 import { leerTodasLasPaginas } from "@/lib/api/servidor";
-import { listarOpcionesInspector } from "@/server/services/inspectores.service";
+import { listarOpcionesInspector } from "@/features/personas/opcionesInspector";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Programar inspección" };

@@ -235,5 +235,6 @@ Reglas y estados: `docs/reglas-de-negocio.md`.
 | AWS | `SUPABASE_URL` | API REST de Storage y Auth, y emisor y JWKS del JWT |
 | AWS | `SUPABASE_DB_URL`, `SUPABASE_DB_USER`, `SUPABASE_DB_PASSWORD` | Conexión JDBC por el pooler de sesión |
 | AWS | `SUPABASE_SERVICE_ROLE_KEY` | Storage e invitaciones. **Nunca** en el front ni en el código |
+| AWS | `FRONT_URL` | Dirección de la app web, para los enlaces de los correos (`https://inmocheck.vercel.app`) |
 
 Durante la migración, Vercel conserva `SUPABASE_SERVICE_ROLE_KEY` para los módulos que aún están en el BFF. Se retira al terminar.

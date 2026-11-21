@@ -12,10 +12,11 @@ import { DetalleInspector } from "@/features/personas/components/DetalleInspecto
 import { FormularioInvitarInspector } from "@/features/personas/components/FormularioInvitarInspector";
 import { plural } from "@/lib/formato";
 import { aplanarParametros, urlCon, type ParametrosBusqueda } from "@/lib/url";
-import { inspectoresFiltroSchema } from "@/schemas/inspectores";
+import { leerDeSpring, parametrosDeFiltro } from "@/lib/api/servidor";
+import type { Paginado } from "@/schemas/comun";
+import { inspectoresFiltroSchema, type Inspector } from "@/schemas/inspectores";
 import { exigirRol } from "@/server/auth/sesion";
 import { listarAbiertasDeInspector } from "@/server/repositories/inspecciones.repository";
-import { listarInspectores } from "@/server/services/inspectores.service";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Inspectores" };
@@ -37,7 +38,7 @@ export default async function PaginaInspectores({
 
   const { nuevo, ver, ...parametros } = aplanarParametros(await searchParams);
   const filtro = inspectoresFiltroSchema.catch(inspectoresFiltroSchema.parse({})).parse(parametros);
-  const { data: inspectores, meta } = await listarInspectores(filtro);
+  const { data: inspectores, meta } = await leerDeSpring<Paginado<Inspector>>("inspectores", parametrosDeFiltro(filtro));
 
   const hrefCerrar = urlCon(RUTA, parametros, {});
   const seleccionado = ver ? inspectores.find((inspector) => inspector.id === ver) : undefined;
