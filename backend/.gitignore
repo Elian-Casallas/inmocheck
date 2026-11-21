@@ -7,6 +7,8 @@ target/
 *.env
 
 ### Eclipse / STS ###
+# Carpeta de trabajo (workspace) de Eclipse: configuración local del IDE.
+.metadata/
 .apt_generated
 .classpath
 .factorypath
