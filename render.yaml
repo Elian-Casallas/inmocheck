@@ -11,8 +11,8 @@ services:
     plan: free
     # Virginia: la misma zona que la base de Supabase (us-east-1).
     region: virginia
-    # Mientras se prueba. Al unir la rama a main (tarea 5.20) se cambia a main.
-    branch: feat/backend-spring-boot
+    # Front (Vercel) y back (Render) salen de la misma rama.
+    branch: main
     autoDeploy: true
     healthCheckPath: /actuator/health
     envVars:
