@@ -35,8 +35,11 @@ public record Problema(
 				null);
 	}
 
-	// Mismo problema con la lista de errores por campo (422).
+	// Mismo problema con la lista de errores por campo (422). Un mismo error
+	// repetido se deja una sola vez: si un nombre vacío no cumple dos reglas
+	// con el mismo mensaje, el formulario no debe mostrarlo dos veces.
 	public Problema conErrores(List<ErrorDeCampo> erroresDeCampo) {
-		return new Problema(type, title, status, detail, instance, code, traceId, List.copyOf(erroresDeCampo));
+		return new Problema(type, title, status, detail, instance, code, traceId,
+				erroresDeCampo.stream().distinct().toList());
 	}
 }

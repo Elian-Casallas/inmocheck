@@ -84,7 +84,7 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 **Módulos** (en cada uno: endpoints, Bean Validation con los mensajes de Zod, pruebas MockMvc contra la base real, páginas pasadas a `lib/api/servidor.ts`, módulo agregado al proxy y rutas del BFF borradas)
 - [x] 5.9 Propietarios
 - [x] 5.10 Inmuebles (CRUD, filtros, historial y desactivación; opciones de propietario desde `GET /propietarios`)
-- [ ] 5.11 Inventario (espacios y elementos)
+- [x] 5.11 Inventario (espacios y elementos)
 - [ ] 5.12 Inspectores (invitación y reenvío con Auth Admin)
 - [ ] 5.13 Inspecciones (crear, reprogramar, iniciar, reasignar, cancelar; mover `InspeccionResumen` del paquete `inmuebles`)
 - [ ] 5.14 Detalles y finalización

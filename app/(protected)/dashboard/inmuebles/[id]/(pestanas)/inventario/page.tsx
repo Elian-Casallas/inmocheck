@@ -1,8 +1,9 @@
 import { Aviso } from "@/components/ui/Aviso";
 import { cargarInmueble } from "@/features/inmuebles/cargar";
 import { EditorInventario } from "@/features/inventario/components/EditorInventario";
+import { leerDeSpring } from "@/lib/api/servidor";
+import type { Espacio } from "@/schemas/inventario";
 import { exigirActor } from "@/server/auth/sesion";
-import { listarEspacios } from "@/server/services/inventario.service";
 
 // Título de la pestaña del navegador.
 export const metadata = { title: "Inventario" };
@@ -14,7 +15,7 @@ export default async function PaginaInmuebleInventario({
 }) {
   const { id } = await params;
   const [actor, inmueble] = await Promise.all([exigirActor(), cargarInmueble(id)]);
-  const espacios = await listarEspacios(inmueble.id);
+  const { data: espacios } = await leerDeSpring<{ data: Espacio[] }>(`inmuebles/${inmueble.id}/espacios`);
 
   return (
     <>
