@@ -61,7 +61,7 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 - [x] 4.3 Manuales del administrador y del inspector
 - [x] 4.4 Planos SDD en `docs/` (M4U3)
 
-## Backend propio en Spring Boot + AWS
+## Backend propio en Spring Boot + Render
 > Pedido del docente (2026-11-20). Opción A: Spring Boot reemplaza el BFF y Supabase se queda como
 > base, Auth y Storage. Diseño: `docs/arquitectura.md`. Decisiones: `docs/decisiones.md`.
 > Regla: un módulo a la vez. Un módulo está "hecho" cuando sus pruebas de integración pasan contra
@@ -94,7 +94,8 @@ Si el tiempo apretaba, la prioridad era el flujo central: login → inmueble con
 - [x] 5.18 Dashboard y auditoría (`GET /dashboard/resumen` y `GET /auditoria`; la actividad del detalle de inspección sale de `GET /auditoria?recursoId=`). En el BFF solo quedan las 4 rutas de sesión
 
 **Nube y cierre**
-- [ ] 5.19 Desplegar en AWS Elastic Beanstalk (Java 21) con HTTPS y variables de entorno
-- [ ] 5.20 Configurar `BACKEND_URL` en Vercel, correr la colección de Postman completa contra Spring y probar en producción el flujo central (login → inmueble → programar → realizar con fotos → finalizar → PDF)
+- [x] 5.19a Guardar el `main` anterior en la rama `version-nextjs-fullstack` (Next.js como front y back)
+- [ ] 5.19 Desplegar en Render con Docker (`backend/Dockerfile` y `render.yaml`), HTTPS y variables de entorno
+- [ ] 5.20 Configurar `BACKEND_URL` en Vercel, probar primero en el preview de la rama, unir `feat/backend-spring-boot` a `main`, correr la colección de Postman completa contra Spring y probar en producción el flujo central (login → inmueble → programar → realizar con fotos → finalizar → PDF)
 - [ ] 5.21 Borrar el BFF viejo (`server/services`, `server/repositories`, `server/pdf`, `lib/supabase/admin.ts`, rutas migradas) y quitar `SUPABASE_SERVICE_ROLE_KEY` de Vercel
 - [ ] 5.22 Actualizar los manuales, el README y `docs/contratos/api.md` (base y autenticación)

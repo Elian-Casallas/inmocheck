@@ -1,0 +1,12 @@
+# Lo que NO entra a la imagen. Sobre todo .env: las llaves van en las
+# variables de entorno de Render, nunca dentro de la imagen.
+.env
+.env.*
+target/
+.metadata/
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+.vscode/

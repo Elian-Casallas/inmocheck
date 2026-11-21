@@ -12,7 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 // Comprueba que la aplicación arranca completa y que la ruta de salud que
-// usará AWS responde UP.
+// usa Render responde UP.
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc

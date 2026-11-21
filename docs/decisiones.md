@@ -34,7 +34,7 @@
 | 2026-11-14 | **Supuesto:** los criterios de las specs se dedujeron del código, la especificación y el README, sin recorrerlos en el navegador | La regla de la sesión fue no ejecutar la app; se marcan al verificarlos |
 | 2026-11-14 | **Supuesto:** las tareas se agruparon por unidad del diplomado (Front U3, Back U4, Pruebas U5, Nube U6) según los commits | El proyecto se hizo por etapas, no tarea por tarea |
 
-## Backend propio en AWS (2026-11-20)
+## Backend propio (2026-11-20)
 El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**. Se eligió la **opción A**: Spring Boot reemplaza el BFF de Next.js y Supabase se queda como base de datos, Auth y Storage.
 
 | Fecha | Decisión | Por qué |
@@ -116,3 +116,13 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 | 2026-11-21 | Generar: se lee todo en una transacción, se arma el PDF, se sube a Storage y se registra con `registrar_informe`; si el registro falla se borra el archivo | Storage y la base no comparten transacción; un fallo del PDF responde `503 PDF_NO_GENERADO` sin tocar la inspección |
 | 2026-11-21 | El resumen del administrador calcula "próximas" y "no realizadas" en SQL con `limite_para_iniciar` | Una sola regla para el plazo (la misma que `iniciar_inspeccion`) y siempre hasta 5 próximas, aunque haya vencidas |
 | 2026-11-21 | La actividad del detalle de inspección se lee de `GET /auditoria?recursoId=` en vez de un endpoint propio | El contrato ya tenía `/auditoria`; no hace falta otra ruta |
+
+## Render en vez de AWS (2026-11-21)
+El docente aprobó desplegar el backend en **Render** en lugar de AWS. Las filas de 2026-11-20 que hablan de AWS quedan como historia; donde digan AWS, hoy es Render.
+
+| Fecha | Decisión | Por qué |
+|---|---|---|
+| 2026-11-21 | Backend en **Render** con una imagen **Docker** (`backend/Dockerfile`); el front sigue en Vercel | HTTPS gratis y automático (en Elastic Beanstalk, con una sola instancia, había que pagar un balanceador o tener dominio propio); la misma imagen corre igual en local y en la nube |
+| 2026-11-21 | Un solo repositorio: Render despliega la carpeta `backend/` (`render.yaml`) | El SDD, el contrato y los cambios que tocan front y back quedan juntos en un commit; Render y Vercel ignoran los cambios de la otra carpeta |
+| 2026-11-21 | El `main` anterior se guarda en la rama `version-nextjs-fullstack`; la rama de Spring se une a `main` cuando Render esté probado | Se conserva la versión en la que Next.js hacía de front y de back, y producción no se rompe mientras el backend no esté arriba |
+| 2026-11-21 | La JVM usa como máximo el 75 % de la memoria del contenedor | El plan gratis de Render tiene 512 MB |

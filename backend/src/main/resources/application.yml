@@ -3,7 +3,7 @@ spring:
     name: inmocheck-backend
   config:
     # En local, las variables salen de backend/.env (no se sube a git).
-    # En AWS no existe ese archivo: se usan las variables del entorno.
+    # En Render no existe ese archivo: se usan las variables del entorno.
     import: optional:file:.env[.properties]
   datasource:
     # PostgreSQL de Supabase por el pooler de SESIÓN (IPv4, puerto 5432).
@@ -38,7 +38,7 @@ spring:
       accept-float-as-int: false
   web:
     # Los mensajes de validación que no traen texto propio salen en español,
-    # también en AWS (donde el sistema está en inglés).
+    # también en el servidor (donde el sistema está en inglés).
     locale: es
     locale-resolver: fixed
 
@@ -53,14 +53,14 @@ inmocheck:
     url: ${FRONT_URL:}
 
 server:
-  # Elastic Beanstalk entrega el puerto en la variable PORT; en local es 8080
+  # Render entrega el puerto en la variable PORT; en local es 8080
   # para no chocar con Next.js (3000).
   port: ${PORT:8080}
 
 management:
   endpoints:
     web:
-      # Solo la salud: el balanceador de AWS la usa para saber si la app está viva.
+      # Solo la salud: Render la usa para saber si la app está viva.
       exposure:
         include: health
   endpoint:
@@ -70,5 +70,5 @@ management:
   health:
     db:
       # La salud dice si ESTA app está viva. Si Supabase falla, reiniciar el
-      # servidor en AWS no lo arregla, así que la base no cuenta para la salud.
+      # servidor no lo arregla, así que la base no cuenta para la salud.
       enabled: false

@@ -1,0 +1,31 @@
+# Despliegue del backend en Render (Blueprint). El front sigue en Vercel.
+# Render construye la imagen de backend/Dockerfile y solo redespliega cuando
+# cambia algo dentro de backend/.
+services:
+  - type: web
+    name: inmocheck-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    # Virginia: la misma zona que la base de Supabase (us-east-1).
+    region: virginia
+    # Mientras se prueba. Al unir la rama a main (tarea 5.20) se cambia a main.
+    branch: feat/backend-spring-boot
+    autoDeploy: true
+    healthCheckPath: /actuator/health
+    envVars:
+      # sync: false = Render pide el valor en su panel; nunca va en el repositorio.
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_DB_URL
+        sync: false
+      - key: SUPABASE_DB_USER
+        sync: false
+      - key: SUPABASE_DB_PASSWORD
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: FRONT_URL
+        value: https://inmocheck.vercel.app

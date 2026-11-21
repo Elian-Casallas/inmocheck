@@ -3,20 +3,20 @@
 > Detalle ampliado: `documentos/InmoCheck_Diseno_Tecnico_REGENERADO.md` (§2 arquitectura, §10 carpetas, §11 flujos).
 
 > **Estado (2026-11-20): en migración.** El back pasa del BFF de Next.js (`app/api/v1`) a un
-> **backend propio en Spring Boot desplegado en AWS** (`backend/`). Este documento describe el
+> **backend propio en Spring Boot desplegado en Render con Docker** (`backend/`). Este documento describe el
 > destino. Mientras dura la migración, los módulos que aún no están en Spring siguen en el BFF
-> (ver la sección 5 de `docs/tareas.md`). Por qué: `docs/decisiones.md`, "Backend propio en AWS".
+> (ver la sección 5 de `docs/tareas.md`). Por qué: `docs/decisiones.md`, "Backend propio" y "Render en vez de AWS".
 
 ## Visión general
 InmoCheck tiene tres piezas:
 - **Front**: aplicación Next.js en Vercel. Pantallas, formularios y un proxy delgado hacia el back.
-- **Back**: API REST en **Spring Boot** en **AWS Elastic Beanstalk**. Sesión, rol, validación, reglas de negocio y PDF.
+- **Back**: API REST en **Spring Boot**, en un contenedor Docker en **Render**. Sesión, rol, validación, reglas de negocio y PDF.
 - **Supabase**: PostgreSQL con RLS y funciones SQL, Auth (usuarios y JWT) y Storage privado.
 
 ```mermaid
 flowchart TD
   B[Navegador: pantallas React] -->|HTTPS /api/v1 + cookies| N[Next.js en Vercel: proxy /api/v1]
-  N -->|HTTPS + Authorization: Bearer JWT| C[Spring Boot en AWS: Controllers]
+  N -->|HTTPS + Authorization: Bearer JWT| C[Spring Boot en Render: Controllers]
   C --> V[JWT + perfil + rol + Bean Validation]
   V --> S[Services: reglas de negocio]
   S --> RP[Repositories: JdbcClient]
@@ -37,7 +37,7 @@ flowchart TD
 | Back | Spring Boot 4.1 con Java 21, Maven (wrapper `mvnw`), Spring Web MVC, Actuator, Spring Security (OAuth2 Resource Server), Spring JDBC (`JdbcClient`), Bean Validation, OpenPDF |
 | Datos | Supabase: PostgreSQL con RLS y funciones SQL, Auth (cookies httpOnly con `@supabase/ssr` en el front, JWT en el back) y Storage privado |
 | Pruebas | JUnit 5 + MockMvc (back), Vitest (front), SQL de RLS (`supabase/tests/rls.sql`), Postman (contrato) |
-| Despliegue | Vercel (front), AWS Elastic Beanstalk (back), Supabase en la nube (datos) |
+| Despliegue | Vercel (front), Render con Docker (back), Supabase en la nube (datos) |
 
 ---
 
@@ -224,7 +224,9 @@ Reglas y estados: `docs/reglas-de-negocio.md`.
 
 ## Despliegue
 - **Front:** Vercel, https://inmocheck.vercel.app, con despliegue continuo desde `main`.
-- **Back:** AWS Elastic Beanstalk, plataforma Java 21 (Corretto), una instancia en la capa gratuita, con el `.jar` que genera `mvn package`. Expuesto **solo por HTTPS**, porque viaja el token del usuario.
+- **Back:** Render, servicio web con la imagen de `backend/Dockerfile` (compila con Maven y corre en Java 21). La configuración está en `render.yaml`: carpeta raíz `backend/` y solo se redespliega cuando cambia esa carpeta. Render da **HTTPS** automático (`https://<servicio>.onrender.com`), obligatorio porque viaja el token del usuario. Salud: `GET /actuator/health`.
+- **Plan gratis de Render:** se duerme tras 15 minutos sin tráfico y la primera petición después tarda mientras Spring arranca; tiene 512 MB de RAM (la JVM se limita en el Dockerfile).
+- **Ramas:** `main` es la versión con Spring (front en Vercel y back en Render). `version-nextjs-fullstack` conserva la versión anterior, en la que Next.js hacía de front y de back (BFF).
 - **Datos, auth y archivos:** proyecto de Supabase en la nube. Las migraciones se aplican con `npx supabase db push` y luego `seed.sql`.
 
 ### Variables de entorno
@@ -232,9 +234,9 @@ Reglas y estados: `docs/reglas-de-negocio.md`.
 |---|---|---|
 | Vercel | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Sesión en cookies |
 | Vercel | `BACKEND_URL` (solo servidor) | URL HTTPS de Spring a la que reenvía el proxy |
-| AWS | `SUPABASE_URL` | API REST de Storage y Auth, y emisor y JWKS del JWT |
-| AWS | `SUPABASE_DB_URL`, `SUPABASE_DB_USER`, `SUPABASE_DB_PASSWORD` | Conexión JDBC por el pooler de sesión |
-| AWS | `SUPABASE_SERVICE_ROLE_KEY` | Storage e invitaciones. **Nunca** en el front ni en el código |
-| AWS | `FRONT_URL` | Dirección de la app web, para los enlaces de los correos (`https://inmocheck.vercel.app`) |
+| Render | `SUPABASE_URL` | API REST de Storage y Auth, y emisor y JWKS del JWT |
+| Render | `SUPABASE_DB_URL`, `SUPABASE_DB_USER`, `SUPABASE_DB_PASSWORD` | Conexión JDBC por el pooler de sesión |
+| Render | `SUPABASE_SERVICE_ROLE_KEY` | Storage e invitaciones. **Nunca** en el front ni en el código |
+| Render | `FRONT_URL` | Dirección de la app web, para los enlaces de los correos (`https://inmocheck.vercel.app`) |
 
 Durante la migración, Vercel conserva `SUPABASE_SERVICE_ROLE_KEY` para los módulos que aún están en el BFF. Se retira al terminar.

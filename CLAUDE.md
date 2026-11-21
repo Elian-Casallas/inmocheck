@@ -9,7 +9,7 @@ Inspecciones digitales de inmuebles para inmobiliarias: inventario, visitas con 
 - Back: **Spring Boot 4.1 + Java 21** en `backend/` (Maven, Spring Security con el JWT de Supabase, `JdbcClient`, Bean Validation, OpenPDF, JUnit 5)
 - **En migración** (sección 5 de `docs/tareas.md`): los módulos que aún no están en Spring siguen en el BFF viejo de `app/api/v1` y `server/`. Next.js reenvía `/api/v1` a Spring con un proxy.
 - Supabase: PostgreSQL con RLS y funciones SQL, Auth (cookies en el front, JWT en el back) y Storage privado
-- Despliegue: Vercel (front), AWS Elastic Beanstalk (back) y Supabase (datos)
+- Despliegue: Vercel (front), Render con Docker (back) y Supabase (datos)
 
 ## Documentación (léela antes de cualquier cambio)
 - Qué es el producto y qué NO entra: @docs/producto.md

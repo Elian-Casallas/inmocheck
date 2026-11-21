@@ -15,7 +15,9 @@ Las pruebas que no necesitan base corren siempre. `AislamientoRlsTest` usa la ba
 |---|---|
 | Pruebas | `.\mvnw.cmd test` |
 | Levantar en local (puerto 8080) | `.\mvnw.cmd spring-boot:run` |
-| Generar el `.jar` para AWS | `.\mvnw.cmd package` → `target/inmocheck-backend-0.0.1-SNAPSHOT.jar` |
+| Generar el `.jar` | `.\mvnw.cmd package` → `target/inmocheck-backend-0.0.1-SNAPSHOT.jar` |
+| Imagen Docker (la que usa Render) | `docker build -t inmocheck-backend .` |
+| Correr la imagen | `docker run --rm -p 8080:8080 --env-file .env inmocheck-backend` |
 
 Comprobar que está vivo: http://localhost:8080/actuator/health → `{"status":"UP"}`.
 
@@ -35,4 +37,4 @@ $env:JAVA_TOOL_OPTIONS = "-Djdk.net.unixdomain.tmpdir=C:\tmp\jdk-sockets"
 .\mvnw.cmd spring-boot:run
 ```
 
-En AWS (Linux) no ocurre.
+En Linux (el contenedor de Render) no ocurre.
