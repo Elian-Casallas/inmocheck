@@ -96,10 +96,15 @@ Cuando termine la migración se borran `server/services`, `server/repositories` 
 - Algo se marca "Guardado" solo cuando el servidor responde.
 
 ### Proxy `/api/v1/[...ruta]`
-1. Lee la sesión de las cookies con `@supabase/ssr`. Si no hay sesión, responde `401` en `problem+json`.
-2. Reenvía método, ruta, query y cuerpo (incluido `multipart/form-data` de las fotos) a `BACKEND_URL/api/v1/...`, con `Authorization: Bearer <access_token>`.
-3. Devuelve tal cual el estado, las cabeceras útiles (`Content-Type`, `Location`) y el cuerpo de Spring.
-4. No aplica reglas ni toca la base.
+Código: `app/api/v1/[...ruta]/route.ts` (delgado) y `lib/api/backend.ts` (reglas, probadas en `tests/unit/backend.test.ts`).
+1. Solo reenvía los módulos de `MODULOS_EN_SPRING`; el resto responde `404`. Rechaza segmentos `.` y `..`.
+2. **CSRF:** si una petición con cuerpo trae `Origin` de otro sitio, responde `403 ORIGEN_NO_PERMITIDO`. Va aquí porque Spring recibe un token y no puede saber que la petición vino con cookies.
+3. Lee el token de la sesión (cookies, que `proxy.ts` ya refrescó). Sin sesión: `401`.
+4. Reenvía método, ruta, query y cuerpo a `BACKEND_URL/api/v1/...` con `Authorization: Bearer <access_token>`. **No** reenvía las cookies.
+5. Devuelve el estado, las cabeceras útiles (`Content-Type`, `Location`, `Content-Disposition`, `Cache-Control`) y el cuerpo de Spring. Si Spring no responde: `503 SERVICIO_NO_DISPONIBLE`.
+6. No aplica reglas ni toca la base.
+
+**Migrar un módulo:** agregarlo a `MODULOS_EN_SPRING` y borrar sus `route.ts` del BFF. En Next.js una ruta específica le gana al catch-all, así que mientras exista, el BFF la sigue atendiendo.
 
 ---
 

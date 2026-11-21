@@ -6,6 +6,17 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
       "port": 3000
+    },
+    {
+      "name": "backend",
+      "runtimeExecutable": "java",
+      "runtimeArgs": [
+        "-Djdk.net.unixdomain.tmpdir=C:\\tmp\\jdk-sockets",
+        "-jar",
+        "backend/target/inmocheck-backend-0.0.1-SNAPSHOT.jar",
+        "--spring.config.import=optional:file:backend/.env[.properties]"
+      ],
+      "port": 8080
     }
   ]
 }

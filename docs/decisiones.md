@@ -70,3 +70,7 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 | 2026-11-20 | Idioma fijo en español (`spring.web.locale: es`) | Los mensajes de validación sin texto propio salen en español también en AWS, cuyo sistema está en inglés |
 | 2026-11-20 | Los límites (página 20/100, foto 10 MB) van en `comun/Limites.java` | Equivale a `lib/constantes.ts`; nada de números mágicos. El tamaño máximo de subida de Spring se configura en la 5.15 |
 | 2026-11-20 | Las respuestas usan DTOs (`PerfilActual`), nunca el `Actor` directo; un recurso suelto va en `{ data }` (`Datos<T>`) | El `Actor` guarda el token del usuario y no debe salir en ninguna respuesta |
+| 2026-11-20 | La protección CSRF (chequeo de `Origin`) vive en el proxy de Next.js | El navegador manda las cookies solo; Spring recibe un token y no puede saber que la petición nació con cookies de otro sitio |
+| 2026-11-20 | El proxy rechaza los segmentos `.` y `..` | Una petición armada a mano como `/auth/me/../../actuator` saldría de `/api/v1` al llegar a Spring |
+| 2026-11-20 | Migrar un módulo = agregarlo a `MODULOS_EN_SPRING` y borrar sus `route.ts` del BFF | En Next.js una ruta específica le gana al catch-all; la lista evita reenviar a ciegas lo que aún no existe en Spring |
+| 2026-11-20 | El proxy lee el token con `getSession()` y no con `getUser()` | `proxy.ts` ya valida y refresca la sesión en cada petición, y Spring verifica la firma del token; evita una llamada extra a Supabase Auth |
