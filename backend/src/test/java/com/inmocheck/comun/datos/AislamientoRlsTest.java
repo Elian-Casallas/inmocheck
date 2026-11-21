@@ -4,9 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.inmocheck.comun.sesion.PerfilesRepository;
 import com.inmocheck.comun.sesion.PerfilesRepository.PerfilEncontrado;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIf;
@@ -24,7 +21,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 // inmobiliaria NO ve datos de la otra (CA-14, RN-10), y que sin
 // EjecutorRls el usuario de conexión sí vería todo: por eso es la única puerta.
 @SpringBootTest
-@EnabledIf("hayBaseConfigurada")
+@EnabledIf("com.inmocheck.BaseDePrueba#hayBaseConfigurada")
 class AislamientoRlsTest {
 
 	private static final UUID LOS_PINOS = UUID.fromString("a0000000-0000-4000-8000-000000000001");
@@ -41,12 +38,6 @@ class AislamientoRlsTest {
 	// Solo para el control "sin RLS". La app nunca hace esto (EjecutorRlsUnicaPuertaTest).
 	@Autowired
 	private JdbcClient jdbcSinRls;
-
-	static boolean hayBaseConfigurada() throws IOException {
-		Path env = Path.of(".env");
-		return Files.exists(env) && Files.readAllLines(env).stream()
-				.anyMatch(linea -> linea.startsWith("SUPABASE_DB_URL=") && linea.length() > "SUPABASE_DB_URL=".length());
-	}
 
 	@Test
 	void elAdminDeLosPinosSoloVeSuInmobiliaria() {

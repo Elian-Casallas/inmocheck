@@ -69,3 +69,4 @@ El docente pidió que el proyecto tenga un **backend propio desplegado en AWS**.
 | 2026-11-20 | Se agrega `405 METHOD_NOT_ALLOWED`, que el BFF no tenía | Spring distingue el método equivocado de la ruta inexistente; antes ambos caían en 404 o 500 |
 | 2026-11-20 | Idioma fijo en español (`spring.web.locale: es`) | Los mensajes de validación sin texto propio salen en español también en AWS, cuyo sistema está en inglés |
 | 2026-11-20 | Los límites (página 20/100, foto 10 MB) van en `comun/Limites.java` | Equivale a `lib/constantes.ts`; nada de números mágicos. El tamaño máximo de subida de Spring se configura en la 5.15 |
+| 2026-11-20 | Las respuestas usan DTOs (`PerfilActual`), nunca el `Actor` directo; un recurso suelto va en `{ data }` (`Datos<T>`) | El `Actor` guarda el token del usuario y no debe salir en ninguna respuesta |
