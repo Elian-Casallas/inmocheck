@@ -99,7 +99,9 @@ final class ActaPdf {
 		documento.open();
 
 		documento.add(encabezado(datos));
-		documento.add(new Paragraph("Acta de inspección de " + tipo, TITULO));
+		// Interlineado ajustado al tamaño de letra (como react-pdf); el por
+		// defecto deja aire de más arriba del título.
+		documento.add(new Paragraph(18, "Acta de inspección de " + tipo, TITULO));
 		documento.add(new Paragraph(datos.organizacion(), CUERPO_TENUE));
 		documento.add(datosGenerales(datos));
 
@@ -149,8 +151,10 @@ final class ActaPdf {
 			texto.add(new Chunk(dato[0] + "\n", ETIQUETA));
 			texto.add(new Chunk(dato[1], CUERPO));
 			PdfPCell celda = celda(texto);
+			// 12.5 pt entre la etiqueta y el valor (etiqueta + marginBottom 2 de acta.tsx).
+			celda.setLeading(12.5f, 0);
 			celda.setPaddingBottom(8);
-			celda.setPaddingRight(10);
+			celda.setPaddingRight(4);
 			tabla.addCell(celda);
 		}
 		tabla.completeRow();
@@ -257,11 +261,11 @@ final class ActaPdf {
 			titulo.setBorderColor(BORDE);
 			titulo.setBorderWidth(0.5f);
 			titulo.setPaddingTop(10);
-			titulo.setPaddingBottom(3);
+			titulo.setPaddingBottom(5);
 			tabla.addCell(titulo);
 			PdfPCell espacio = celda(new Phrase(" ", ETIQUETA));
 			espacio.setColspan(anchos.size());
-			espacio.setFixedHeight(4);
+			espacio.setFixedHeight(7);
 			tabla.addCell(espacio);
 		}
 
@@ -276,7 +280,7 @@ final class ActaPdf {
 	private static PdfPCell bloqueDeFotos(PdfWriter escritor, Bloque bloque) {
 		PdfPTable interior = tablaSinBordes(1);
 		PdfPCell titulo = celda(new Phrase(bloque.titulo(), ELEMENTO));
-		titulo.setPaddingBottom(3);
+		titulo.setPaddingBottom(5);
 		interior.addCell(titulo);
 
 		List<Float> anchos = new ArrayList<>();
@@ -352,10 +356,12 @@ final class ActaPdf {
 			lienzo.lineTo(derecha, lineaY);
 			lienzo.stroke();
 
-			// Interlineado de 10 pt: el texto ocupa dos líneas y deben caber completas.
+			// ColumnText usa SU interlineado (16 pt por defecto), no el de la frase:
+			// con 9 pt las dos líneas quedan juntas, como en acta.tsx.
 			ColumnText columna = new ColumnText(lienzo);
 			columna.setSimpleColumn(izquierda, 10, derecha, lineaY - 4);
-			columna.addText(new Phrase(10, texto, PIE));
+			columna.setLeading(9, 0);
+			columna.addText(new Phrase(texto, PIE));
 			columna.go();
 		}
 	}
